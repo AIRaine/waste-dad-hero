@@ -88,8 +88,11 @@ import {
   enterChallenge,
   ensureFarmState,
   farmMeterView,
+  isChallengeUnlocked,
   isFarmMonsterId,
+  killsNeeded,
   makeFarmMinion,
+  meterCount,
   migrateFarmFromDefeated,
   returnToFarm,
   syncFarmFocus,
@@ -523,7 +526,21 @@ export function createApp(root, data, state) {
     } else {
       const mon = (data.monsters?.tiers || []).find((x) => x.id === id);
       if (!mon) return;
-      // Manual pick of a catalog foe = enter challenge if unlocked/reachable; else ignore.
+      // Catalog pick = enter T-challenge only when chain + farm meter allow it.
+      if (!isMonsterFightable(data, state, mon)) {
+        showPageNotice(monsterUnlockHint(data, mon) || '尚未解鎖此對手', 'warn', 'battle');
+        tierPickerOpen = false;
+        render();
+        return;
+      }
+      if (!isChallengeUnlocked(data, state, mon.id)) {
+        const need = killsNeeded(data);
+        const have = meterCount(state, mon.id);
+        showPageNotice(`農區進度未滿（${have}/${need}）— 先刷小怪再挑戰`, 'warn', 'battle');
+        tierPickerOpen = false;
+        render();
+        return;
+      }
       const res = enterChallenge(data, state, mon.id);
       if (!res.ok) {
         showPageNotice(res.message, 'warn', 'battle');
@@ -803,12 +820,9 @@ export function createApp(root, data, state) {
     const showRetreat = canRetreat(data, state);
     const showAdvance = canManualAdvanceScene(data, state);
     const showChallengeBtn = !training && meter?.canChallenge && meter.mode === 'farm';
-    // Challenge mid-fight / victory: return when still in challenge mode.
-    // Defeat: always offer 回刷小怪 beside/under 再戰 (even if still flagged challenge).
-    const showReturnFarm =
-      !training &&
-      !!meter &&
-      (meter.mode === 'challenge' || (battle.over && !battle.victory));
+    // 「回刷小怪」only while in a T-challenge (含挑戰敗北；mode 敗時仍為 challenge)。
+    // 農區小怪敗北不應出現此 CTA，否則會蓋過「再戰」主按鈕。
+    const showReturnFarm = !training && !!meter && meter.mode === 'challenge';
     const armorEmpty = ARMOR_SLOTS.every((s) => !state.equipped?.[s]);
     const needsEquipHint =
       !!state.firstRunGuideSeen &&
@@ -870,7 +884,13 @@ export function createApp(root, data, state) {
                     <span class="run-gate-hint">目標：${meter.focus.name}</span>
                     <div class="farm-meter ${showChallengeBtn ? 'is-full' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="${meter.need}" aria-valuenow="${meter.have}" aria-label="農區擊殺進度">
                       <div class="farm-meter-fill" style="width:${meter.pct}%"></div>
-                      <span class="farm-meter-label">${meter.unlocked || meter.cleared ? '可挑戰' : `${meter.have}/${meter.need}`}</span>
+                      <span class="farm-meter-label">${
+                        meter.canChallenge
+                          ? '可挑戰'
+                          : meter.cleared
+                            ? '已通關'
+                            : `${meter.have}/${meter.need}`
+                      }</span>
                     </div>
                     ${
                       showChallengeBtn
@@ -1071,19 +1091,24 @@ export function createApp(root, data, state) {
                     </div>
                     ${sceneMonsters
                       .map((t) => {
-                        const open = isMonsterFightable(data, state, t);
+                        const chainOpen = isMonsterFightable(data, state, t);
+                        const farmOpen = isChallengeUnlocked(data, state, t.id);
+                        const open = chainOpen && farmOpen;
                         const selected =
                           t.id === state.selectedMonsterId ||
                           t.id === state.farm?.focusId ||
                           state.selectedMonsterId === `farm__${t.id}`;
+                        const need = killsNeeded(data);
+                        const have = meterCount(state, t.id);
+                        const meta = open
+                          ? `${roleLabel(t.role === 'trash' ? 'tier' : t.role)} · HP${t.hp}`
+                          : !chainOpen
+                            ? monsterUnlockHint(data, t)
+                            : `農區 ${have}/${need} 後可挑戰`;
                         return `<div role="button" tabindex="${open ? 0 : -1}" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" aria-disabled="${open ? 'false' : 'true'}">
                           <span class="tier-option-body">
                             <span class="tier-option-main">T${t.tier} ${roleTag(combatRoleBadge(t).role)}${t.name}${open ? '' : ' · 鎖'}</span>
-                            <span class="tier-option-meta">${
-                              open
-                                ? `${roleLabel(t.role === 'trash' ? 'tier' : t.role)} · HP${t.hp}`
-                                : monsterUnlockHint(data, t)
-                            }</span>
+                            <span class="tier-option-meta">${meta}</span>
                           </span>
                         </div>`;
                       })
