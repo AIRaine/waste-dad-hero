@@ -1072,13 +1072,16 @@ export function createApp(root, data, state) {
                     ${sceneMonsters
                       .map((t) => {
                         const open = isMonsterFightable(data, state, t);
-                        const selected = t.id === state.selectedMonsterId;
+                        const selected =
+                          t.id === state.selectedMonsterId ||
+                          t.id === state.farm?.focusId ||
+                          state.selectedMonsterId === `farm__${t.id}`;
                         return `<div role="button" tabindex="${open ? 0 : -1}" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" aria-disabled="${open ? 'false' : 'true'}">
                           <span class="tier-option-body">
-                            <span class="tier-option-main">T${t.tier} ${roleTag(t.role)}${t.name}${open ? '' : ' · 鎖'}</span>
+                            <span class="tier-option-main">T${t.tier} ${roleTag(combatRoleBadge(t).role)}${t.name}${open ? '' : ' · 鎖'}</span>
                             <span class="tier-option-meta">${
                               open
-                                ? `${roleLabel(t.role)} · HP${t.hp}`
+                                ? `${roleLabel(t.role === 'trash' ? 'tier' : t.role)} · HP${t.hp}`
                                 : monsterUnlockHint(data, t)
                             }</span>
                           </span>
