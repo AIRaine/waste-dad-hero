@@ -1,19 +1,32 @@
 /**
  * Scene gacha: draw a themed character buff/debuff for the current scene.
  * Data-driven from data/gacha.json. Light satire archetypes only.
+ *
+ * Pricing is draw-count based per scene (not whether a buff is currently equipped).
+ * Draws land in `pending` until the player confirms 「上場／實裝」.
  */
 
 export function ensureGachaState(state) {
   if (!state.gacha) {
     state.gacha = {
       active: null,
+      pending: null,
       freeUsedByScene: {},
+      drawsByScene: {},
       lastDrawId: null,
       revealOpen: false,
     };
   }
   if (!state.gacha.freeUsedByScene) state.gacha.freeUsedByScene = {};
+  if (!state.gacha.drawsByScene) state.gacha.drawsByScene = {};
   if (state.gacha.active === undefined) state.gacha.active = null;
+  if (state.gacha.pending === undefined) state.gacha.pending = null;
+  // Migrate: free used ⇒ at least one draw counted for that scene.
+  for (const [sid, used] of Object.entries(state.gacha.freeUsedByScene)) {
+    if (used && !(state.gacha.drawsByScene[sid] > 0)) {
+      state.gacha.drawsByScene[sid] = 1;
+    }
+  }
 }
 
 export function isGachaUnlocked(data, state) {
@@ -50,19 +63,30 @@ export function findGachaCard(data, cardId) {
   return null;
 }
 
+function sceneDrawCount(state, sceneId) {
+  ensureGachaState(state);
+  return Math.max(0, Math.floor(Number(state.gacha.drawsByScene?.[sceneId]) || 0));
+}
+
+/**
+ * Cost by how many times the player has drawn in this scene — not by empty slot.
+ * Draw #0: free (if firstFreePerScene) else drawGold (14).
+ * Draw #1+: always rerollGold (22), even after unequip/clear.
+ */
 export function drawCost(data, state, sceneId) {
   ensureGachaState(state);
   const rules = data.gacha?.rules || {};
-  const hasActive = !!state.gacha.active;
-  // First free only for an empty slot in this scene (never for reroll/replace).
-  const free =
-    !hasActive &&
-    rules.firstFreePerScene &&
-    !state.gacha.freeUsedByScene?.[sceneId];
-  if (free) return { gold: 0, free: true, ticket: false, label: '免費' };
+  const draws = sceneDrawCount(state, sceneId);
+  if (draws === 0 && rules.firstFreePerScene && !state.gacha.freeUsedByScene?.[sceneId]) {
+    return { gold: 0, free: true, ticket: false, label: '免費' };
+  }
   const tickets = state.iapEntitlements?.gachaTickets || 0;
   if (tickets > 0) return { gold: 0, free: false, ticket: true, label: '扭蛋券×1' };
-  const gold = hasActive ? Number(rules.rerollGold) || 28 : Number(rules.drawGold) || 18;
+  if (draws === 0) {
+    const gold = Number(rules.drawGold) || 14;
+    return { gold, free: false, ticket: false, label: `${gold} 金` };
+  }
+  const gold = Number(rules.rerollGold) || 22;
   return { gold, free: false, ticket: false, label: `${gold} 金` };
 }
 
@@ -98,6 +122,15 @@ export function getGachaBonuses(data, state) {
     card,
     active,
   };
+}
+
+export function getGachaPending(data, state) {
+  ensureGachaState(state);
+  const pending = state.gacha.pending;
+  if (!pending?.cardId) return null;
+  const card = findGachaCard(data, pending.cardId);
+  if (!card) return null;
+  return { pending, card };
 }
 
 function emptyBonuses() {
@@ -137,8 +170,7 @@ export function toneLabel(tone) {
 }
 
 /**
- * Draw (or reroll) a card for the current scene.
- * @param {{ autofighting?: boolean }} opts
+ * Draw a card into `pending` — does NOT equip. Player must confirmEquipGacha.
  */
 export function drawGacha(data, state, sceneId, opts = {}) {
   ensureGachaState(state);
@@ -147,6 +179,9 @@ export function drawGacha(data, state, sceneId, opts = {}) {
   }
   if (opts.autofighting && data.gacha?.rules?.blockDuringAutofight !== false) {
     return { ok: false, reason: '掛機中先暫停再抽' };
+  }
+  if (state.gacha.pending) {
+    return { ok: false, reason: '請先上場或放棄目前抽到的人情' };
   }
   const pool = poolForScene(data, sceneId);
   if (!pool.length) return { ok: false, reason: '此場景尚無扭蛋池' };
@@ -157,7 +192,6 @@ export function drawGacha(data, state, sceneId, opts = {}) {
   }
 
   let card = weightedPick(pool);
-  // Mild anti-repeat: if same as last and pool > 1, reroll once
   if (card && pool.length > 1 && card.id === state.gacha.lastDrawId) {
     const alt = weightedPick(pool.filter((c) => c.id !== card.id));
     if (alt) card = alt;
@@ -175,52 +209,84 @@ export function drawGacha(data, state, sceneId, opts = {}) {
   }
   if (cost.free) state.gacha.freeUsedByScene[sceneId] = true;
 
-  const duration =
-    card.durationBattles ??
-    data.gacha?.rules?.defaultDurationBattles ??
-    5;
+  state.gacha.drawsByScene[sceneId] = sceneDrawCount(state, sceneId) + 1;
 
-  state.gacha.active = {
+  const duration =
+    card.durationBattles ?? data.gacha?.rules?.defaultDurationBattles ?? 5;
+
+  state.gacha.pending = {
     cardId: card.id,
     sceneId,
-    battlesLeft: duration,
+    duration,
     drawnAt: Date.now(),
   };
   state.gacha.lastDrawId = card.id;
   state.gacha.revealOpen = true;
 
-  return { ok: true, card, cost, duration };
+  return { ok: true, card, cost, duration, pending: true };
 }
 
-export function clearGacha(state) {
+/** Move pending → active (replaces any current active). */
+export function confirmEquipGacha(data, state) {
   ensureGachaState(state);
-  state.gacha.active = null;
+  const pending = state.gacha.pending;
+  if (!pending?.cardId) return { ok: false, reason: '沒有待上場的人情' };
+  const card = findGachaCard(data, pending.cardId);
+  if (!card) {
+    state.gacha.pending = null;
+    state.gacha.revealOpen = false;
+    return { ok: false, reason: '人情資料遺失' };
+  }
+  const duration = pending.duration ?? data.gacha?.rules?.defaultDurationBattles ?? 5;
+  state.gacha.active = {
+    cardId: pending.cardId,
+    sceneId: pending.sceneId,
+    battlesLeft: duration,
+    drawnAt: pending.drawnAt || Date.now(),
+  };
+  state.gacha.pending = null;
+  state.gacha.revealOpen = false;
+  return { ok: true, card, duration };
+}
+
+/** Discard pending without equipping (draw already paid). */
+export function discardPendingGacha(state) {
+  ensureGachaState(state);
+  state.gacha.pending = null;
   state.gacha.revealOpen = false;
   return { ok: true };
 }
 
-/** Call when player leaves a scene if rules.expireOnSceneChange. */
-export function onGachaSceneChange(data, state, nextSceneId) {
+/** Unequip active buff only — does not reset draw-count pricing. */
+export function clearGacha(state) {
   ensureGachaState(state);
-  const active = state.gacha.active;
-  if (!active) return false;
-  if (!data.gacha?.rules?.expireOnSceneChange) return false;
-  if (active.sceneId === nextSceneId) return false;
   state.gacha.active = null;
-  state.gacha.revealOpen = false;
-  return true;
+  // Keep pending / drawsByScene / freeUsedByScene.
+  return { ok: true };
 }
 
-/**
- * Tick duration after a real fight ends (not training).
- * Returns true if buff expired this tick.
- */
+export function onGachaSceneChange(data, state, nextSceneId) {
+  ensureGachaState(state);
+  let cleared = false;
+  if (data.gacha?.rules?.expireOnSceneChange) {
+    if (state.gacha.active && state.gacha.active.sceneId !== nextSceneId) {
+      state.gacha.active = null;
+      cleared = true;
+    }
+    if (state.gacha.pending && state.gacha.pending.sceneId !== nextSceneId) {
+      state.gacha.pending = null;
+      state.gacha.revealOpen = false;
+      cleared = true;
+    }
+  }
+  return cleared;
+}
+
 export function tickGachaAfterBattle(data, state, { training = false, victory = false } = {}) {
   ensureGachaState(state);
   const active = state.gacha.active;
   if (!active) return false;
   if (training && data.gacha?.rules?.trainingIgnoresTick !== false) return false;
-  // Tick on both win and loss — time on the field still counts
   active.battlesLeft = Math.max(0, (active.battlesLeft || 0) - 1);
   if (active.battlesLeft <= 0) {
     const card = findGachaCard(data, active.cardId);
@@ -230,14 +296,10 @@ export function tickGachaAfterBattle(data, state, { training = false, victory = 
   return { expired: false, battlesLeft: active.battlesLeft, victory };
 }
 
-/** Apply gold/material find bonuses to reward numbers. */
 export function applyGachaLootBonus(data, state, rewards) {
   const g = getGachaBonuses(data, state);
   if (!rewards) return rewards;
-  const gold = Math.max(
-    1,
-    Math.round((rewards.gold || 1) * (1 + (g.goldFindPct || 0))),
-  );
+  const gold = Math.max(1, Math.round((rewards.gold || 1) * (1 + (g.goldFindPct || 0))));
   const material = Math.max(
     1,
     Math.round((rewards.material || 1) * (1 + (g.materialFindPct || 0))),

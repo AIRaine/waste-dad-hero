@@ -49,7 +49,9 @@ export function createInitialState(data) {
     _boostMigrated: true,
     gacha: {
       active: null,
+      pending: null,
       freeUsedByScene: {},
+      drawsByScene: {},
       lastDrawId: null,
       revealOpen: false,
     },
@@ -107,6 +109,11 @@ export function loadState(data) {
           ...(base.gacha?.freeUsedByScene || {}),
           ...(parsed.gacha?.freeUsedByScene || {}),
         },
+        drawsByScene: {
+          ...(base.gacha?.drawsByScene || {}),
+          ...(parsed.gacha?.drawsByScene || {}),
+        },
+        pending: parsed.gacha?.pending ?? null,
       },
       iapEntitlements: {
         ...base.iapEntitlements,
@@ -190,7 +197,14 @@ export function saveState(data, state) {
     inventory: state.inventory,
     boostArmed: state.boostArmed,
     _boostMigrated: state._boostMigrated,
-    gacha: state.gacha || { active: null, freeUsedByScene: {}, lastDrawId: null, revealOpen: false },
+    gacha: state.gacha || {
+      active: null,
+      pending: null,
+      freeUsedByScene: {},
+      drawsByScene: {},
+      lastDrawId: null,
+      revealOpen: false,
+    },
     iapEntitlements: state.iapEntitlements || {
       gachaTickets: 0,
       speedBoost: false,
