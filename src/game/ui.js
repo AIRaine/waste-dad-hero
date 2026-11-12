@@ -1066,7 +1066,7 @@ export function createApp(root, data, state) {
           ${
             battle.over && !autoFighting
               ? `<div class="result-box ${battle.victory ? 'win' : 'lose'}">
-                  <p>${battle.victory ? '勝利！' : '敗北…'}</p>
+                  <p>${battle.victory ? '勝利！' : '敗北．． 強化才能走更遠的路'}</p>
                   ${
                     battle.rewards
                       ? `<p class="reward">+${battle.rewards.gold} 金 · +${battle.rewards.material} 材 · +${battle.rewards.exp} 經驗${battle.rewards.doubled ? '（雙倍）' : ''}</p>`
