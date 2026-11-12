@@ -69,7 +69,14 @@ import {
   scaleMonster,
   sceneUnlockHint,
 } from './scenes.js';
-import { clearHitFloatDom, syncHitFloatDom } from './hitFloats.js';
+import { clearHitFloatDom, setPendingAttackSfxGroup, syncHitFloatDom } from './hitFloats.js';
+import {
+  initSfx,
+  installSfxUnlock,
+  isSfxMuted,
+  toggleSfxMuted,
+  weaponSfxGroup,
+} from './sfx.js';
 import {
   TRAINING_DUMMY_ID,
   formatTrainingDefPct,
@@ -111,6 +118,14 @@ import { displayResource, pushLog, resetState, saveState } from './state.js';
 const TABS = TAB_META;
 
 export function createApp(root, data, state) {
+  initSfx(data.sfx);
+  const uninstallSfxUnlock = installSfxUnlock();
+
+  function armAttackSfx() {
+    const weapon = getEquippedSkin(data, state, 'weapon');
+    setPendingAttackSfxGroup(weaponSfxGroup(weapon));
+  }
+
   let tab = 'battle';
   let battle = null;
   let enhanceFlash = null;
@@ -289,6 +304,7 @@ export function createApp(root, data, state) {
         else stopAutoFight({ renderAfter: true });
         return;
       }
+      armAttackSfx();
       const res = playerAttack(data, state, battle, currentMonster());
       if (res.blocked) {
         scheduleAutoStrike();
@@ -311,6 +327,7 @@ export function createApp(root, data, state) {
     if (!battle || battle.over) return;
     autoFighting = true;
     pushLog(state, '掛機打怪開始——勝利後會自動再戰；點「暫停」停止。', 'info');
+    armAttackSfx();
     const res = playerAttack(data, state, battle, currentMonster());
     if (res.blocked) {
       render();
@@ -1309,6 +1326,7 @@ export function createApp(root, data, state) {
   function render({ skipCapture = false } = {}) {
     if (!skipCapture) captureScroll(tab);
     ensureSceneSelection(data, state);
+    armAttackSfx();
     root.innerHTML = `
       <div class="shell ${state.adminMode ? 'admin-on' : ''}">
         <header class="topbar">
@@ -1320,11 +1338,20 @@ export function createApp(root, data, state) {
                 <p>${data.meta.subtitle}</p>
               </div>
             </div>
-            ${
-              state.adminMode
-                ? `<button type="button" class="admin-badge" data-action="admin-off" title="點擊關閉管理員">管理員測試中 · 點此關閉</button>`
-                : ''
-            }
+            <div class="topbar-actions">
+              <button
+                type="button"
+                class="sfx-toggle ${isSfxMuted() ? 'is-muted' : ''}"
+                data-action="sfx-toggle"
+                aria-pressed="${isSfxMuted()}"
+                title="${isSfxMuted() ? '開啟戰鬥音效' : '關閉戰鬥音效'}"
+              >${isSfxMuted() ? '音效關' : '音效開'}</button>
+              ${
+                state.adminMode
+                  ? `<button type="button" class="admin-badge" data-action="admin-off" title="點擊關閉管理員">管理員測試中 · 點此關閉</button>`
+                  : ''
+              }
+            </div>
           </div>
           <div class="hud-strip" aria-label="資源與戰力">
             <div class="hud-wallet" role="group" aria-label="資源">
@@ -1376,6 +1403,10 @@ export function createApp(root, data, state) {
   }
 
   function bind() {
+    root.querySelector('[data-action="sfx-toggle"]')?.addEventListener('click', () => {
+      toggleSfxMuted();
+      render({ skipCapture: true });
+    });
     root.querySelector('[data-action="onboard-dismiss"]')?.addEventListener('click', () => {
       state.firstRunGuideSeen = true;
       persist();
@@ -1909,11 +1940,13 @@ export function createApp(root, data, state) {
       stopAutoFight();
       cancelAnimationFrame(raf);
       clearHitFloatDom();
+      uninstallSfxUnlock();
     },
     getState: () => state,
     getBattle: () => battle,
     attackOnce: () => {
       ensureBattle();
+      armAttackSfx();
       const res = playerAttack(data, state, battle, currentMonster());
       syncHitFloatDom(root, battle);
       return res;

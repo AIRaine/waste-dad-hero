@@ -1,0 +1,33 @@
+{
+  "note": "戰鬥音效：Web Audio 程序合成；武器依 type 對應音效組（非每把武器獨立）。詳見 docs/combat-sfx.md。",
+  "storageKey": "feicai-sfx-muted",
+  "defaultMuted": false,
+  "volume": 0.45,
+  "groups": {
+    "blade": {
+      "label": "刃器",
+      "types": ["劍", "刀", "短劍", "匕首", "雙刀"],
+      "desc": "金屬切削／短刺"
+    },
+    "stick": {
+      "label": "棍竿",
+      "types": ["長槍", "法杖"],
+      "desc": "竹木掃擊／點刺"
+    },
+    "blunt": {
+      "label": "鈍器",
+      "types": ["斧"],
+      "desc": "沉重撞擊"
+    },
+    "ranged": {
+      "label": "遠程",
+      "types": ["弓"],
+      "desc": "彈射／繃弦"
+    },
+    "improvised": {
+      "label": "徒手／即興",
+      "types": [],
+      "desc": "空手或未對應類型的後備音色"
+    }
+  }
+}

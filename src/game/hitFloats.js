@@ -7,7 +7,18 @@
  * - crit: hot amber + 「爆擊」 badge, large pop
  * - block: ice cyan + 「格擋」 badge
  * - counter: magenta + 「反擊」 badge
+ *
+ * SFX: playHitSfx runs here (side-effect only; no combat math).
  */
+
+import { playHitSfx } from './sfx.js';
+
+/** Optional: set before a player swing so attack SFX uses weapon group. */
+let pendingWeaponGroup = 'improvised';
+
+export function setPendingAttackSfxGroup(group) {
+  pendingWeaponGroup = group || 'improvised';
+}
 
 const FLOAT_TTL_MS = 900;
 const SPECIAL_TTL_MS = 1100;
@@ -62,6 +73,15 @@ export function pushHitResultFloat(battle, side, dmg, { crit = false, block = fa
   if (resolvedTone === 'crit' || resolvedTone === 'block' || resolvedTone === 'counter') {
     triggerSpecialFlash(resolvedTone);
   }
+  // Audio side-effect only — formulas unchanged.
+  playHitSfx({
+    side: side === 'player' ? 'player' : 'monster',
+    crit: !!crit,
+    block: !!block,
+    counter: !!counter,
+    dmg: amount,
+    weaponGroup: pendingWeaponGroup,
+  });
   return entry;
 }
 
@@ -107,7 +127,6 @@ export function triggerSpecialFlash(kind) {
     el.classList.remove('is-on');
     delete el.dataset.kind;
   }, 420);
-  // Audio placeholder — wire real SFX later without touching combat math.
   if (typeof window !== 'undefined') {
     window.__FEICAI_HIT_SFX__ = { kind, at: Date.now() };
     window.dispatchEvent(new CustomEvent('feicai-special-hit', { detail: { kind } }));
