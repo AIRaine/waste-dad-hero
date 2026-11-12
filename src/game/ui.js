@@ -1195,7 +1195,7 @@ export function createApp(root, data, state) {
                   const meta = rarityMeta(skin.rarity, data);
                   return `<button type="button" class="gear-row ${rarityClass(skin.rarity)} ${affixClass(skin)} ${selected ? 'selected' : ''} ${eq ? 'is-equipped' : ''}" data-select-gear="${skin.id}" title="點選聚焦 · 再點或雙擊穿戴">
                     <div class="gear-icon ${affixClass(skin)}">${slotIcon(skin, lv)}</div>
-                    <div><strong class="rarity-name">${skin.name}${eq ? ' · 穿戴中' : ''}${eq && hidden ? '（隱藏）' : ''}</strong><span>${meta.name}${meta.label} · ${slotLabel(skin.slot)} · ${formatPieceSummary(data, state, skin)}</span></div>
+                    <div><strong class="rarity-name">${skin.name}${eq ? ' · 穿戴中' : ''}${eq && hidden ? '（不顯示外觀）' : ''}</strong><span>${meta.name}${meta.label} · ${slotLabel(skin.slot)} · ${formatPieceSummary(data, state, skin)}</span></div>
                   </button>`;
                 })
                 .join('') || `<p class="muted">尚無裝備</p>`}
@@ -1209,7 +1209,7 @@ export function createApp(root, data, state) {
               <div class="weapon-mini vivid">${focusIcon}</div>
             </div>
             <div class="cta-meta">
-              <strong>${focus?.name || '裝備'}+${level}${focusEquipped ? ' · 穿戴中' : ''}${focusHidden ? '（隱藏）' : ''}</strong>
+              <strong>${focus?.name || '裝備'}+${level}${focusEquipped ? ' · 穿戴中' : ''}${focusHidden ? '（不顯示外觀）' : ''}</strong>
               <span class="cta-rate-line"><b class="rate-pct-inline">${(rate * 100).toFixed(0)}%</b> · ${costLine} · ${focusSummary}</span>
             </div>
           </div>
@@ -1229,7 +1229,7 @@ export function createApp(root, data, state) {
               <button type="button" class="ops-chip enhance-wear-btn ${focusEquipped ? 'is-on' : ''}" data-action="${focusEquipped ? 'unequip-focus' : 'wear-focus'}" title="${focusEquipped ? '卸下此裝（空槽）' : '穿戴此裝'}">${focusEquipped ? '卸下' : '穿戴'}</button>
               ${
                 focusIsArmor
-                  ? `<button type="button" class="ops-chip enhance-hide-btn ${focusHidden ? 'on' : ''}" data-action="toggle-hide-focus" aria-pressed="${focusHidden}" title="${focusHidden ? '顯示疊圖' : '隱藏疊圖'}">${focusHidden ? '顯示' : '隱藏'}</button>`
+                  ? `<button type="button" class="ops-chip enhance-hide-btn ${focusHidden ? 'on' : ''}" data-action="toggle-hide-focus" aria-pressed="${focusHidden}" title="${focusHidden ? '顯示外觀' : '不顯示外觀'}">${focusHidden ? '顯示外觀' : '不顯示外觀'}</button>`
                   : ''
               }
             </div>
@@ -1393,7 +1393,7 @@ export function createApp(root, data, state) {
         ? unlockHint(skin, data)
         : eq
           ? hidden
-            ? '穿戴中 · 疊圖已隱藏 · 點擊卸下'
+            ? '穿戴中 · 外觀已不顯示 · 點擊卸下'
             : '穿戴中 · 點擊卸下'
           : '點擊裝備';
       return `<div class="skin-card gear-card ${rarityClass(skin.rarity)} ${affixClass(skin)} ${owned ? 'owned' : 'locked'} ${eq ? 'equipped' : ''} ${hidden ? 'visual-hidden' : ''}">
@@ -1416,7 +1416,7 @@ export function createApp(root, data, state) {
           eq
             ? `<div class="gear-card-actions">
                 <button type="button" class="gear-unequip-btn" data-unequip-slot="${skin.slot}">卸下</button>
-                <button type="button" class="gear-hide-toggle ${hidden ? 'on' : ''}" data-toggle-hide-slot="${skin.slot}" aria-pressed="${hidden}">${hidden ? '顯示疊圖' : '隱藏疊圖'}</button>
+                <button type="button" class="gear-hide-toggle ${hidden ? 'on' : ''}" data-toggle-hide-slot="${skin.slot}" aria-pressed="${hidden}">${hidden ? '顯示外觀' : '不顯示外觀'}</button>
               </div>`
             : ''
         }
@@ -1491,17 +1491,17 @@ export function createApp(root, data, state) {
       paneHtml = `
         <section class="catalog-pane" data-catalog-pane="gear" aria-label="防具">
           <h2 class="catalog-pane-title">${catMeta.label}</h2>
-          <p class="muted">頭盔／護甲／手套／靴子／盾牌 · 穿戴後可隱藏疊圖（數值仍生效）</p>
+          <p class="muted">頭盔／護甲／手套／靴子／盾牌 · 穿戴後可不顯示外觀（數值仍生效）</p>
           <div class="type-chips">${gearSlotChips
             .map((t) => {
               const label = t === '全部' ? '全部' : slotLabel(t);
               return `<button type="button" class="chip ${gearSlotFilter === t ? 'active' : ''}" data-gear-slot="${t}">${label}</button>`;
             })
             .join('')}</div>
-          <div class="type-chips gear-hide-chips" role="group" aria-label="隱藏防具疊圖">
+          <div class="type-chips gear-hide-chips" role="group" aria-label="不顯示防具外觀">
             ${ARMOR_SLOTS.map((slot) => {
               const on = isGearVisualHidden(state, slot);
-              return `<button type="button" class="chip hide-chip ${on ? 'active' : ''}" data-toggle-hide-slot="${slot}" aria-pressed="${on}" title="${on ? '點擊顯示疊圖' : '點擊隱藏疊圖'}">隱·${slotLabel(slot)}</button>`;
+              return `<button type="button" class="chip hide-chip ${on ? 'active' : ''}" data-toggle-hide-slot="${slot}" aria-pressed="${on}" title="${on ? '點擊顯示外觀' : '點擊不顯示外觀'}">不顯·${slotLabel(slot)}</button>`;
             }).join('')}
           </div>
           <div class="skin-grid weapons">${gearPieces.map(gearCard).join('') || '<p class="muted catalog-empty">無</p>'}</div>
@@ -1982,8 +1982,8 @@ export function createApp(root, data, state) {
       const focus = getGearSkin(data, state.enhanceFocusId);
       if (!focus || !ARMOR_SLOTS.includes(focus.slot)) return;
       const hidden = toggleGearVisualHidden(state, focus.slot);
-      pushLog(state, hidden ? `隱藏「${slotLabel(focus.slot)}」疊圖` : `顯示「${slotLabel(focus.slot)}」疊圖`, 'info');
-      showPageNotice(hidden ? `${slotLabel(focus.slot)}疊圖已隱藏（數值仍在）` : `${slotLabel(focus.slot)}疊圖已顯示`, 'good', 'enhance');
+      pushLog(state, hidden ? `「${slotLabel(focus.slot)}」不顯示外觀` : `「${slotLabel(focus.slot)}」顯示外觀`, 'info');
+      showPageNotice(hidden ? `${slotLabel(focus.slot)}外觀已不顯示（數值仍在）` : `${slotLabel(focus.slot)}外觀已顯示`, 'good', 'enhance');
       stopAutoFight();
       battle = null;
       persist();
@@ -1996,7 +1996,7 @@ export function createApp(root, data, state) {
         const slot = btn.getAttribute('data-toggle-hide-slot');
         if (!slot || !ARMOR_SLOTS.includes(slot)) return;
         const hidden = toggleGearVisualHidden(state, slot);
-        pushLog(state, hidden ? `隱藏「${slotLabel(slot)}」疊圖` : `顯示「${slotLabel(slot)}」疊圖`, 'info');
+        pushLog(state, hidden ? `「${slotLabel(slot)}」不顯示外觀` : `「${slotLabel(slot)}」顯示外觀`, 'info');
         stopAutoFight();
         battle = null;
         persist();
