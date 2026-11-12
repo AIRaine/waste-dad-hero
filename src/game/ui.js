@@ -100,6 +100,7 @@ import {
   rarityClass,
   rarityMeta,
   rarityStars,
+  unequipSkin,
   unlockAllSkins,
   unlockHint,
 } from './skins.js';
@@ -718,16 +719,19 @@ export function createApp(root, data, state) {
             data-training="${training ? '1' : '0'}"
             data-training-def="${trainingDefPct}"
           >
-            <strong class="as-you">你攻速 ${formatAs(playerAs)}（${playerCd}ms）</strong>
-            ${
-              training
-                ? `<span class="as-mob">${trainCopy.asLine}</span>`
-                : `<span class="as-mob">怪攻速 ${formatAs(monsterAs)}（${monsterCd}ms）</span>`
-            }
+            <div class="as-col as-mob-col">
+              <span class="as-k">${training ? '訓練' : '怪'}</span>
+              <strong class="as-mob">${
+                training
+                  ? trainCopy.asLine
+                  : `${formatAs(monsterAs)}<span class="as-ms">（${monsterCd}ms）</span>`
+              }</strong>
+            </div>
+            <div class="as-col as-you-col">
+              <span class="as-k">你</span>
+              <strong class="as-you">${formatAs(playerAs)}<span class="as-ms">（${playerCd}ms）</span></strong>
+            </div>
             ${autoFighting ? `<span class="auto-live">${training ? '練功中' : '掛機中'}</span>` : ''}
-            <span class="as-hint">${
-              training ? '訓練：只算你的冷卻；傷害飄字、雙方 HP 不變' : '雙方各自冷卻，互不干擾'
-            }</span>
           </div>
 
           <div class="battle-log-wrap">
@@ -994,7 +998,7 @@ export function createApp(root, data, state) {
       { id: 'weapons', label: '武器' },
       { id: 'gear', label: '防具' },
       { id: 'frames', label: '外框' },
-      { id: 'fx', label: '特效' },
+      { id: 'fx', label: '發脾氣特效' },
       { id: 'monsters', label: '怪物' },
       { id: 'scenes', label: '場景' },
     ];
@@ -1195,21 +1199,28 @@ export function createApp(root, data, state) {
         </section>`;
     } else if (cat === 'fx') {
       paneHtml = `
-        <section class="catalog-pane" data-catalog-pane="fx" aria-label="特效">
-          <h2 class="catalog-pane-title">氣焰特效</h2>
-          <p class="muted">裝備後戰鬥頭像持續可見；提供攻擊％與攻速加成</p>
+        <section class="catalog-pane" data-catalog-pane="fx" aria-label="發脾氣特效">
+          <h2 class="catalog-pane-title">發脾氣特效</h2>
+          <p class="muted">裝備後戰鬥頭像持續可見；可卸下留空（無焰）· 攻％／攻速</p>
           <div class="skin-grid frames">${fxList
             .map((skin) => {
               const owned = skinOwned(skin);
               const eq = state.equipped.victoryFx === skin.id;
               const frame = getEquippedSkin(data, state, 'frame');
-              return `<button type="button" class="skin-card frame-card fx-card ${owned ? 'owned' : 'locked'} ${eq ? 'equipped' : ''}" data-equip="${skin.id}" ${owned ? '' : 'disabled'}>
+              return `<div class="skin-card frame-card fx-card ${owned ? 'owned' : 'locked'} ${eq ? 'equipped' : ''}">
                 ${ownershipBadge(owned, eq)}
-                <div class="card-left"><div class="frame-preview">${framedPortraitHtml(avatarSvg(frame?.palette), frame, skin, { compact: true })}</div>
-                <strong>${skin.name}</strong><span class="card-status">${owned ? (eq ? '裝備中' : '點擊裝備') : unlockHint(skin, data)}</span></div>
-                <div class="card-right">${formatAuraBonusLines(skin).map((l) => `<div class="stat-line bonus"><b>${l}</b></div>`).join('')}
-                <div class="stat-line unlock"><span>解鎖</span><b>${unlockHint(skin, data)}</b></div></div>
-              </button>`;
+                <button type="button" class="gear-card-main" data-equip="${skin.id}" ${owned ? '' : 'disabled'}>
+                  <div class="card-left"><div class="frame-preview">${framedPortraitHtml(avatarSvg(frame?.palette), frame, skin, { compact: true })}</div>
+                  <strong>${skin.name}</strong><span class="card-status">${owned ? (eq ? '裝備中 · 點擊卸下' : '點擊裝備') : unlockHint(skin, data)}</span></div>
+                  <div class="card-right">${formatAuraBonusLines(skin).map((l) => `<div class="stat-line bonus"><b>${l}</b></div>`).join('')}
+                  <div class="stat-line unlock"><span>解鎖</span><b>${unlockHint(skin, data)}</b></div></div>
+                </button>
+                ${
+                  eq
+                    ? `<button type="button" class="gear-unequip-btn" data-unequip-slot="victoryFx">卸下特效</button>`
+                    : ''
+                }
+              </div>`;
             })
             .join('') || '<p class="muted catalog-empty">無</p>'}</div>
         </section>`;
@@ -1328,6 +1339,23 @@ export function createApp(root, data, state) {
               `<button type="button" class="tab ${tab === t.id ? 'active' : ''}" data-tab="${t.id}" role="tab" aria-selected="${tab === t.id}" aria-label="${t.label}"><span class="tab-ico">${tabIconSvg(t.id, 22)}</span><span class="tab-label">${t.label}</span></button>`,
           ).join('')}
         </footer>
+        ${
+          !state.firstRunGuideSeen
+            ? `<div class="onboard-overlay" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
+                <div class="onboard-card">
+                  <h2 id="onboard-title">歡迎踏上英雄路</h2>
+                  <p class="onboard-lead">四步上手——站樁扛事的廢材老爸教學。</p>
+                  <ol class="onboard-steps">
+                    <li><strong>戰鬥</strong>：選場景與對手，點「打怪」掛機連攻；雙方各自冷卻。</li>
+                    <li><strong>強化</strong>：衝裝是主軸，無安定區；失敗可能降階／炸裝，輔助道具可護體。</li>
+                    <li><strong>穿戴</strong>：新手裝備只在背包；到強化或圖鑑「穿戴」，也可「卸下」留空槽。</li>
+                    <li><strong>場景</strong>：戰鬥頁上方選家庭場景；解鎖後往下一站人生推進。</li>
+                  </ol>
+                  <button type="button" class="btn primary wide" data-action="onboard-dismiss">知道了，開始</button>
+                </div>
+              </div>`
+            : ''
+        }
       </div>`;
     bind();
     restoreScroll(tab);
@@ -1338,6 +1366,12 @@ export function createApp(root, data, state) {
   }
 
   function bind() {
+    root.querySelector('[data-action="onboard-dismiss"]')?.addEventListener('click', () => {
+      state.firstRunGuideSeen = true;
+      persist();
+      render();
+    });
+
     // Admin: no always-visible checkbox (mis-tap risk). Long-press title to toggle; badge closes it.
     root.querySelector('[data-action="admin-off"]')?.addEventListener('click', () => applyAdmin(false));
 
@@ -1664,12 +1698,23 @@ export function createApp(root, data, state) {
         const skin = data.skins.catalog.find((s) => s.id === btn.getAttribute('data-equip'));
         if (!skin) return;
         const isGear = skin.slot === 'weapon' || ARMOR_SLOTS.includes(skin.slot);
-        // Gear: tap equipped piece again to fully unequip (empty slot).
-        if (isGear && state.equipped?.[skin.slot] === skin.id) {
-          const res = unequipGear(state, skin.slot);
-          if (!res.ok) {
-            showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
-            return;
+        const isTemperFx = skin.slot === 'victoryFx';
+        // Gear / 發脾氣特效: tap equipped again to fully unequip (empty slot).
+        if ((isGear || isTemperFx) && state.equipped?.[skin.slot] === skin.id) {
+          let ok = false;
+          if (isGear) {
+            const res = unequipGear(state, skin.slot);
+            ok = !!res.ok;
+            if (!ok) {
+              showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
+              return;
+            }
+          } else {
+            ok = unequipSkin(state, skin.slot);
+            if (!ok) {
+              showPageNotice('無法卸下', 'bad', 'collection');
+              return;
+            }
           }
           pushLog(state, `卸下「${skin.name}」`, 'info');
           stopAutoFight();
@@ -1683,7 +1728,7 @@ export function createApp(root, data, state) {
             state.enhanceFocusId = skin.id;
             stopAutoFight();
             battle = null;
-          } else if (skin.slot === 'frame') {
+          } else if (skin.slot === 'frame' || isTemperFx) {
             stopAutoFight();
             battle = null;
           }
@@ -1699,12 +1744,26 @@ export function createApp(root, data, state) {
         ev.stopPropagation();
         const slot = btn.getAttribute('data-unequip-slot');
         const skin = getEquippedSkin(data, state, slot);
-        const res = unequipGear(state, slot);
-        if (!res.ok) {
-          showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
+        let ok = false;
+        if (slot === 'victoryFx') {
+          ok = unequipSkin(state, slot);
+        } else {
+          const res = unequipGear(state, slot);
+          ok = !!res.ok;
+          if (!ok) {
+            showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
+            return;
+          }
+        }
+        if (!ok) {
+          showPageNotice('無法卸下', 'bad', 'collection');
           return;
         }
-        pushLog(state, skin ? `卸下「${skin.name}」` : `卸下${slotLabel(slot)}`, 'info');
+        pushLog(
+          state,
+          skin ? `卸下「${skin.name}」` : slot === 'victoryFx' ? '卸下發脾氣特效' : `卸下${slotLabel(slot)}`,
+          'info',
+        );
         stopAutoFight();
         battle = null;
         persist();
