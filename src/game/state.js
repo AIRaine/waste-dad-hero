@@ -62,8 +62,9 @@ export function createInitialState(data) {
     selectedSceneId: data.scenes.defaultId,
     selectedDifficultyId: data.difficulty.defaultId,
     selectedMonsterId: null,
-    /** Run→Boss→next scene: see docs/run-boss-progression.md */
-    run: { autoAdvance: true },
+    /** Farm meter → manual T challenge; auto-push off. */
+    run: { autoAdvance: false },
+    farm: { mode: 'farm', focusId: null, meters: {}, unlocked: {} },
     playerName: data.avatar?.defaultName || '廢材老爸',
     avatar: defaultAvatar(data),
     adminMode: false,
@@ -128,13 +129,24 @@ export function loadState(data) {
       },
       firstRunGuideSeen: !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen),
       run: {
-        autoAdvance: true,
+        autoAdvance: false,
         ...(parsed.run && typeof parsed.run === 'object' ? parsed.run : {}),
+      },
+      farm: {
+        mode: 'farm',
+        focusId: null,
+        meters: {},
+        unlocked: {},
+        ...(parsed.farm && typeof parsed.farm === 'object' ? parsed.farm : {}),
       },
       gearFilter: '',
       log: [],
     };
-    if (typeof merged.run.autoAdvance !== 'boolean') merged.run.autoAdvance = true;
+    // Farm-tier gate supersedes PR #13 forced auto-advance.
+    merged.run.autoAdvance = false;
+    if (merged.farm.mode !== 'farm' && merged.farm.mode !== 'challenge') merged.farm.mode = 'farm';
+    if (!merged.farm.meters || typeof merged.farm.meters !== 'object') merged.farm.meters = {};
+    if (!merged.farm.unlocked || typeof merged.farm.unlocked !== 'object') merged.farm.unlocked = {};
     migrateEquippedAura(merged);
     // Drop retired aura ids from owned list after remap
     merged.ownedSkins = merged.ownedSkins.filter((id) => data.skins.catalog.some((s) => s.id === id));
@@ -188,7 +200,8 @@ export function saveState(data, state) {
     selectedSceneId: state.selectedSceneId,
     selectedDifficultyId: state.selectedDifficultyId,
     selectedMonsterId: state.selectedMonsterId,
-    run: state.run || { autoAdvance: true },
+    run: state.run || { autoAdvance: false },
+    farm: state.farm || { mode: 'farm', focusId: null, meters: {}, unlocked: {} },
     playerName: state.playerName,
     avatar: state.avatar,
     firstRunGuideSeen: !!state.firstRunGuideSeen,

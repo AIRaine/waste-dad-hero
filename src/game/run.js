@@ -1,23 +1,30 @@
 /**
- * Run → Boss → next scene progression helpers.
- * Pure selection/state helpers — does not change combat math.
- * Spec: docs/run-boss-progression.md (agent store).
+ * Scene retreat / manual advance + victory hook into farm-tier gates.
+ * Spec: docs/farm-tier-gate-progression.md (supersedes auto-push in run-boss-progression.md).
  */
 
 import {
   getScene,
-  isMonsterFightable,
   isSceneUnlocked,
   monstersInScene,
   sceneUnlockHint,
 } from './scenes.js';
 import { onGachaSceneChange } from './gacha.js';
+import {
+  applyFarmVictory,
+  ensureFarmState,
+  makeFarmMinion,
+  resolveFocusChallenge,
+  returnToFarm,
+  syncFarmFocus,
+} from './farm.js';
 
 export function ensureRunState(state) {
   if (!state.run || typeof state.run !== 'object') {
-    state.run = { autoAdvance: true };
+    state.run = { autoAdvance: false };
   }
-  if (typeof state.run.autoAdvance !== 'boolean') state.run.autoAdvance = true;
+  // Farm-tier model: never force-push next T / next scene on victory.
+  state.run.autoAdvance = false;
   return state.run;
 }
 
@@ -39,20 +46,22 @@ export function getGateMonster(data, sceneId) {
 export function isGateMonster(data, monster) {
   if (!monster?.sceneId) return false;
   const gate = getGateMonster(data, monster.sceneId);
-  return !!gate && gate.id === monster.id;
+  const id = monster.farmOf || monster.id;
+  return !!gate && gate.id === id;
 }
 
 export function runProgress(data, state, sceneId = state.selectedSceneId) {
   const chain = getRunChain(data, sceneId);
-  const idx = chain.findIndex((m) => m.id === state.selectedMonsterId);
+  const focus = resolveFocusChallenge(data, state, sceneId);
   const gate = getGateMonster(data, sceneId);
+  const idx = focus ? chain.findIndex((m) => m.id === focus.id) : -1;
   return {
     chain,
     index: idx,
     total: chain.length,
-    current: idx >= 0 ? chain[idx] : null,
+    current: focus,
     gate,
-    atGate: !!gate && state.selectedMonsterId === gate.id,
+    atGate: !!gate && focus?.id === gate.id,
   };
 }
 
@@ -74,96 +83,54 @@ export function getPrevScene(data, sceneId) {
   return list[i - 1];
 }
 
-/** First fightable monster in a scene (training excluded — not in tiers). */
 export function firstFightableInScene(data, state, sceneId) {
-  return getRunChain(data, sceneId).find((m) => isMonsterFightable(data, state, m)) || null;
-}
-
-export function getNextMonsterInRun(data, state, monster) {
-  if (!monster?.sceneId) return null;
-  const chain = getRunChain(data, monster.sceneId);
-  const idx = chain.findIndex((m) => m.id === monster.id);
-  if (idx < 0) return null;
-  for (let i = idx + 1; i < chain.length; i++) {
-    if (isMonsterFightable(data, state, chain[i])) return chain[i];
-  }
-  return null;
+  const focus = resolveFocusChallenge(data, state, sceneId);
+  return focus ? makeFarmMinion(data, focus) : null;
 }
 
 /**
- * After a real (non-training) victory: advance monster and/or scene.
- * @returns {{ kind: string, message: string, fromSceneId?: string, toSceneId?: string, monster?: object, nextScene?: object, blockedHint?: string }}
+ * Victory progression: farm meter / challenge clear only — no forced next T or scene.
  */
 export function applyVictoryProgression(data, state, monster, { training = false } = {}) {
   ensureRunState(state);
+  ensureFarmState(state);
   if (training || !monster || monster.id === 'training_dummy') {
     return { kind: 'skip', message: '' };
   }
-  if (!state.run.autoAdvance) {
-    return { kind: 'disabled', message: '自動推進已關閉' };
-  }
 
-  const fromSceneId = monster.sceneId;
-  const nextMon = getNextMonsterInRun(data, state, monster);
+  const result = applyFarmVictory(data, state, monster);
 
-  if (nextMon) {
-    state.selectedMonsterId = nextMon.id;
-    const gate = getGateMonster(data, fromSceneId);
-    const bossSoon = gate && nextMon.id === gate.id;
-    return {
-      kind: 'next_monster',
-      message: bossSoon
-        ? `本關進度：Boss「${nextMon.name}」登場`
-        : `本關進度：下一隻「${nextMon.name}」`,
-      monster: nextMon,
-      fromSceneId,
-    };
-  }
-
-  // End of run (typically gate boss just cleared).
-  if (isGateMonster(data, monster) || !getNextMonsterInRun(data, state, monster)) {
-    const nextScene = getNextScene(data, fromSceneId);
+  if (result.kind === 'scene_gate_clear') {
+    const nextScene = getNextScene(data, monster.sceneId);
     if (!nextScene) {
       return {
-        kind: 'campaign_clear',
-        message: `人生線通關：「${getScene(data, fromSceneId)?.name || fromSceneId}」已是最終站`,
-        fromSceneId,
-        monster,
+        ...result,
+        message: `${result.message}（已是最終站）`,
       };
     }
-    if (isSceneUnlocked(data, state, nextScene.id)) {
-      state.selectedSceneId = nextScene.id;
-      onGachaSceneChange(data, state, nextScene.id);
-      const first = firstFightableInScene(data, state, nextScene.id);
-      if (first) state.selectedMonsterId = first.id;
+    if (!isSceneUnlocked(data, state, nextScene.id)) {
       return {
-        kind: 'next_scene',
-        message: `場景通關！前往「${nextScene.name}」`,
-        fromSceneId,
-        toSceneId: nextScene.id,
+        ...result,
+        kind: 'scene_blocked',
+        message: `通關閘已破，但「${nextScene.name}」尚未解鎖`,
+        blockedHint: sceneUnlockHint(data, nextScene),
         nextScene,
-        monster: first,
       };
     }
     return {
-      kind: 'scene_blocked',
-      message: `Boss 已破，但下一站「${nextScene.name}」尚未解鎖`,
-      blockedHint: sceneUnlockHint(data, nextScene),
-      fromSceneId,
+      ...result,
+      message: `${result.message}可點「前往下一場景」。`,
       nextScene,
-      monster,
+      canAdvanceScene: true,
     };
   }
 
-  return { kind: 'stay', message: '可再戰刷素材', fromSceneId, monster };
+  return result;
 }
 
-/**
- * Retreat to previous unlocked scene for farming.
- * @returns {{ ok: boolean, message: string, scene?: object, monster?: object }}
- */
 export function retreatToPreviousScene(data, state) {
   ensureRunState(state);
+  ensureFarmState(state);
   const prev = getPrevScene(data, state.selectedSceneId);
   if (!prev) {
     return { ok: false, message: '已在第一場景，無處可退' };
@@ -173,13 +140,12 @@ export function retreatToPreviousScene(data, state) {
   }
   state.selectedSceneId = prev.id;
   onGachaSceneChange(data, state, prev.id);
-  const mon = firstFightableInScene(data, state, prev.id);
-  if (mon) state.selectedMonsterId = mon.id;
+  const farm = returnToFarm(data, state);
   return {
     ok: true,
-    message: `撤回「${prev.name}」練功／刷素材`,
+    message: `撤回「${prev.name}」無限農區`,
     scene: prev,
-    monster: mon,
+    monster: farm.monster,
   };
 }
 
@@ -193,7 +159,6 @@ export function canManualAdvanceScene(data, state) {
   return !!next && isSceneUnlocked(data, state, next.id);
 }
 
-/** Manual jump to next unlocked scene (same as auto next_scene without requiring gate). */
 export function advanceToNextScene(data, state) {
   const next = getNextScene(data, state.selectedSceneId);
   if (!next || !isSceneUnlocked(data, state, next.id)) {
@@ -202,11 +167,14 @@ export function advanceToNextScene(data, state) {
   const from = state.selectedSceneId;
   state.selectedSceneId = next.id;
   onGachaSceneChange(data, state, next.id);
+  ensureFarmState(state);
+  state.farm.mode = 'farm';
+  syncFarmFocus(data, state, next.id);
   const mon = firstFightableInScene(data, state, next.id);
   if (mon) state.selectedMonsterId = mon.id;
   return {
     ok: true,
-    message: `前往「${next.name}」`,
+    message: `前往「${next.name}」農區`,
     fromSceneId: from,
     scene: next,
     monster: mon,

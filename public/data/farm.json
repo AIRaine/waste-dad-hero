@@ -1,0 +1,10 @@
+{
+  "note": "農區小怪為挑戰目標的弱化動態體；進度滿才可手動挑戰。見 docs/farm-tier-gate-progression.md。",
+  "killsToUnlock": 3,
+  "statMul": { "hp": 0.82, "atk": 0.85 },
+  "defMul": 0.9,
+  "counterMul": 0.9,
+  "rewardMul": { "gold": 0.7, "material": 0.75, "exp": 0.7 },
+  "labelPrefix": "農區·",
+  "farmIdPrefix": "farm__"
+}

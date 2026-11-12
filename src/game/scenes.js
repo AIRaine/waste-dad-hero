@@ -172,15 +172,21 @@ export function ensureSceneSelection(data, state) {
     state.selectedDifficultyId = open?.id || data.difficulty.defaultId;
   }
 
+  // Farm synthetic ids (farm__*) are valid selections — do not snap to catalog pool[0].
+  const sel = state.selectedMonsterId;
+  if (sel && String(sel).startsWith('farm__')) return;
+
   const pool = monstersInScene(data, state.selectedSceneId).filter((m) =>
     isMonsterFightable(data, state, m),
   );
   if (!pool.length) {
-    state.selectedMonsterId = null;
+    // Leave null; farm layer may assign farm__ focus.
+    if (!sel) state.selectedMonsterId = null;
     return;
   }
-  if (!pool.some((m) => m.id === state.selectedMonsterId)) {
-    state.selectedMonsterId = pool[0].id;
+  if (!pool.some((m) => m.id === sel)) {
+    // Prefer keeping farm mode assignment from farm.js; only snap if empty.
+    if (!sel) state.selectedMonsterId = pool[0].id;
   }
 }
 
