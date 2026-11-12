@@ -41,7 +41,7 @@ export function createInitialState(data) {
       boots: null,
       shield: null,
       frame: defaults.find((id) => id.startsWith('frame_')) || 'frame_default',
-      // 發脾氣特效：與新手裝備相同，預設空槽（可稍後在圖鑑穿戴）。
+      // 發脾氣特效：與新手裝備相同，預設空槽（可稍後在背包圖鑑穿戴）。
       victoryFx: null,
     },
     boosts: { ...DEFAULT_BOOSTS },

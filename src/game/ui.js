@@ -779,10 +779,10 @@ export function createApp(root, data, state) {
             ${
               needsEquipHint
                 ? `<div class="equip-nudge" role="status">
-                    <p>還沒穿裝？新手裝備在「強化」或「圖鑑」穿戴（沒有獨立背包）。</p>
+                    <p>還沒穿裝？新手裝備在「強化」或「背包圖鑑」穿戴（沒有獨立背包）。</p>
                     <div class="equip-nudge-actions">
                       <button type="button" class="btn" data-action="equip-hint-enhance">去強化穿戴</button>
-                      <button type="button" class="btn" data-action="equip-hint-catalog">去圖鑑</button>
+                      <button type="button" class="btn" data-action="equip-hint-catalog">去背包圖鑑</button>
                       <button type="button" class="btn ghost" data-action="equip-hint-dismiss">知道了</button>
                     </div>
                   </div>`
@@ -1532,7 +1532,7 @@ export function createApp(root, data, state) {
     return `
       <section class="collection page-with-cta catalog-subpages" data-catalog-current="${cat}">
         <div class="page-scroll">
-          <div class="catalog-sticky ${cat === 'avatar' ? 'has-avatar-freeze' : ''}" role="navigation" aria-label="圖鑑分類">
+          <div class="catalog-sticky ${cat === 'avatar' ? 'has-avatar-freeze' : ''}" role="navigation" aria-label="背包圖鑑分類">
             <nav class="catalog-jump catalog-jump-7" role="tablist">
               ${CATALOG_CATS.map(
                 (c) =>
@@ -1621,7 +1621,7 @@ export function createApp(root, data, state) {
                   <ol class="onboard-steps">
                     <li><strong>戰鬥</strong>：選場景與對手，點「打怪」掛機連攻；雙方各自冷卻。</li>
                     <li><strong>強化</strong>：衝裝是主軸，無安定區；失敗可能降階／炸裝，輔助道具可護體。</li>
-                    <li><strong>穿戴</strong>：沒有獨立背包——到<strong>強化</strong>或<strong>圖鑑</strong>穿上新手裝備；發脾氣特效預設空槽，可之後再裝。</li>
+                    <li><strong>穿戴</strong>：沒有獨立背包——到<strong>強化</strong>或<strong>背包圖鑑</strong>穿上新手裝備；發脾氣特效預設空槽，可之後再裝。</li>
                     <li><strong>場景</strong>：戰鬥頁上方選家庭場景；解鎖後往下一站人生推進。</li>
                   </ol>
                   <button type="button" class="btn primary wide" data-action="onboard-dismiss">知道了，開始</button>
