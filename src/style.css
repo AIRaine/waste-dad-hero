@@ -836,7 +836,72 @@ button.admin-badge:active { transform: scale(0.98); }
   border-left: 3px solid var(--rarity, transparent);
 }
 .gear-row.selected { border-color: rgba(212,162,76,0.55); background: rgba(212,162,76,0.1); }
+.gear-row.is-equipped { border-color: rgba(125,206,160,0.4); }
 .gear-row span { display: block; font-size: 0.72rem; color: var(--muted); }
+.enhance-wear-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.enhance-wear-row:has(.enhance-hide-btn) {
+  grid-template-columns: 1fr 1fr;
+}
+.enhance-hide-btn.on {
+  border-color: rgba(125,158,220,0.55);
+  background: rgba(125,158,220,0.14);
+  color: #c5d4f0;
+}
+.gear-hide-chips { margin-top: 2px; margin-bottom: 8px; }
+.chip.hide-chip.active {
+  border-color: rgba(125,158,220,0.6);
+  background: rgba(125,158,220,0.16);
+  color: #c5d4f0;
+}
+.skin-card.gear-card {
+  flex-direction: column;
+  gap: 8px;
+  padding: 28px 10px 10px;
+  min-height: 0;
+}
+.skin-card.gear-card .gear-card-main {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.skin-card.gear-card.locked .gear-card-main { cursor: not-allowed; }
+.skin-card.gear-card.visual-hidden {
+  border-color: rgba(125,158,220,0.45);
+  box-shadow: inset 0 0 0 1px rgba(125,158,220,0.28);
+}
+.gear-hide-toggle {
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.gear-hide-toggle.on {
+  border-color: rgba(125,158,220,0.55);
+  background: rgba(125,158,220,0.14);
+  color: #c5d4f0;
+}
+@media (max-width: 380px) {
+  .enhance-wear-row:has(.enhance-hide-btn) {
+    grid-template-columns: 1fr;
+  }
+}
 .gear-row.rarity-1, .skin-card.rarity-1 { --rarity: #d8dde2; }
 .gear-row.rarity-2, .skin-card.rarity-2 { --rarity: #6fbf7a; }
 .gear-row.rarity-3, .skin-card.rarity-3 { --rarity: #7d9edc; }

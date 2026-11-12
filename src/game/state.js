@@ -65,6 +65,14 @@ export function createInitialState(data) {
     catalogGearSlot: '全部',
     catalogOwnedOnly: false,
     catalogJump: 'avatar',
+    /** Per armor slot: equipped stats stay on, avatar overlay hidden. */
+    hiddenGearVisual: {
+      helmet: false,
+      armor: false,
+      gloves: false,
+      boots: false,
+      shield: false,
+    },
     log: [],
   };
 }
@@ -105,6 +113,10 @@ export function loadState(data) {
       ownedSkins: Array.from(new Set([...(base.ownedSkins || []), ...(parsed.ownedSkins || [])])),
       playerName: parsed.playerName || base.playerName,
       avatar: { ...base.avatar, ...(parsed.avatar || {}) },
+      hiddenGearVisual: {
+        ...base.hiddenGearVisual,
+        ...(parsed.hiddenGearVisual || {}),
+      },
       gearFilter: '',
       log: [],
     };
@@ -136,6 +148,13 @@ export function saveState(data, state) {
     difficultyClears: state.difficultyClears || {},
     ownedSkins: state.ownedSkins,
     equipped: state.equipped,
+    hiddenGearVisual: state.hiddenGearVisual || {
+      helmet: false,
+      armor: false,
+      gloves: false,
+      boots: false,
+      shield: false,
+    },
     boosts: state.boosts,
     inventory: state.inventory,
     boostArmed: state.boostArmed,
