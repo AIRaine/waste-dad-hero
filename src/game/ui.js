@@ -730,17 +730,12 @@ export function createApp(root, data, state) {
     const gachaEffectLines = gachaBonuses.card
       ? formatGachaEffectLines(gachaBonuses.card.effects || {})
       : [];
-    // Dense under-portrait chips (mobile): core + one packed line — no frame/aura chip wall.
-    const playerChips = [
-      { kind: 'atk', label: `攻${displayAtk}` },
-      { kind: 'def', label: `防${def}` },
-    ];
-    const packed = [];
-    if (mit > 0) packed.push(`減${Math.round(mit * 100)}%`);
-    if (block > 0) packed.push(`格${Math.round(block * 100)}%`);
-    if (counter > 0) packed.push(`反${Math.round(counter * 100)}%`);
-    if (critTotal > 0) packed.push(`爆${Math.round(critTotal * 100)}%`);
-    if (packed.length) playerChips.push({ kind: 'mit', label: packed.join('·') });
+    // Secondary chips only — name / 攻 / 防 live on the fighter card frame (not pills).
+    const playerChips = [];
+    if (mit > 0) playerChips.push({ kind: 'mit', label: `減${Math.round(mit * 100)}%` });
+    if (block > 0) playerChips.push({ kind: 'block', label: `格${Math.round(block * 100)}%` });
+    if (counter > 0) playerChips.push({ kind: 'counter', label: `反${Math.round(counter * 100)}%` });
+    if (critTotal > 0) playerChips.push({ kind: 'crit', label: `爆${Math.round(critTotal * 100)}%` });
     if (gachaBonuses.card) {
       playerChips.push({
         kind: 'gacha',
@@ -754,18 +749,29 @@ export function createApp(root, data, state) {
     const pendingLines = gachaPending
       ? formatGachaEffectLines(gachaPending.card.effects || {})
       : [];
+    // Monster pills: no name / 攻 / 角色重複 — role+ATK on card; secondary only here.
     const monsterChips = training
       ? [
-          { kind: 'role-training', label: '訓練' },
           { kind: 'sturdy', label: trainCopy.sturdyChip },
           { kind: 'block', label: '不反擊' },
         ]
       : [
-          { kind: m.role === 'boss' ? 'role-boss' : m.role === 'elite' ? 'role-elite' : 'role-trash', label: roleLabel(m.role) },
-          { kind: 'atk', label: `攻${m.atk}` },
-          ...(m.defChance > 0 ? [{ kind: 'block', label: `格擋${Math.round((m.defChance || 0) * 100)}%` }] : []),
-          ...(m.counterChance > 0 ? [{ kind: 'counter', label: `反擊${Math.round((m.counterChance || 0) * 100)}%` }] : []),
+          ...(m.defChance > 0
+            ? [{ kind: 'block', label: `格${Math.round((m.defChance || 0) * 100)}%` }]
+            : []),
+          ...(m.counterChance > 0
+            ? [{ kind: 'counter', label: `反${Math.round((m.counterChance || 0) * 100)}%` }]
+            : []),
         ];
+    const monsterRoleKind =
+      training
+        ? 'role-training'
+        : m.role === 'boss'
+          ? 'role-boss'
+          : m.role === 'elite'
+            ? 'role-elite'
+            : 'role-trash';
+    const monsterRoleLabel = training ? '訓練' : roleLabel(m.role);
     const recentLog = (state.log || []).slice(0, 4);
     const run = training ? null : runProgress(data, state, state.selectedSceneId);
     const meter = training ? null : farmMeterView(data, state, state.selectedSceneId);
@@ -903,33 +909,54 @@ export function createApp(root, data, state) {
           ${training ? `<div class="training-banner" role="status">${trainCopy.banner}</div>` : ''}
 
           <div class="arena ${victoryFx ? 'victory-fx' : ''} ${training ? 'is-training' : ''}" style="--fx1:${fx?.palette?.primary || '#ffe08a'};--fx2:${fx?.palette?.accent || '#ffb347'};--scene1:${scene.bg?.[0] || '#1a3340'};--scene2:${scene.bg?.[1] || '#122028'}">
-            <div class="fighter monster ${battle.monsterState}" data-monster-hp="${battle.monsterHp}" data-monster-maxhp="${battle.monsterMaxHp}" data-training="${training ? '1' : '0'}">
-              <div class="hp-readout" aria-label="${training ? '訓練假人' : '怪物生命'}">${
-                training ? '訓練 ∞' : `${battle.monsterHp}/${battle.monsterMaxHp}`
-              }</div>
-              <div class="hpbar ${training ? 'is-training' : ''}" data-hp-pct="${training ? '100' : mHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${training ? 100 : mHpPct}%"></span></div>
-              <div class="portrait-stage">
-                <div class="portrait-box monster-portrait" style="--mob1:${m.color || '#6a7888'};--mob2:#243040">
-                  ${monsterSvg(m.shape, m.color, { scale: m.scale || 1, role: training ? null : m.role })}
+            <div class="fighter fighter-card monster ${monsterRoleKind} ${battle.monsterState}" data-monster-hp="${battle.monsterHp}" data-monster-maxhp="${battle.monsterMaxHp}" data-training="${training ? '1' : '0'}">
+              <div class="fighter-card-face">
+                <div class="card-hp">
+                  <div class="hp-readout" aria-label="${training ? '訓練假人' : '怪物生命'}">${
+                    training ? '訓練 ∞' : `${battle.monsterHp}/${battle.monsterMaxHp}`
+                  }</div>
+                  <div class="hpbar ${training ? 'is-training' : ''}" data-hp-pct="${training ? '100' : mHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${training ? 100 : mHpPct}%"></span></div>
+                </div>
+                <div class="card-title-row">
+                  <div class="name">${m.name}</div>
+                  <span class="role-badge kind-${monsterRoleKind}">${monsterRoleLabel}</span>
+                </div>
+                <div class="portrait-stage">
+                  <div class="portrait-box monster-portrait" style="--mob1:${m.color || '#6a7888'};--mob2:#243040">
+                    ${monsterSvg(m.shape, m.color, { scale: m.scale || 1, role: training ? null : m.role })}
+                  </div>
+                </div>
+                <div class="card-core-stats" aria-label="怪物攻擊">
+                  <span class="card-atk">攻 ${training ? '—' : m.atk}</span>
                 </div>
               </div>
               <div class="fighter-meta">
-                <div class="name">${m.name}</div>
                 ${renderStatPills(monsterChips, { className: 'monster-stat-pills' })}
               </div>
               <!-- hit floats live in #hit-float-layer (persistent; not remounted here) -->
             </div>
             <div class="vs" aria-hidden="true">${training ? '練' : 'VS'}</div>
-            <div class="fighter player ${battle.playerState}${playerIsHit(battle) ? ' is-hit' : ''}" data-player-hp="${battle.playerHp}">
-              <div class="hp-readout" aria-label="玩家生命">${battle.playerHp}/${battle.playerMaxHp}</div>
-              <div class="hpbar player" data-hp-pct="${pHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${pHpPct}%"></span></div>
-              <div class="portrait-stage">
-                ${framedPortraitHtml(avatarSvg(frame?.palette), frame, fx, { burst: victoryFx })}
-                <div class="weapon-badge ${affixClass(weapon)}">${slotIcon(weapon, wLevel)}</div>
-                <div class="shield-badge ${affixClass(shield)}">${slotIcon(shield, getGearLevel(state, shield?.id))}</div>
+            <div class="fighter fighter-card player ${battle.playerState}${playerIsHit(battle) ? ' is-hit' : ''}" data-player-hp="${battle.playerHp}">
+              <div class="fighter-card-face">
+                <div class="card-hp">
+                  <div class="hp-readout" aria-label="玩家生命">${battle.playerHp}/${battle.playerMaxHp}</div>
+                  <div class="hpbar player" data-hp-pct="${pHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${pHpPct}%"></span></div>
+                </div>
+                <div class="card-title-row">
+                  <div class="name">${playerDisplayName(state)}</div>
+                  <span class="weapon-chip">${weapon ? `${weapon.name}+${wLevel}` : '徒手'}</span>
+                </div>
+                <div class="portrait-stage">
+                  ${framedPortraitHtml(avatarSvg(frame?.palette), frame, fx, { burst: victoryFx })}
+                  <div class="weapon-badge ${affixClass(weapon)}">${slotIcon(weapon, wLevel)}</div>
+                  <div class="shield-badge ${affixClass(shield)}">${slotIcon(shield, getGearLevel(state, shield?.id))}</div>
+                </div>
+                <div class="card-core-stats" aria-label="玩家攻防">
+                  <span class="card-def">防 ${def}</span>
+                  <span class="card-atk">攻 ${displayAtk}</span>
+                </div>
               </div>
               <div class="fighter-meta">
-                <div class="name">${playerDisplayName(state)} · ${weapon ? `${weapon.name}+${wLevel}` : '徒手'}</div>
                 ${renderStatPills(playerChips, { className: 'player-stat-pills' })}
               </div>
             </div>

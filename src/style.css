@@ -514,10 +514,10 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 
 .arena {
-  --portrait-w: 84px; --portrait-h: 96px;
+  --portrait-w: 92px; --portrait-h: 104px;
   position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
-  gap: 6px 8px; align-items: start; justify-items: center;
-  padding: 14px 10px 12px; border-radius: 16px;
+  gap: 8px 6px; align-items: start; justify-items: stretch;
+  padding: 12px 8px 10px; border-radius: 16px;
   background:
     radial-gradient(ellipse at 50% 120%, rgba(60,184,160,0.18), transparent 55%),
     linear-gradient(180deg, var(--scene1, #1a3340) 0%, var(--scene2, #122028) 100%);
@@ -529,16 +529,98 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .arena.victory-fx { overflow: visible; }
 .fighter {
-  position: relative; width: 100%; max-width: 168px; text-align: center; min-width: 0;
-  display: flex; flex-direction: column; align-items: center; overflow: visible;
+  position: relative; width: 100%; max-width: 178px; text-align: center; min-width: 0;
+  display: flex; flex-direction: column; align-items: stretch; overflow: visible;
+  justify-self: center;
 }
+/* Pokémon-like combat card face */
+.fighter-card-face {
+  position: relative;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 8px 7px;
+  border-radius: 12px;
+  background:
+    linear-gradient(165deg, rgba(36,48,58,0.95) 0%, rgba(14,20,26,0.98) 100%);
+  border: 2px solid rgba(180,200,210,0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.06),
+    inset 0 0 0 3px rgba(8,12,16,0.55),
+    0 4px 0 rgba(0,0,0,0.28);
+}
+.fighter-card.monster .fighter-card-face {
+  border-color: rgba(125,206,160,0.38);
+}
+.fighter-card.monster.role-elite .fighter-card-face,
+.fighter-card.role-elite .fighter-card-face {
+  border-color: rgba(168,140,220,0.5);
+}
+.fighter-card.monster.role-boss .fighter-card-face,
+.fighter-card.role-boss .fighter-card-face {
+  border-color: rgba(212,101,92,0.55);
+}
+.fighter-card.monster.role-training .fighter-card-face,
+.fighter-card.role-training .fighter-card-face {
+  border-color: rgba(120,160,180,0.4);
+}
+.fighter-card.player .fighter-card-face {
+  border-color: rgba(224,179,90,0.48);
+}
+.card-hp { width: 100%; }
+.card-title-row {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;
+  min-width: 0; width: 100%;
+}
+.card-title-row .name {
+  flex: 1 1 auto; min-width: 0; margin: 0;
+  font-size: 0.78rem; font-weight: 900; line-height: 1.2;
+  text-align: left; color: #f2f6f8;
+  overflow-wrap: anywhere;
+}
+.role-badge, .weapon-chip {
+  flex: 0 0 auto; max-width: 46%;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 18px; padding: 0 5px; border-radius: 5px;
+  font-size: 0.55rem; font-weight: 800; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.weapon-chip {
+  color: #f0d9a0; background: rgba(224,179,90,0.14);
+  border: 1px solid rgba(224,179,90,0.32);
+}
+.role-badge.kind-role-trash {
+  color: #b8efc9; background: rgba(125,206,160,0.14);
+  border: 1px solid rgba(125,206,160,0.3);
+}
+.role-badge.kind-role-elite {
+  color: #e0d0ff; background: rgba(168,140,220,0.16);
+  border: 1px solid rgba(168,140,220,0.4);
+}
+.role-badge.kind-role-boss {
+  color: #ffc4c0; background: rgba(196,92,92,0.18);
+  border: 1px solid rgba(196,92,92,0.4);
+}
+.role-badge.kind-role-training {
+  color: #c5d4e0; background: rgba(120,160,180,0.14);
+  border: 1px solid rgba(120,160,180,0.32);
+}
+.card-core-stats {
+  display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;
+  width: 100%; min-height: 18px; margin-top: 2px;
+}
+.fighter-card.player .card-core-stats { justify-content: space-between; }
+.card-atk, .card-def {
+  font-family: var(--pixel); font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.02em; line-height: 1;
+}
+.card-atk { color: #f0d9a0; text-align: right; margin-left: auto; }
+.card-def { color: #c5d4f0; text-align: left; margin-left: 0; }
 .hp-readout {
-  font-size: 0.72rem; font-weight: 800; color: #d5e6ea; margin-bottom: 4px;
-  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+  font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 3px;
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: left;
 }
 .hpbar {
-  width: 100%; max-width: 120px; height: 10px; border-radius: 999px;
-  background: rgba(0,0,0,0.45); overflow: hidden; margin-bottom: 8px;
+  width: 100%; height: 8px; border-radius: 4px;
+  background: rgba(0,0,0,0.5); overflow: hidden; margin-bottom: 0;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 .hpbar-fill {
@@ -549,7 +631,7 @@ button.admin-badge:active { transform: scale(0.98); }
 .hpbar.player .hpbar-fill { background: linear-gradient(90deg, #e0b35a, #d4a24c); }
 .portrait-stage {
   position: relative; width: var(--portrait-w); height: var(--portrait-h);
-  overflow: visible;
+  overflow: visible; margin: 2px auto 0;
 }
 .portrait-with-aura {
   position: relative; width: 100%; height: 100%;
@@ -801,17 +883,18 @@ button.admin-badge:active { transform: scale(0.98); }
 .weapon-badge { right: -10px; bottom: -4px; }
 .shield-badge { left: -10px; bottom: -4px; }
 .fighter-meta {
-  width: 100%; margin-top: 8px;
+  width: 100%; margin-top: 6px;
   text-align: left;
   display: flex; flex-direction: column; align-items: flex-start;
+  min-height: 0;
 }
-.fighter .name { font-size: 0.82rem; font-weight: 800; margin-bottom: 6px; text-align: left; width: 100%; }
+.fighter .name { font-size: 0.78rem; font-weight: 900; margin-bottom: 0; text-align: left; width: auto; }
 .vs {
   font-family: var(--pixel); font-size: 0.55rem; color: var(--accent);
-  align-self: start; margin-top: calc(16px + (var(--portrait-h) / 2) - 0.55em); opacity: 0.85;
+  align-self: center; margin-top: 72px; opacity: 0.85;
 }
 .stat-pills {
-  display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-start;
+  display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start;
   width: 100%; /* no nested scroll — badges must fully wrap */
 }
 .monster-stat-pills,
@@ -820,16 +903,23 @@ button.admin-badge:active { transform: scale(0.98); }
   max-width: 100%;
   justify-content: flex-start;
 }
+.monster-stat-pills .stat-pill,
+.player-stat-pills .stat-pill {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.25);
+}
 .player-stat-pills .stat-pill,
 .monster-stat-pills .stat-pill {
   min-height: 18px; padding: 0 6px; font-size: 0.58rem; border-radius: 6px;
 }
 @media (max-width: 430px) {
+  .arena { --portrait-w: 84px; --portrait-h: 96px; padding: 10px 6px 8px; gap: 6px 4px; }
+  .fighter { max-width: 168px; }
+  .fighter-card-face { padding: 7px 6px 6px; border-radius: 10px; }
+  .card-title-row .name { font-size: 0.72rem; }
   .monster-stat-pills,
-  .player-stat-pills { gap: 4px; }
+  .player-stat-pills { gap: 3px; }
   .player-stat-pills .stat-pill,
-  .monster-stat-pills .stat-pill { min-height: 17px; font-size: 0.55rem; padding: 0 5px; }
-  .fighter-meta .name { font-size: 0.78rem; }
+  .monster-stat-pills .stat-pill { min-height: 16px; font-size: 0.54rem; padding: 0 5px; }
 }
 .equip-nudge {
   margin: 0 0 8px; padding: 8px 10px; border-radius: 10px;
@@ -974,6 +1064,15 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .kind-sturdy {
   background: rgba(166, 124, 58, 0.18); color: #f0d9a0; border-color: rgba(166, 124, 58, 0.4);
+}
+.kind-block {
+  background: rgba(78, 196, 239, 0.14); color: #9edcf5; border-color: rgba(78, 196, 239, 0.35);
+}
+.kind-counter {
+  background: rgba(196, 74, 232, 0.14); color: #e0b0f5; border-color: rgba(196, 74, 232, 0.35);
+}
+.kind-gacha {
+  background: rgba(60, 184, 160, 0.14); color: #9be0d4; border-color: rgba(60, 184, 160, 0.35);
 }
 .training-banner {
   margin: 0; padding: 8px 10px; border-radius: 10px; text-align: center;
