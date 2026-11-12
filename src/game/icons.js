@@ -175,5 +175,5 @@ export const TAB_META = [
   { id: 'battle', label: '戰鬥' },
   { id: 'enhance', label: '強化' },
   { id: 'shop', label: '商店' },
-  { id: 'collection', label: '圖鑑' },
+  { id: 'collection', label: '背包圖鑑' },
 ];
