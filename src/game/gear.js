@@ -18,15 +18,19 @@ export function gearSlotDefs(data) {
 export function ensureGearState(data, state) {
   if (!state.gearLevels) state.gearLevels = {};
   if (!state.equipped) state.equipped = {};
+  if (!Array.isArray(state.ownedSkins)) state.ownedSkins = [];
   for (const slot of ENHANCEABLE_SLOTS) {
-    if (!state.equipped[slot]) {
-      const def = data.skins.catalog.find(
-        (s) => s.slot === slot && s.unlock?.type === 'default',
-      );
-      if (def) {
-        state.equipped[slot] = def.id;
-        if (!state.ownedSkins.includes(def.id)) state.ownedSkins.push(def.id);
-      }
+    // Keep empty slots empty — never auto-equip starter gear.
+    if (!(slot in state.equipped)) state.equipped[slot] = null;
+    const def = data.skins.catalog.find((s) => s.slot === slot && s.unlock?.type === 'default');
+    if (def && !state.ownedSkins.includes(def.id)) state.ownedSkins.push(def.id);
+    // Drop invalid equipped ids (retired skins) without forcing a replacement.
+    const eqId = state.equipped[slot];
+    if (eqId && !data.skins.catalog.some((s) => s.id === eqId && s.slot === slot)) {
+      state.equipped[slot] = null;
+    }
+    if (eqId && !state.ownedSkins.includes(eqId)) {
+      state.equipped[slot] = null;
     }
   }
   const owned = ownedEnhanceableSkins(data, state);
@@ -37,6 +41,16 @@ export function ensureGearState(data, state) {
   if (!state.enhanceFocusId || !state.ownedSkins.includes(state.enhanceFocusId)) {
     state.enhanceFocusId = eq || owned[0]?.id || 'blade_default';
   }
+}
+
+/** Clear an enhanceable gear slot (weapon / armor). Frame & FX stay as cosmetics. */
+export function unequipGear(state, slot) {
+  if (!ENHANCEABLE_SLOTS.includes(slot)) return { ok: false, reason: '無法卸下' };
+  if (!state.equipped) state.equipped = {};
+  if (!state.equipped[slot]) return { ok: false, reason: '此部位未穿戴' };
+  state.equipped[slot] = null;
+  if (slot === 'weapon') state.weaponLevel = 0;
+  return { ok: true };
 }
 
 export function ownedEnhanceableSkins(data, state) {

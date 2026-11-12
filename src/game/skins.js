@@ -42,6 +42,16 @@ export function equipSkin(state, skin) {
   return true;
 }
 
+/** Unequip enhanceable gear slots to empty. Cosmetics (frame / victoryFx) stay put. */
+export function unequipSkin(state, slot) {
+  const GEAR_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'shield'];
+  if (!GEAR_SLOTS.includes(slot)) return false;
+  if (!state.equipped) state.equipped = {};
+  if (!state.equipped[slot]) return false;
+  state.equipped[slot] = null;
+  return true;
+}
+
 export function getEquippedSkin(data, state, slot) {
   const id = state.equipped[slot];
   return data.skins.catalog.find((s) => s.id === id) || null;

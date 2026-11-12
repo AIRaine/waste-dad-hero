@@ -13,6 +13,10 @@ export function createInitialState(data) {
   const defaultWeapon =
     defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'weapon') ||
     'blade_default';
+  const starterGearIds = defaults.filter((id) => {
+    const slot = data.skins.catalog.find((x) => x.id === id)?.slot;
+    return slot === 'weapon' || ['helmet', 'armor', 'gloves', 'boots', 'shield'].includes(slot);
+  });
 
   return {
     gold: data.meta.startingGold,
@@ -21,7 +25,8 @@ export function createInitialState(data) {
     kills: 0,
     weaponLevel: 0,
     highestEnhance: 0,
-    gearLevels: { [defaultWeapon]: 0 },
+    // Starter gear is owned/inventory only — slots stay empty until the player equips.
+    gearLevels: Object.fromEntries(starterGearIds.map((id) => [id, 0])),
     gearAffixes: {},
     enhanceFocusId: defaultWeapon,
     defeated: {},
@@ -29,12 +34,12 @@ export function createInitialState(data) {
     difficultyClears: {},
     ownedSkins: [...defaults],
     equipped: {
-      weapon: defaultWeapon,
-      helmet: defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'helmet') || 'helmet_default',
-      armor: defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'armor') || 'armor_default',
-      gloves: defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'gloves') || 'gloves_default',
-      boots: defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'boots') || 'boots_default',
-      shield: defaults.find((id) => data.skins.catalog.find((x) => x.id === id)?.slot === 'shield') || 'shield_default',
+      weapon: null,
+      helmet: null,
+      armor: null,
+      gloves: null,
+      boots: null,
+      shield: null,
       frame: defaults.find((id) => id.startsWith('frame_')) || 'frame_default',
       victoryFx: defaults.find((id) => id.startsWith('fx_aura_')) || 'fx_aura_white',
     },

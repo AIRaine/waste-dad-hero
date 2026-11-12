@@ -51,6 +51,7 @@ import {
   totalPlayerDef,
   tryEnhance,
   enhanceCost,
+  unequipGear,
   visibleGearBundle,
 } from './gear.js';
 import {
@@ -593,7 +594,7 @@ export function createApp(root, data, state) {
     const recentLog = (state.log || []).slice(0, 4);
 
     return `
-      <section class="battle">
+      <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''}">
         <div class="battle-scroll">
           <div class="fight-setup">
             <button type="button" class="setup-btn setup-scene" data-action="scene-picker" aria-expanded="${scenePickerOpen}">
@@ -672,65 +673,6 @@ export function createApp(root, data, state) {
             </div>
           </div>
 
-          ${
-            scenePickerOpen
-              ? `<div class="tier-picker scene-picker" role="dialog" aria-label="選擇場景">
-                  <button type="button" class="tier-picker-backdrop" data-action="scene-picker-close" aria-label="關閉"></button>
-                  <div class="tier-picker-panel">
-                    <div class="tier-picker-head"><strong>家庭場景</strong>
-                      <button type="button" class="btn ghost tier-picker-x" data-action="scene-picker-close">關閉</button>
-                    </div>
-                    <div class="tier-picker-list">
-                      ${data.scenes.scenes
-                        .sort((a, b) => a.order - b.order)
-                        .map((s) => {
-                          const unlocked = isSceneUnlocked(data, state, s.id);
-                          const clears = state.sceneClears?.[s.id] || 0;
-                          return `<button type="button" class="tier-option ${s.id === state.selectedSceneId ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-scene-id="${s.id}" ${unlocked ? '' : 'disabled'}>
-                            <span class="tier-option-main">${sceneIconHtml(s, 26)} ${s.name}${unlocked ? '' : ' · 鎖'}</span>
-                            <span class="tier-option-meta">${unlocked ? `通關 ${clears} · ${s.flavor}` : sceneUnlockHint(data, s)}</span>
-                          </button>`;
-                        })
-                        .join('')}
-                    </div>
-                  </div>
-                </div>`
-              : ''
-          }
-
-          ${
-            tierPickerOpen
-              ? `<div class="tier-picker" role="dialog" aria-label="選擇對手">
-                  <button type="button" class="tier-picker-backdrop" data-action="tier-picker-close" aria-label="關閉"></button>
-                  <div class="tier-picker-panel" role="listbox">
-                    <div class="tier-picker-head"><strong>${scene.name}對手</strong>
-                      <button type="button" class="btn ghost tier-picker-x" data-action="tier-picker-close">關閉</button>
-                    </div>
-                    <div class="tier-picker-list">
-                      <button type="button" class="tier-option training-option ${training ? 'active' : ''}" data-monster-id="${TRAINING_DUMMY_ID}">
-                        <span class="tier-option-main">${roleTag('training')}練功木頭人</span>
-                        <span class="tier-option-meta">${trainCopy.pickerMeta}</span>
-                      </button>
-                      ${sceneMonsters
-                        .map((t) => {
-                          const open = isMonsterFightable(data, state, t);
-                          const selected = t.id === state.selectedMonsterId;
-                          return `<button type="button" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" ${open ? '' : 'disabled'}>
-                            <span class="tier-option-main">T${t.tier} ${roleTag(t.role)}${t.name}${open ? '' : ' · 鎖'}</span>
-                            <span class="tier-option-meta">${
-                              open
-                                ? `${roleLabel(t.role)} · HP${t.hp}`
-                                : monsterUnlockHint(data, t)
-                            }</span>
-                          </button>`;
-                        })
-                        .join('')}
-                    </div>
-                  </div>
-                </div>`
-              : ''
-          }
-
           ${training ? `<div class="training-banner" role="status">${trainCopy.banner}</div>` : ''}
 
           <div class="arena ${victoryFx ? 'victory-fx' : ''} ${training ? 'is-training' : ''}" style="--fx1:${fx?.palette?.primary || '#ffe08a'};--fx2:${fx?.palette?.accent || '#ffb347'};--scene1:${scene.bg?.[0] || '#1a3340'};--scene2:${scene.bg?.[1] || '#122028'}">
@@ -760,7 +702,7 @@ export function createApp(root, data, state) {
                 <div class="shield-badge ${affixClass(shield)}">${slotIcon(shield, getGearLevel(state, shield?.id))}</div>
               </div>
               <div class="fighter-meta">
-                <div class="name">${playerDisplayName(state)} · ${weapon?.name || '武器'}+${wLevel}</div>
+                <div class="name">${playerDisplayName(state)} · ${weapon ? `${weapon.name}+${wLevel}` : '徒手'}</div>
                 ${renderStatPills(playerChips, { className: 'player-stat-pills' })}
               </div>
             </div>
@@ -797,6 +739,65 @@ export function createApp(root, data, state) {
             }</ul>
           </div>
         </div>
+
+        ${
+          scenePickerOpen
+            ? `<div class="tier-picker scene-picker" role="dialog" aria-modal="true" aria-label="選擇場景">
+                <button type="button" class="tier-picker-backdrop" data-action="scene-picker-close" aria-label="關閉"></button>
+                <div class="tier-picker-panel">
+                  <div class="tier-picker-head"><strong>家庭場景</strong>
+                    <button type="button" class="btn ghost tier-picker-x" data-action="scene-picker-close">關閉</button>
+                  </div>
+                  <div class="tier-picker-list">
+                    ${data.scenes.scenes
+                      .sort((a, b) => a.order - b.order)
+                      .map((s) => {
+                        const unlocked = isSceneUnlocked(data, state, s.id);
+                        const clears = state.sceneClears?.[s.id] || 0;
+                        return `<button type="button" class="tier-option ${s.id === state.selectedSceneId ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-scene-id="${s.id}" ${unlocked ? '' : 'disabled'}>
+                          <span class="tier-option-main">${sceneIconHtml(s, 26)} ${s.name}${unlocked ? '' : ' · 鎖'}</span>
+                          <span class="tier-option-meta">${unlocked ? `通關 ${clears} · ${s.flavor}` : sceneUnlockHint(data, s)}</span>
+                        </button>`;
+                      })
+                      .join('')}
+                  </div>
+                </div>
+              </div>`
+            : ''
+        }
+
+        ${
+          tierPickerOpen
+            ? `<div class="tier-picker" role="dialog" aria-modal="true" aria-label="選擇對手">
+                <button type="button" class="tier-picker-backdrop" data-action="tier-picker-close" aria-label="關閉"></button>
+                <div class="tier-picker-panel" role="listbox">
+                  <div class="tier-picker-head"><strong>${scene.name}對手</strong>
+                    <button type="button" class="btn ghost tier-picker-x" data-action="tier-picker-close">關閉</button>
+                  </div>
+                  <div class="tier-picker-list">
+                    <button type="button" class="tier-option training-option ${training ? 'active' : ''}" data-monster-id="${TRAINING_DUMMY_ID}">
+                      <span class="tier-option-main">${roleTag('training')}練功木頭人</span>
+                      <span class="tier-option-meta">${trainCopy.pickerMeta}</span>
+                    </button>
+                    ${sceneMonsters
+                      .map((t) => {
+                        const open = isMonsterFightable(data, state, t);
+                        const selected = t.id === state.selectedMonsterId;
+                        return `<button type="button" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" ${open ? '' : 'disabled'}>
+                          <span class="tier-option-main">T${t.tier} ${roleTag(t.role)}${t.name}${open ? '' : ' · 鎖'}</span>
+                          <span class="tier-option-meta">${
+                            open
+                              ? `${roleLabel(t.role)} · HP${t.hp}`
+                              : monsterUnlockHint(data, t)
+                          }</span>
+                        </button>`;
+                      })
+                      .join('')}
+                  </div>
+                </div>
+              </div>`
+            : ''
+        }
 
         <div class="battle-controls">
           ${
@@ -849,7 +850,7 @@ export function createApp(root, data, state) {
         <div class="page-scroll enhance-browse">
           <div class="enhance-browse-head">
             <h2>裝備強化</h2>
-            <p class="muted">點選聚焦 · 再點穿戴 · 無安定區</p>
+            <p class="muted">點選聚焦 · 再點穿戴／卸下 · 可空槽</p>
           </div>
           <div class="gear-picker">
             <input id="gear-filter" class="gear-filter" placeholder="搜尋已擁有裝備…" value="${state.gearFilter || ''}" />
@@ -894,7 +895,7 @@ export function createApp(root, data, state) {
                   <span class="boost-chip-count">${on ? `已套${on}` : `×${n}`}</span>
                 </button>`;
               }).join('')}
-              <button type="button" class="ops-chip enhance-wear-btn ${focusEquipped ? 'is-on' : ''}" data-action="wear-focus" ${focusEquipped ? 'disabled' : ''} title="${focusEquipped ? '已穿戴' : '穿戴此裝'}">${focusEquipped ? '已穿戴' : '穿戴'}</button>
+              <button type="button" class="ops-chip enhance-wear-btn ${focusEquipped ? 'is-on' : ''}" data-action="${focusEquipped ? 'unequip-focus' : 'wear-focus'}" title="${focusEquipped ? '卸下此裝（空槽）' : '穿戴此裝'}">${focusEquipped ? '卸下' : '穿戴'}</button>
               ${
                 focusIsArmor
                   ? `<button type="button" class="ops-chip enhance-hide-btn ${focusHidden ? 'on' : ''}" data-action="toggle-hide-focus" aria-pressed="${focusHidden}" title="${focusHidden ? '顯示疊圖' : '隱藏疊圖'}">${focusHidden ? '顯示' : '隱藏'}</button>`
@@ -1037,7 +1038,7 @@ export function createApp(root, data, state) {
         ${ownershipBadge(owned, eq)}
         ${rarityBadge(skin)}
         <div class="card-left"><div class="mini weapon-art ${affixClass(skin)}">${slotIcon(skin, lv)}</div>
-        <strong class="rarity-name">${skin.name}${owned ? ` +${lv}` : ''}</strong><span class="card-status">${owned ? (eq ? '裝備中' : '點擊裝備') : unlockHint(skin, data)}${affix === 'bless' ? ' · 祝福' : affix === 'curse' ? ' · 詛咒' : ''}</span></div>
+        <strong class="rarity-name">${skin.name}${owned ? ` +${lv}` : ''}</strong><span class="card-status">${owned ? (eq ? '裝備中 · 點擊卸下' : '點擊裝備') : unlockHint(skin, data)}${affix === 'bless' ? ' · 祝福' : affix === 'curse' ? ' · 詛咒' : ''}</span></div>
         <div class="card-right">
           <div class="stat-line"><span>攻擊加成</span><b>+${skin.atkBonus ?? 0}</b></div>
           <div class="stat-line"><span>爆擊</span><b>${Math.round((skin.critChance || 0) * 100)}%</b></div>
@@ -1061,8 +1062,8 @@ export function createApp(root, data, state) {
         ? unlockHint(skin, data)
         : eq
           ? hidden
-            ? '穿戴中 · 疊圖已隱藏'
-            : '穿戴中'
+            ? '穿戴中 · 疊圖已隱藏 · 點擊卸下'
+            : '穿戴中 · 點擊卸下'
           : '點擊裝備';
       return `<div class="skin-card gear-card ${rarityClass(skin.rarity)} ${affixClass(skin)} ${owned ? 'owned' : 'locked'} ${eq ? 'equipped' : ''} ${hidden ? 'visual-hidden' : ''}">
         ${ownershipBadge(owned, eq)}
@@ -1082,7 +1083,10 @@ export function createApp(root, data, state) {
         </button>
         ${
           eq
-            ? `<button type="button" class="gear-hide-toggle ${hidden ? 'on' : ''}" data-toggle-hide-slot="${skin.slot}" aria-pressed="${hidden}">${hidden ? '顯示疊圖' : '隱藏疊圖'}</button>`
+            ? `<div class="gear-card-actions">
+                <button type="button" class="gear-unequip-btn" data-unequip-slot="${skin.slot}">卸下</button>
+                <button type="button" class="gear-hide-toggle ${hidden ? 'on' : ''}" data-toggle-hide-slot="${skin.slot}" aria-pressed="${hidden}">${hidden ? '顯示疊圖' : '隱藏疊圖'}</button>
+              </div>`
             : ''
         }
       </div>`;
@@ -1274,6 +1278,7 @@ export function createApp(root, data, state) {
           ${paneHtml}
         </div>
         <div class="page-cta">
+          ${noticeHtml('collection')}
           ${state.adminMode ? `<button type="button" class="btn wide" data-action="admin-skins">解鎖全部外觀／場景進度</button>` : ''}
           <button type="button" class="btn ghost wide" data-action="reset">重置存檔（原型用）</button>
         </div>
@@ -1445,6 +1450,22 @@ export function createApp(root, data, state) {
       return { ok: true, skin };
     };
 
+    const unequipGearById = (gearId, { announce = true } = {}) => {
+      const skin = getGearSkin(data, gearId);
+      if (!skin || !(skin.slot === 'weapon' || ARMOR_SLOTS.includes(skin.slot))) {
+        return { ok: false, reason: '無法卸下' };
+      }
+      if (state.equipped?.[skin.slot] !== skin.id) {
+        return { ok: false, reason: '此裝未穿戴' };
+      }
+      const res = unequipGear(state, skin.slot);
+      if (!res.ok) return res;
+      stopAutoFight();
+      battle = null;
+      if (announce) pushLog(state, `卸下「${skin.name}」`, 'info');
+      return { ok: true, skin };
+    };
+
     root.querySelectorAll('[data-select-gear]').forEach((btn) => {
       const wearFromRow = (id) => {
         const res = wearGearById(id);
@@ -1453,13 +1474,20 @@ export function createApp(root, data, state) {
         persist();
         render();
       };
+      const unequipFromRow = (id) => {
+        const res = unequipGearById(id);
+        if (!res.ok) showPageNotice(res.reason || '無法卸下', 'bad', 'enhance');
+        else showPageNotice(`已卸下「${res.skin.name}」`, 'good', 'enhance');
+        persist();
+        render();
+      };
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-select-gear');
-        // Re-tap focused row = wear (mobile-friendly stand-in for double-click).
+        // Re-tap focused row = wear / unequip toggle.
         if (id && id === state.enhanceFocusId) {
           const skin = getGearSkin(data, id);
-          if (skin && state.equipped?.[skin.slot] === skin.id) return;
-          wearFromRow(id);
+          if (skin && state.equipped?.[skin.slot] === skin.id) unequipFromRow(id);
+          else wearFromRow(id);
           return;
         }
         state.enhanceFocusId = id;
@@ -1469,14 +1497,21 @@ export function createApp(root, data, state) {
         ev.preventDefault();
         const id = btn.getAttribute('data-select-gear');
         const skin = getGearSkin(data, id);
-        if (skin && state.equipped?.[skin.slot] === skin.id) return;
-        wearFromRow(id);
+        if (skin && state.equipped?.[skin.slot] === skin.id) unequipFromRow(id);
+        else wearFromRow(id);
       });
     });
     root.querySelector('[data-action="wear-focus"]')?.addEventListener('click', () => {
       const res = wearGearById(state.enhanceFocusId);
       if (!res.ok) showPageNotice(res.reason || '無法穿戴', 'bad', 'enhance');
       else showPageNotice(`已穿戴「${res.skin.name}」`, 'good', 'enhance');
+      persist();
+      render();
+    });
+    root.querySelector('[data-action="unequip-focus"]')?.addEventListener('click', () => {
+      const res = unequipGearById(state.enhanceFocusId);
+      if (!res.ok) showPageNotice(res.reason || '無法卸下', 'bad', 'enhance');
+      else showPageNotice(`已卸下「${res.skin.name}」`, 'good', 'enhance');
       persist();
       render();
     });
@@ -1628,8 +1663,23 @@ export function createApp(root, data, state) {
       btn.addEventListener('click', () => {
         const skin = data.skins.catalog.find((s) => s.id === btn.getAttribute('data-equip'));
         if (!skin) return;
+        const isGear = skin.slot === 'weapon' || ARMOR_SLOTS.includes(skin.slot);
+        // Gear: tap equipped piece again to fully unequip (empty slot).
+        if (isGear && state.equipped?.[skin.slot] === skin.id) {
+          const res = unequipGear(state, skin.slot);
+          if (!res.ok) {
+            showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
+            return;
+          }
+          pushLog(state, `卸下「${skin.name}」`, 'info');
+          stopAutoFight();
+          battle = null;
+          persist();
+          render();
+          return;
+        }
         if (equipSkin(state, skin)) {
-          if (skin.slot === 'weapon' || ARMOR_SLOTS.includes(skin.slot)) {
+          if (isGear) {
             state.enhanceFocusId = skin.id;
             stopAutoFight();
             battle = null;
@@ -1641,6 +1691,24 @@ export function createApp(root, data, state) {
           persist();
           render();
         }
+      });
+    });
+    root.querySelectorAll('[data-unequip-slot]').forEach((btn) => {
+      btn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const slot = btn.getAttribute('data-unequip-slot');
+        const skin = getEquippedSkin(data, state, slot);
+        const res = unequipGear(state, slot);
+        if (!res.ok) {
+          showPageNotice(res.reason || '無法卸下', 'bad', 'collection');
+          return;
+        }
+        pushLog(state, skin ? `卸下「${skin.name}」` : `卸下${slotLabel(slot)}`, 'info');
+        stopAutoFight();
+        battle = null;
+        persist();
+        render();
       });
     });
 
@@ -1671,6 +1739,62 @@ export function createApp(root, data, state) {
       battle = null;
       persist();
       setTab('battle');
+    });
+
+    // Scene / foe picker: trap overscroll so gestures don't scroll the battle page behind.
+    root.querySelectorAll('.tier-picker').forEach((picker) => {
+      const list = picker.querySelector('.tier-picker-list');
+      const panel = picker.querySelector('.tier-picker-panel');
+      const stopChain = (ev) => {
+        // Only block when the gesture would bubble into .battle-scroll.
+        if (ev.cancelable) ev.preventDefault();
+        ev.stopPropagation();
+      };
+      picker.addEventListener(
+        'wheel',
+        (ev) => {
+          if (!list) {
+            stopChain(ev);
+            return;
+          }
+          const atTop = list.scrollTop <= 0;
+          const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 1;
+          const goingUp = ev.deltaY < 0;
+          const goingDown = ev.deltaY > 0;
+          if ((atTop && goingUp) || (atBottom && goingDown) || !list.contains(ev.target)) {
+            stopChain(ev);
+          } else {
+            ev.stopPropagation();
+          }
+        },
+        { passive: false },
+      );
+      let touchY = 0;
+      picker.addEventListener(
+        'touchstart',
+        (ev) => {
+          touchY = ev.touches[0]?.clientY || 0;
+        },
+        { passive: true },
+      );
+      picker.addEventListener(
+        'touchmove',
+        (ev) => {
+          const y = ev.touches[0]?.clientY || 0;
+          const dy = y - touchY;
+          const onList = list && (list === ev.target || list.contains(ev.target));
+          if (!onList) {
+            stopChain(ev);
+            return;
+          }
+          const atTop = list.scrollTop <= 0;
+          const atBottom = list.scrollTop + list.clientHeight >= list.scrollHeight - 1;
+          if ((atTop && dy > 0) || (atBottom && dy < 0)) stopChain(ev);
+          else ev.stopPropagation();
+        },
+        { passive: false },
+      );
+      panel?.addEventListener('click', (ev) => ev.stopPropagation());
     });
   }
 
