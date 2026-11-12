@@ -430,14 +430,25 @@ button.admin-badge:active { transform: scale(0.98); }
   overscroll-behavior: none;
 }
 .tier-option {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%;
-  min-height: 48px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line);
-  background: rgba(255,255,255,0.04); text-align: left;
+  /* flex-shrink:0 — list is a column flex; default shrink was crushing multi-line flavor */
+  display: block; width: 100%; height: auto; box-sizing: border-box;
+  flex: 0 0 auto; min-height: min-content;
+  padding: 12px 12px 18px; border-radius: 12px; border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04); text-align: left; cursor: pointer;
+  overflow: visible; line-height: 1.35; white-space: normal; color: inherit; font: inherit;
 }
+.tier-option-body { display: block; width: 100%; }
 .tier-option.active { border-color: rgba(212,162,76,0.7); background: rgba(212,162,76,0.16); }
-.tier-option.locked { opacity: 0.5; filter: grayscale(0.4); }
-.tier-option-main { font-weight: 800; font-size: 0.9rem; }
-.tier-option-meta { font-size: 0.72rem; color: var(--muted); }
+.tier-option.locked { opacity: 0.5; filter: grayscale(0.4); cursor: not-allowed; }
+.tier-option-main {
+  display: block; font-weight: 800; font-size: 0.9rem; line-height: 1.35;
+  overflow: visible; white-space: normal;
+}
+.tier-option-meta {
+  display: block; margin-top: 4px;
+  font-size: 0.72rem; color: var(--muted); line-height: 1.45;
+  white-space: normal; overflow: visible; overflow-wrap: anywhere;
+}
 
 .arena {
   --portrait-w: 84px; --portrait-h: 96px;
@@ -529,7 +540,7 @@ button.admin-badge:active { transform: scale(0.98); }
 .frame-art-steam { border-radius: 12px; }
 .frame-art-apron { border-radius: 8px; }
 .frame-art-ornate { border-radius: 6px; }
-/* Catalog frame/FX thumbs: keep aura clipped inside the portrait frame */
+/* Catalog frame thumbs: clip aura to portrait (sticky avatar preview stays clipped per prefs) */
 .frame-preview {
   position: relative;
   overflow: hidden;
@@ -543,6 +554,45 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .frame-preview .portrait-box.with-aura {
   overflow: hidden;
+}
+/* 發脾氣特效列表縮圖：氣焰可超出字卡框頂（近戰姿態），列表仍好捲 */
+.fx-card .frame-preview {
+  /* Flame sits in top padding above the square; stay inside card so sticky catalog doesn't cover tip */
+  width: 72px;
+  height: 124px;
+  margin-top: 0;
+  margin-left: -4px;
+  padding-top: 44px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+}
+.fx-card .frame-preview .portrait-with-aura {
+  width: 64px;
+  height: 76px;
+  overflow: visible;
+}
+.fx-card .frame-preview .portrait-box {
+  width: 64px;
+  height: 76px;
+  border-radius: 10px;
+}
+.fx-card .frame-preview .portrait-box.with-aura {
+  overflow: visible;
+  background: rgba(8, 12, 18, 0.18);
+}
+/* filter on avatar-slot clips overflow paint — drop it for FX list thumbs */
+.fx-card .portrait-avatar-slot {
+  filter: none;
+  overflow: visible;
+}
+.fx-card .frame-preview .avatar-aura-anchor {
+  overflow: visible;
+}
+.fx-card .frame-preview .avatar-aura-anchor > .aura-shell.is-compact {
+  width: 168%;
+  height: 195%;
+  bottom: 2px;
 }
 .avatar-preview .portrait-with-aura {
   width: 84px; height: 96px;
@@ -882,27 +932,34 @@ button.admin-badge:active { transform: scale(0.98); }
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 6px 10px;
   align-items: start;
-  margin: 4px 0 2px; padding: 8px 10px; border-radius: 12px;
+  margin: 4px 0 2px; padding: 10px 10px 14px; border-radius: 12px;
   background: rgba(60, 184, 160, 0.12); border: 1px solid rgba(60, 184, 160, 0.35);
-  font-size: 0.88rem; line-height: 1.3;
+  font-size: 0.88rem; line-height: 1.45;
+  overflow: visible;
 }
 .as-col {
-  display: flex; flex-direction: column; gap: 2px; min-width: 0;
+  display: flex; flex-direction: column; gap: 3px; min-width: 0;
+  overflow: visible;
 }
 .as-mob-col { text-align: left; }
 .as-you-col { text-align: right; }
 .as-k {
   font-size: 0.68rem; font-weight: 800; color: var(--muted); letter-spacing: 0.04em;
+  line-height: 1.3;
 }
 .as-you-col .as-k { color: rgba(255, 224, 138, 0.75); }
 .as-readout .as-you {
   color: #ffe08a; font-size: 0.95rem; letter-spacing: 0.01em;
-  font-weight: 900; overflow-wrap: anywhere;
+  font-weight: 900; overflow-wrap: anywhere; line-height: 1.4; overflow: visible;
 }
 .as-readout .as-mob {
   color: #b8d4dc; font-weight: 800; font-size: 0.92rem; overflow-wrap: anywhere;
+  line-height: 1.4; overflow: visible;
 }
-.as-ms { font-size: 0.72rem; font-weight: 700; opacity: 0.85; white-space: nowrap; }
+.as-ms {
+  font-size: 0.72rem; font-weight: 700; opacity: 0.85; white-space: nowrap;
+  line-height: 1.35; display: inline-block; padding-bottom: 1px;
+}
 .as-readout .auto-live {
   grid-column: 1 / -1;
   text-align: center;
@@ -1419,8 +1476,13 @@ button.admin-badge:active { transform: scale(0.98); }
     #243844;
 }
 .catalog-jump-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0;
-  padding: 7px 4px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,0.04); font-size: 0.72rem; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0;
+  min-height: 36px; padding: 8px 4px; border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(255,255,255,0.04); font-size: 0.72rem; font-weight: 700;
+  line-height: 1.25; overflow: visible;
+}
+.catalog-jump-btn .jump-label {
+  display: block; white-space: normal; overflow: visible; text-align: center; line-height: 1.25;
 }
 .catalog-jump-btn.active { border-color: rgba(212,162,76,0.75); background: rgba(212,162,76,0.18); color: #f0d9a0; }
 .catalog-filter-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
@@ -1437,17 +1499,19 @@ button.admin-badge:active { transform: scale(0.98); }
   flex-direction: row; align-items: stretch; gap: 10px; min-height: 0; padding: 28px 10px 10px;
 }
 .skin-card.fx-card, .skin-card.monster-card { padding-top: 26px; min-height: 0; }
-/* 發脾氣特效卡：直向排（預覽主列 + 卸下），避免字卡框／卸下鈕橫向跑位 */
+/* 發脾氣特效卡：直向排（預覽主列 + 卸下）；overflow 可見讓氣焰頂穿出 */
 .skin-card.frame-card.fx-card {
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
   padding: 28px 10px 10px;
+  overflow: visible;
 }
+.skin-grid.frames { overflow: visible; }
 .skin-card.fx-card .gear-card-main {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
+  align-items: flex-start;
   gap: 10px;
   width: 100%;
   margin: 0;
@@ -1457,7 +1521,9 @@ button.admin-badge:active { transform: scale(0.98); }
   color: inherit;
   text-align: left;
   cursor: pointer;
+  overflow: visible;
 }
+.skin-card.fx-card .card-left { overflow: visible; }
 .skin-card.fx-card.locked .gear-card-main { cursor: not-allowed; }
 .skin-card.fx-card .gear-unequip-btn { width: 100%; }
 .skin-card.owned { cursor: pointer; border-color: rgba(125,206,160,0.35); background: rgba(125,206,160,0.06); }
@@ -1489,10 +1555,15 @@ button.admin-badge:active { transform: scale(0.98); }
 .unlock-req { font-size: 0.7rem !important; color: #d4b878 !important; }
 .scene-progress-list { display: flex; flex-direction: column; gap: 8px; }
 .scene-progress-row {
-  padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+  padding: 12px 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03); overflow: visible;
 }
 .scene-progress-row.locked { opacity: 0.55; filter: grayscale(0.35); }
-.scene-progress-row p { margin: 4px 0 0; font-size: 0.78rem; color: var(--muted); }
+.scene-progress-row strong { display: block; line-height: 1.35; overflow: visible; }
+.scene-progress-row p {
+  margin: 6px 0 0; font-size: 0.78rem; color: var(--muted);
+  line-height: 1.45; overflow: visible; white-space: normal;
+}
 .muted, .muted-empty { color: var(--muted); }
 h2 { margin: 0 0 6px; font-size: 1.15rem; }
 h3 { margin: 12px 0 8px; font-size: 0.95rem; }
