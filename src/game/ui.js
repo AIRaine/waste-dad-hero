@@ -395,6 +395,10 @@ export function createApp(root, data, state) {
   }
 
   function chooseMonster(id) {
+    if (id !== TRAINING_DUMMY_ID) {
+      const mon = (data.monsters?.tiers || []).find((x) => x.id === id);
+      if (mon && !isMonsterFightable(data, state, mon)) return;
+    }
     stopAutoFight();
     state.selectedMonsterId = id;
     battle = createBattle(data, state, currentMonster());
@@ -758,10 +762,12 @@ export function createApp(root, data, state) {
                       .map((s) => {
                         const unlocked = isSceneUnlocked(data, state, s.id);
                         const clears = state.sceneClears?.[s.id] || 0;
-                        return `<button type="button" class="tier-option ${s.id === state.selectedSceneId ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-scene-id="${s.id}" ${unlocked ? '' : 'disabled'}>
-                          <span class="tier-option-main">${sceneIconHtml(s, 26)} ${s.name}${unlocked ? '' : ' · 鎖'}</span>
-                          <span class="tier-option-meta">${unlocked ? `通關 ${clears} · ${s.flavor}` : sceneUnlockHint(data, s)}</span>
-                        </button>`;
+                        return `<div role="button" tabindex="${unlocked ? 0 : -1}" class="tier-option ${s.id === state.selectedSceneId ? 'active' : ''} ${unlocked ? '' : 'locked'}" data-scene-id="${s.id}" aria-disabled="${unlocked ? 'false' : 'true'}">
+                          <span class="tier-option-body">
+                            <span class="tier-option-main">${sceneIconHtml(s, 26)} ${s.name}${unlocked ? '' : ' · 鎖'}</span>
+                            <span class="tier-option-meta">${unlocked ? `通關 ${clears} · ${s.flavor}` : sceneUnlockHint(data, s)}</span>
+                          </span>
+                        </div>`;
                       })
                       .join('')}
                   </div>
@@ -779,22 +785,26 @@ export function createApp(root, data, state) {
                     <button type="button" class="btn ghost tier-picker-x" data-action="tier-picker-close">關閉</button>
                   </div>
                   <div class="tier-picker-list">
-                    <button type="button" class="tier-option training-option ${training ? 'active' : ''}" data-monster-id="${TRAINING_DUMMY_ID}">
-                      <span class="tier-option-main">${roleTag('training')}練功木頭人</span>
-                      <span class="tier-option-meta">${trainCopy.pickerMeta}</span>
-                    </button>
+                    <div role="button" tabindex="0" class="tier-option training-option ${training ? 'active' : ''}" data-monster-id="${TRAINING_DUMMY_ID}">
+                      <span class="tier-option-body">
+                        <span class="tier-option-main">${roleTag('training')}練功木頭人</span>
+                        <span class="tier-option-meta">${trainCopy.pickerMeta}</span>
+                      </span>
+                    </div>
                     ${sceneMonsters
                       .map((t) => {
                         const open = isMonsterFightable(data, state, t);
                         const selected = t.id === state.selectedMonsterId;
-                        return `<button type="button" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" ${open ? '' : 'disabled'}>
-                          <span class="tier-option-main">T${t.tier} ${roleTag(t.role)}${t.name}${open ? '' : ' · 鎖'}</span>
-                          <span class="tier-option-meta">${
-                            open
-                              ? `${roleLabel(t.role)} · HP${t.hp}`
-                              : monsterUnlockHint(data, t)
-                          }</span>
-                        </button>`;
+                        return `<div role="button" tabindex="${open ? 0 : -1}" class="tier-option ${selected ? 'active' : ''} ${open ? '' : 'locked'}" data-monster-id="${t.id}" aria-disabled="${open ? 'false' : 'true'}">
+                          <span class="tier-option-body">
+                            <span class="tier-option-main">T${t.tier} ${roleTag(t.role)}${t.name}${open ? '' : ' · 鎖'}</span>
+                            <span class="tier-option-meta">${
+                              open
+                                ? `${roleLabel(t.role)} · HP${t.hp}`
+                                : monsterUnlockHint(data, t)
+                            }</span>
+                          </span>
+                        </div>`;
                       })
                       .join('')}
                   </div>
