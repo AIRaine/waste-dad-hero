@@ -41,7 +41,8 @@ export function createInitialState(data) {
       boots: null,
       shield: null,
       frame: defaults.find((id) => id.startsWith('frame_')) || 'frame_default',
-      victoryFx: defaults.find((id) => id.startsWith('fx_aura_')) || 'fx_aura_white',
+      // 發脾氣特效：與新手裝備相同，預設空槽（可稍後在圖鑑穿戴）。
+      victoryFx: null,
     },
     boosts: { ...DEFAULT_BOOSTS },
     inventory: {},
@@ -85,6 +86,8 @@ export function createInitialState(data) {
     },
     /** First-run guide dismissed — do not show again after persist. */
     firstRunGuideSeen: false,
+    /** Battle sticky “go equip” nudge dismissed. */
+    equipHintDismissed: false,
     log: [],
   };
 }
@@ -135,6 +138,7 @@ export function loadState(data) {
         ...(parsed.hiddenGearVisual || {}),
       },
       firstRunGuideSeen: !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen),
+      equipHintDismissed: !!(parsed.equipHintDismissed ?? base.equipHintDismissed),
       run: {
         autoAdvance: false,
         ...(parsed.run && typeof parsed.run === 'object' ? parsed.run : {}),
@@ -157,12 +161,13 @@ export function loadState(data) {
     migrateEquippedAura(merged);
     // Drop retired aura ids from owned list after remap
     merged.ownedSkins = merged.ownedSkins.filter((id) => data.skins.catalog.some((s) => s.id === id));
-    // Allow victoryFx: null (fully unequipped). Only remap unknown non-null ids.
+    // Allow victoryFx: null (fully unequipped). Only remap unknown non-null ids —
+    // never auto-fill a default aura for new/empty slots.
     if (
       merged.equipped.victoryFx != null &&
       !data.skins.catalog.some((s) => s.id === merged.equipped.victoryFx)
     ) {
-      merged.equipped.victoryFx = 'fx_aura_white';
+      merged.equipped.victoryFx = null;
     }
     return merged;
   } catch {
@@ -219,6 +224,7 @@ export function saveState(data, state) {
     playerName: state.playerName,
     avatar: state.avatar,
     firstRunGuideSeen: !!state.firstRunGuideSeen,
+    equipHintDismissed: !!state.equipHintDismissed,
   };
   localStorage.setItem(data.meta.storageKey, JSON.stringify(payload));
 }
