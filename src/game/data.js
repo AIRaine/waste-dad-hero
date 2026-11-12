@@ -30,6 +30,7 @@ const DATA_FILES = [
   'gear.json',
   'gacha.json',
   'iap.json',
+  'sfx.json',
 ];
 
 export async function loadAllData() {
@@ -47,6 +48,7 @@ export async function loadAllData() {
     gear,
     gacha,
     iap,
+    sfx,
   ] = await Promise.all(DATA_FILES.map((file) => loadJson(`data/${file}`)));
-  return { meta, enhance, monsters, skins, items, scenes, difficulty, companions, avatar, combat, gear, gacha, iap };
+  return { meta, enhance, monsters, skins, items, scenes, difficulty, companions, avatar, combat, gear, gacha, iap, sfx };
 }
