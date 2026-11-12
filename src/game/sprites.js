@@ -171,7 +171,8 @@ export function playerSvg(palette = {}, avatar = {}, gear = {}) {
   if (face === 'square') {
     head = `<rect x="11" y="6" width="18" height="14" fill="${skin}"/>`;
   } else if (face === 'oval') {
-    head = `<rect x="12" y="5" width="16" height="15" fill="${skin}"/><rect x="13" y="4" width="14" height="2" fill="${skin}"/>`;
+    // 倒三角臉：額寬、頷尖（id 仍為 oval，相容舊存檔）
+    head = `<rect x="10" y="5" width="20" height="5" fill="${skin}"/><rect x="11" y="10" width="18" height="5" fill="${skin}"/><rect x="13" y="15" width="14" height="4" fill="${skin}"/><rect x="15" y="19" width="10" height="2" fill="${skin}"/>`;
   } else if (face === 'cheeky') {
     head = `<rect x="10" y="7" width="20" height="13" fill="${skin}"/><rect x="9" y="12" width="3" height="6" fill="${skin}"/><rect x="28" y="12" width="3" height="6" fill="${skin}"/>`;
   } else if (face === 'slim') {
@@ -185,9 +186,14 @@ export function playerSvg(palette = {}, avatar = {}, gear = {}) {
 
   let hairLayer = '';
   if (hairStyle === 'bowl') {
+    // 阿志頭（原鍋蓋頭）
     hairLayer = `<rect x="11" y="4" width="18" height="6" fill="${hair}"/><rect x="10" y="8" width="3" height="6" fill="${hair}"/><rect x="27" y="8" width="3" height="6" fill="${hair}"/>`;
   } else if (hairStyle === 'spiky') {
+    // 刺蝟頭（原抓狂刺刺）
     hairLayer = `<rect x="12" y="5" width="16" height="4" fill="${hair}"/><rect x="11" y="2" width="3" height="4" fill="${hair}"/><rect x="16" y="1" width="3" height="5" fill="${hair}"/><rect x="21" y="1" width="3" height="5" fill="${hair}"/><rect x="26" y="2" width="3" height="4" fill="${hair}"/>`;
+  } else if (hairStyle === 'haonan') {
+    // 浩南：長髮中分，兩側垂到臉頰
+    hairLayer = `<rect x="12" y="3" width="7" height="4" fill="${hair}"/><rect x="21" y="3" width="7" height="4" fill="${hair}"/><rect x="19" y="3" width="2" height="2" fill="${hair}" opacity="0.55"/><rect x="10" y="6" width="4" height="12" fill="${hair}"/><rect x="26" y="6" width="4" height="12" fill="${hair}"/><rect x="11" y="18" width="3" height="4" fill="${hair}"/><rect x="26" y="18" width="3" height="4" fill="${hair}"/>`;
   } else if (hairStyle === 'bald') {
     hairLayer = `<rect x="14" y="5" width="12" height="2" fill="${hair}" opacity="0.55"/>`;
   } else if (hairStyle === 'ponytail') {
@@ -206,6 +212,9 @@ export function playerSvg(palette = {}, avatar = {}, gear = {}) {
     traitLayer = `<rect x="26" y="14" width="2" height="2" fill="#5a3a28"/>`;
   } else if (trait === 'blush') {
     traitLayer = `<rect x="13" y="14" width="3" height="2" fill="#e89a9a" opacity="0.8"/><rect x="24" y="14" width="3" height="2" fill="#e89a9a" opacity="0.8"/>`;
+  } else if (trait === 'scar') {
+    // 刀疤：右臉頰／太陽穴側斜痕
+    traitLayer = `<rect x="25" y="9" width="2" height="2" fill="#8a4a3a"/><rect x="26" y="11" width="2" height="2" fill="#8a4a3a"/><rect x="27" y="13" width="2" height="2" fill="#8a4a3a"/><rect x="28" y="15" width="2" height="2" fill="#8a4a3a"/>`;
   }
 
   // Helmet overlays hair

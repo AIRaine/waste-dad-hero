@@ -15,8 +15,9 @@
       "label": "髮型",
       "options": [
         { "id": "short", "label": "清爽短髮" },
-        { "id": "bowl", "label": "鍋蓋頭" },
-        { "id": "spiky", "label": "抓狂刺刺" },
+        { "id": "bowl", "label": "阿志頭" },
+        { "id": "spiky", "label": "刺蝟頭" },
+        { "id": "haonan", "label": "浩南" },
         { "id": "bald", "label": "地中海" },
         { "id": "ponytail", "label": "小馬尾" }
       ]
@@ -38,7 +39,7 @@
       "options": [
         { "id": "round", "label": "圓臉" },
         { "id": "square", "label": "國字臉" },
-        { "id": "oval", "label": "鵝蛋臉" },
+        { "id": "oval", "label": "倒三角臉" },
         { "id": "cheeky", "label": "肉肉臉" },
         { "id": "slim", "label": "瘦長臉" }
       ]
@@ -73,7 +74,8 @@
         { "id": "glasses", "label": "粗框眼鏡" },
         { "id": "beard", "label": "落腮鬍" },
         { "id": "mole", "label": "幸運痣" },
-        { "id": "blush", "label": "易臉紅" }
+        { "id": "blush", "label": "易臉紅" },
+        { "id": "scar", "label": "刀疤" }
       ]
     }
   ]
