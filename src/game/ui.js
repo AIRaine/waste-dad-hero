@@ -315,6 +315,17 @@ export function createApp(root, data, state) {
       return;
     }
     noteVictoryProgression();
+    // Meter full → pause autofight so 「挑戰」CTA is immediate (no dig for Pause).
+    if (lastRunProgress?.kind === 'meter_full') {
+      autoFighting = false;
+      if (autoFightTimer) {
+        clearTimeout(autoFightTimer);
+        autoFightTimer = 0;
+      }
+      persist();
+      render();
+      return;
+    }
     persist();
     render();
     scheduleAutoRematch();
@@ -322,6 +333,11 @@ export function createApp(root, data, state) {
 
   function scheduleAutoRematch() {
     if (!autoFighting || tab !== 'battle') {
+      stopAutoFight({ renderAfter: true });
+      return;
+    }
+    // Safety: never auto-continue past a full meter without showing challenge.
+    if (lastRunProgress?.kind === 'meter_full') {
       stopAutoFight({ renderAfter: true });
       return;
     }
@@ -340,11 +356,9 @@ export function createApp(root, data, state) {
       battle = createBattle(data, state, foe);
       victoryFx = false;
       const label =
-        lastRunProgress?.kind === 'meter_full'
-          ? `農區已滿，續刷或手動挑戰 · ${foe?.name}`
-          : lastRunProgress?.kind === 'challenge_clear' || lastRunProgress?.kind === 'scene_gate_clear'
-            ? `回農區續刷「${foe?.name}」`
-            : `掛機續戰「${foe?.name}」`;
+        lastRunProgress?.kind === 'challenge_clear' || lastRunProgress?.kind === 'scene_gate_clear'
+          ? `回農區續刷「${foe?.name}」`
+          : `掛機續戰「${foe?.name}」`;
       pushLog(state, label, 'info');
       persist();
       render();
@@ -822,13 +836,18 @@ export function createApp(root, data, state) {
             </button>
             ${
               runLabel && meter
-                ? `<div class="run-strip" aria-label="農區進度">
+                ? `<div class="run-strip ${showChallengeBtn ? 'is-challenge-ready' : ''}" aria-label="農區進度">
                     <span class="run-chip ${meter.mode === 'challenge' ? 'is-boss' : ''}">${runLabel}</span>
                     <span class="run-gate-hint">目標：${meter.focus.name}</span>
-                    <div class="farm-meter" role="progressbar" aria-valuemin="0" aria-valuemax="${meter.need}" aria-valuenow="${meter.have}" aria-label="農區擊殺進度">
+                    <div class="farm-meter ${showChallengeBtn ? 'is-full' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="${meter.need}" aria-valuenow="${meter.have}" aria-label="農區擊殺進度">
                       <div class="farm-meter-fill" style="width:${meter.pct}%"></div>
                       <span class="farm-meter-label">${meter.unlocked || meter.cleared ? '可挑戰' : `${meter.have}/${meter.need}`}</span>
                     </div>
+                    ${
+                      showChallengeBtn
+                        ? `<button type="button" class="btn primary farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                        : ''
+                    }
                   </div>`
                 : ''
             }
@@ -1035,12 +1054,12 @@ export function createApp(root, data, state) {
                         }</p>`
                       : ''
                   }
-                  <button type="button" class="btn primary wide" data-action="rematch">再戰</button>
                   ${
                     showChallengeBtn
-                      ? `<button type="button" class="btn wide" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                      ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
                       : ''
                   }
+                  <button type="button" class="btn ${showChallengeBtn ? '' : 'primary '}wide" data-action="rematch">${showChallengeBtn ? '續刷小怪' : '再戰'}</button>
                   ${
                     showReturnFarm
                       ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
@@ -1065,14 +1084,14 @@ export function createApp(root, data, state) {
                         }</p>`
                       : ''
                   }
-                  <button type="button" class="btn attack ${autoFighting ? 'is-auto' : ''}" data-action="autofight" aria-pressed="${autoFighting}">
-                    ${autoFighting ? '暫停' : training ? '練功' : '打怪'}
-                  </button>
                   ${
-                    !autoFighting && showChallengeBtn
-                      ? `<button type="button" class="btn wide" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                    showChallengeBtn
+                      ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
                       : ''
                   }
+                  <button type="button" class="btn attack ${autoFighting ? 'is-auto' : ''}" data-action="autofight" aria-pressed="${autoFighting}">
+                    ${autoFighting ? '暫停' : training ? '練功' : showChallengeBtn ? '續刷小怪' : '打怪'}
+                  </button>
                   ${
                     !autoFighting && showReturnFarm
                       ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
@@ -1774,7 +1793,7 @@ export function createApp(root, data, state) {
       persist();
       render();
     });
-    root.querySelector('[data-action="farm-challenge"]')?.addEventListener('click', () => {
+    const startFarmChallenge = () => {
       stopAutoFight();
       const focusId = state.farm?.focusId;
       const res = enterChallenge(data, state, focusId);
@@ -1791,18 +1810,23 @@ export function createApp(root, data, state) {
       render();
       // 挑戰 T 王後立刻開打
       startAutoFight();
+    };
+    root.querySelectorAll('[data-action="farm-challenge"]').forEach((btn) => {
+      btn.addEventListener('click', startFarmChallenge);
     });
-    root.querySelector('[data-action="farm-return"]')?.addEventListener('click', () => {
-      stopAutoFight();
-      const res = returnToFarm(data, state);
-      battle = createBattle(data, state, currentMonster());
-      victoryFx = false;
-      lastRunProgress = { kind: 'return_farm', message: res.message };
-      pushLog(state, res.message, 'info');
-      persist();
-      render();
-      // 回刷小怪後立刻開打
-      startAutoFight();
+    root.querySelectorAll('[data-action="farm-return"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        stopAutoFight();
+        const res = returnToFarm(data, state);
+        battle = createBattle(data, state, currentMonster());
+        victoryFx = false;
+        lastRunProgress = { kind: 'return_farm', message: res.message };
+        pushLog(state, res.message, 'info');
+        persist();
+        render();
+        // 回刷小怪後立刻開打
+        startAutoFight();
+      });
     });
 
     root.querySelector('[data-action="enhance"]')?.addEventListener('click', () => {
