@@ -1616,7 +1616,7 @@ export function createApp(root, data, state) {
           !state.firstRunGuideSeen
             ? `<div class="onboard-overlay" role="dialog" aria-modal="true" aria-labelledby="onboard-title">
                 <div class="onboard-card">
-                  <h2 id="onboard-title">歡迎踏上英雄路</h2>
+                  <h2 id="onboard-title">歡迎踏上成為老爸的英雄路</h2>
                   <p class="onboard-lead">四步上手——站樁扛事的廢材老爸教學。</p>
                   <ol class="onboard-steps">
                     <li><strong>戰鬥</strong>：選場景與對手，點「打怪」掛機連攻；雙方各自冷卻。</li>

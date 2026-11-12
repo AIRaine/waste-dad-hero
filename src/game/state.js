@@ -1,4 +1,5 @@
 import { defaultAvatar, ensureAvatarState } from './avatar.js';
+import { persistFirstRunGuideDismiss } from './platform.js';
 import { migrateEquippedAura } from './skins.js';
 
 const DEFAULT_BOOSTS = {
@@ -84,7 +85,7 @@ export function createInitialState(data) {
       boots: false,
       shield: false,
     },
-    /** First-run guide dismissed — do not show again after persist. */
+    /** Welcome / first-run guide dismissed this session (web: not persisted across reload). */
     firstRunGuideSeen: false,
     /** Battle sticky “go equip” nudge dismissed. */
     equipHintDismissed: false,
@@ -137,7 +138,10 @@ export function loadState(data) {
         ...base.hiddenGearVisual,
         ...(parsed.hiddenGearVisual || {}),
       },
-      firstRunGuideSeen: !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen),
+      // Web: always show welcome on reload (ignore stored dismiss). App/Steam may persist later.
+      firstRunGuideSeen: persistFirstRunGuideDismiss()
+        ? !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen)
+        : false,
       equipHintDismissed: !!(parsed.equipHintDismissed ?? base.equipHintDismissed),
       run: {
         autoAdvance: false,
@@ -223,7 +227,7 @@ export function saveState(data, state) {
     farm: state.farm || { mode: 'farm', focusId: null, meters: {}, unlocked: {} },
     playerName: state.playerName,
     avatar: state.avatar,
-    firstRunGuideSeen: !!state.firstRunGuideSeen,
+    firstRunGuideSeen: persistFirstRunGuideDismiss() ? !!state.firstRunGuideSeen : false,
     equipHintDismissed: !!state.equipHintDismissed,
   };
   localStorage.setItem(data.meta.storageKey, JSON.stringify(payload));
