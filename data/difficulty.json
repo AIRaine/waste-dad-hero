@@ -1,0 +1,50 @@
+{
+  "defaultId": "easy",
+  "progression": {
+    "perScene": true,
+    "note": "每個場景各自累積難度通關：輕鬆通關後開普通，普通通關後開硬核。資料欄位 state.difficultyClears[sceneId][difficultyId]。"
+  },
+  "levels": [
+    {
+      "id": "easy",
+      "name": "輕鬆",
+      "order": 1,
+      "desc": "怪物較軟，獎勵略少。場景內初始難度。",
+      "unlock": { "type": "default" },
+      "statMul": { "hp": 0.85, "atk": 0.85 },
+      "rewardMul": { "gold": 0.85, "material": 0.85, "exp": 0.9 },
+      "defMul": 0.9,
+      "counterMul": 0.85
+    },
+    {
+      "id": "normal",
+      "name": "普通",
+      "order": 2,
+      "desc": "標準曲線。需在本場景以「輕鬆」通關至少 1 次。",
+      "unlock": {
+        "type": "sceneDifficultyClear",
+        "difficultyId": "easy",
+        "count": 1
+      },
+      "statMul": { "hp": 1, "atk": 1 },
+      "rewardMul": { "gold": 1, "material": 1, "exp": 1 },
+      "defMul": 1,
+      "counterMul": 1
+    },
+    {
+      "id": "hard",
+      "name": "硬核",
+      "order": 3,
+      "desc": "血攻與格擋升高。需在本場景以「普通」通關至少 1 次。",
+      "unlock": {
+        "type": "sceneDifficultyClear",
+        "difficultyId": "normal",
+        "count": 1
+      },
+      "statMul": { "hp": 1.35, "atk": 1.25 },
+      "rewardMul": { "gold": 1.35, "material": 1.4, "exp": 1.25 },
+      "defMul": 1.15,
+      "counterMul": 1.2
+    }
+  ]
+}

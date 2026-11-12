@@ -1,0 +1,55 @@
+{
+  "slots": [
+    {
+      "id": "weapon",
+      "label": "武器",
+      "enhanceable": true
+    },
+    {
+      "id": "helmet",
+      "label": "頭盔",
+      "enhanceable": true
+    },
+    {
+      "id": "armor",
+      "label": "護甲",
+      "enhanceable": true
+    },
+    {
+      "id": "gloves",
+      "label": "手套",
+      "enhanceable": true
+    },
+    {
+      "id": "boots",
+      "label": "靴子",
+      "enhanceable": true
+    },
+    {
+      "id": "shield",
+      "label": "盾牌",
+      "enhanceable": true
+    }
+  ],
+  "formulas": {
+    "note": "總攻 = 武器強化攻擊 + 各欄 atkBonus(+強化)。總防 = Σ def(+強化)。防具強化另加少量攻／HP。減傷 = clamp(DEF/(DEF+80) + Σ mitigation, 0..0.55)。爆擊倍率 critMul；玩家反擊 = 攻×counterDmgMul（受擊後擲 counterChance）。格擋完全免傷。",
+    "defPerEnhance": 1,
+    "atkPerEnhanceArmor": 1,
+    "hpPerEnhanceArmor": 2,
+    "mitigationCap": 0.55,
+    "defSoftCap": 80,
+    "critMul": 1.5,
+    "critChanceCap": 0.55,
+    "blockChanceCap": 0.35,
+    "counterChanceCap": 0.35,
+    "counterDmgMul": 0.55
+  },
+  "rarityTiers": {
+    "1": { "name": "白", "color": "#d8dde2", "label": "一階" },
+    "2": { "name": "綠", "color": "#6fbf7a", "label": "二階" },
+    "3": { "name": "藍", "color": "#7d9edc", "label": "三階" },
+    "4": { "name": "紫", "color": "#a07dcc", "label": "四階" },
+    "5": { "name": "橘", "color": "#e09a4a", "label": "五階" },
+    "6": { "name": "黃", "color": "#f0d45c", "label": "六階" }
+  }
+}

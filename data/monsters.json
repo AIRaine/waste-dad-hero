@@ -1,0 +1,1669 @@
+{
+  "attackCooldownMs": 420,
+  "tiers": [
+    {
+      "id": "living_room_t1",
+      "tier": 1,
+      "name": "電視雪花怪",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "slime",
+      "color": "#6a7888",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "巷口起步 · 打贏後開下一隻",
+      "hp": 62,
+      "atk": 8,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 13,
+        "material": 2,
+        "exp": 10
+      },
+      "scale": 1,
+      "as": 0.68
+    },
+    {
+      "id": "living_room_t2",
+      "tier": 2,
+      "name": "彈珠幽靈",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "bat",
+      "color": "#5a9a7a",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t1"
+      },
+      "catalogHint": "先擊敗「電視雪花怪」",
+      "hp": 74,
+      "atk": 10,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 16,
+        "material": 2,
+        "exp": 12
+      },
+      "scale": 1,
+      "as": 0.78
+    },
+    {
+      "id": "living_room_t3",
+      "tier": 3,
+      "name": "騎樓鐵窗精",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "golem",
+      "color": "#c45c5c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t2"
+      },
+      "catalogHint": "先擊敗「彈珠幽靈」",
+      "hp": 97,
+      "atk": 13,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 19,
+        "material": 3,
+        "exp": 14
+      },
+      "scale": 1,
+      "as": 0.64
+    },
+    {
+      "id": "living_room_t4",
+      "tier": 4,
+      "name": "零食渣精",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "wolf",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t3"
+      },
+      "catalogHint": "先擊敗「騎樓鐵窗精」",
+      "hp": 111,
+      "atk": 14,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 21,
+        "material": 3,
+        "exp": 16
+      },
+      "scale": 1,
+      "as": 0.71
+    },
+    {
+      "id": "living_room_t5",
+      "tier": 5,
+      "name": "棉被塵蛛",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "plant",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t4"
+      },
+      "catalogHint": "先擊敗「零食渣精」",
+      "hp": 125,
+      "atk": 17,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 24,
+        "material": 3,
+        "exp": 18
+      },
+      "scale": 1,
+      "as": 0.71
+    },
+    {
+      "id": "living_room_t6",
+      "tier": 6,
+      "name": "枕頭刺客",
+      "role": "trash",
+      "sceneId": "living_room",
+      "shape": "skeleton",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t5"
+      },
+      "catalogHint": "先擊敗「棉被塵蛛」",
+      "hp": 125,
+      "atk": 17,
+      "defChance": 0.08,
+      "counterChance": 0.05,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 27,
+        "material": 5,
+        "exp": 20
+      },
+      "scale": 1,
+      "as": 0.72
+    },
+    {
+      "id": "living_room_e1",
+      "tier": 7,
+      "name": "遙控器霸主",
+      "role": "elite",
+      "sceneId": "living_room",
+      "shape": "wolf",
+      "color": "#c45c5c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_t6"
+      },
+      "catalogHint": "先擊敗「枕頭刺客」",
+      "hp": 183,
+      "atk": 22,
+      "defChance": 0.14,
+      "counterChance": 0.1,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 43,
+        "material": 6,
+        "exp": 32
+      },
+      "scale": 1.1,
+      "as": 0.84
+    },
+    {
+      "id": "living_room_e2",
+      "tier": 8,
+      "name": "泡麵蒸氣騎士",
+      "role": "elite",
+      "sceneId": "living_room",
+      "shape": "plant",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_e1"
+      },
+      "catalogHint": "先擊敗「遙控器霸主」",
+      "hp": 200,
+      "atk": 24,
+      "defChance": 0.14,
+      "counterChance": 0.1,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 47,
+        "material": 6,
+        "exp": 35
+      },
+      "scale": 1.1,
+      "as": 0.84
+    },
+    {
+      "id": "living_room_e3",
+      "tier": 9,
+      "name": "遙控車暴走",
+      "role": "elite",
+      "sceneId": "living_room",
+      "shape": "skeleton",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_e2"
+      },
+      "catalogHint": "先擊敗「泡麵蒸氣騎士」",
+      "hp": 216,
+      "atk": 25,
+      "defChance": 0.14,
+      "counterChance": 0.1,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 50,
+        "material": 7,
+        "exp": 38
+      },
+      "scale": 1.1,
+      "as": 0.85
+    },
+    {
+      "id": "living_room_b1",
+      "tier": 10,
+      "name": "巷口沙發巨獸",
+      "role": "boss",
+      "sceneId": "living_room",
+      "shape": "dragon",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_e3"
+      },
+      "catalogHint": "先擊敗「遙控車暴走」",
+      "hp": 339,
+      "atk": 34,
+      "defChance": 0.2,
+      "counterChance": 0.14,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 88,
+        "material": 12,
+        "exp": 67
+      },
+      "scale": 1.25,
+      "as": 0.62
+    },
+    {
+      "id": "living_room_b2",
+      "tier": 11,
+      "name": "週末連播龍",
+      "role": "boss",
+      "sceneId": "living_room",
+      "shape": "dragon",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "living_room_b1"
+      },
+      "catalogHint": "先擊敗「巷口沙發巨獸」",
+      "hp": 361,
+      "atk": 35,
+      "defChance": 0.2,
+      "counterChance": 0.14,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 94,
+        "material": 13,
+        "exp": 72
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "bathroom_t1",
+      "tier": 12,
+      "name": "營養午餐盤精",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "slime",
+      "color": "#5a9a7a",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "本階段起步 · 打贏後開下一隻",
+      "hp": 104,
+      "atk": 14,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 22,
+        "material": 3,
+        "exp": 17
+      },
+      "scale": 1,
+      "as": 0.69
+    },
+    {
+      "id": "bathroom_t2",
+      "tier": 13,
+      "name": "橡膠擦怨靈",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "bat",
+      "color": "#c45c5c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t1"
+      },
+      "catalogHint": "先擊敗「營養午餐盤精」",
+      "hp": 116,
+      "atk": 16,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 25,
+        "material": 5,
+        "exp": 19
+      },
+      "scale": 1,
+      "as": 0.78
+    },
+    {
+      "id": "bathroom_t3",
+      "tier": 14,
+      "name": "洗手台藻兵",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "golem",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t2"
+      },
+      "catalogHint": "先擊敗「橡膠擦怨靈」",
+      "hp": 129,
+      "atk": 17,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 28,
+        "material": 5,
+        "exp": 21
+      },
+      "scale": 1,
+      "as": 0.65
+    },
+    {
+      "id": "bathroom_t4",
+      "tier": 15,
+      "name": "濕走廊怪",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "wolf",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t3"
+      },
+      "catalogHint": "先擊敗「洗手台藻兵」",
+      "hp": 141,
+      "atk": 19,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 30,
+        "material": 5,
+        "exp": 23
+      },
+      "scale": 1,
+      "as": 0.71
+    },
+    {
+      "id": "bathroom_t5",
+      "tier": 16,
+      "name": "鏡霧精",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "plant",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t4"
+      },
+      "catalogHint": "先擊敗「濕走廊怪」",
+      "hp": 154,
+      "atk": 21,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 33,
+        "material": 6,
+        "exp": 25
+      },
+      "scale": 1,
+      "as": 0.72
+    },
+    {
+      "id": "bathroom_t6",
+      "tier": 17,
+      "name": "牙刷糾察",
+      "role": "trash",
+      "sceneId": "bathroom",
+      "shape": "skeleton",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t5"
+      },
+      "catalogHint": "先擊敗「鏡霧精」",
+      "hp": 167,
+      "atk": 22,
+      "defChance": 0.1,
+      "counterChance": 0.065,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 36,
+        "material": 6,
+        "exp": 27
+      },
+      "scale": 1,
+      "as": 0.73
+    },
+    {
+      "id": "bathroom_e1",
+      "tier": 18,
+      "name": "熱水瓶霸主",
+      "role": "elite",
+      "sceneId": "bathroom",
+      "shape": "wolf",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_t6"
+      },
+      "catalogHint": "先擊敗「牙刷糾察」",
+      "hp": 239,
+      "atk": 28,
+      "defChance": 0.16,
+      "counterChance": 0.115,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 56,
+        "material": 8,
+        "exp": 42
+      },
+      "scale": 1.1,
+      "as": 0.84
+    },
+    {
+      "id": "bathroom_e2",
+      "tier": 19,
+      "name": "浴簾潛行者",
+      "role": "elite",
+      "sceneId": "bathroom",
+      "shape": "plant",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_e1"
+      },
+      "catalogHint": "先擊敗「熱水瓶霸主」",
+      "hp": 256,
+      "atk": 30,
+      "defChance": 0.16,
+      "counterChance": 0.115,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 60,
+        "material": 8,
+        "exp": 45
+      },
+      "scale": 1.1,
+      "as": 0.85
+    },
+    {
+      "id": "bathroom_e3",
+      "tier": 20,
+      "name": "馬桶傳說衛",
+      "role": "elite",
+      "sceneId": "bathroom",
+      "shape": "skeleton",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_e2"
+      },
+      "catalogHint": "先擊敗「浴簾潛行者」",
+      "hp": 272,
+      "atk": 32,
+      "defChance": 0.16,
+      "counterChance": 0.115,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 64,
+        "material": 9,
+        "exp": 48
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "bathroom_b1",
+      "tier": 21,
+      "name": "鐘聲水霧巨像",
+      "role": "boss",
+      "sceneId": "bathroom",
+      "shape": "dragon",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "bathroom_e3"
+      },
+      "catalogHint": "先擊敗「馬桶傳說衛」",
+      "hp": 414,
+      "atk": 41,
+      "defChance": 0.22,
+      "counterChance": 0.155,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 108,
+        "material": 15,
+        "exp": 83
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "kitchen_t1",
+      "tier": 22,
+      "name": "過期優格怪",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "slime",
+      "color": "#c45c5c",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "本階段起步 · 打贏後開下一隻",
+      "hp": 146,
+      "atk": 19,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 31,
+        "material": 5,
+        "exp": 24
+      },
+      "scale": 1,
+      "as": 0.78
+    },
+    {
+      "id": "kitchen_t2",
+      "tier": 23,
+      "name": "鍋鏟武士",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "bat",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t1"
+      },
+      "catalogHint": "先擊敗「過期優格怪」",
+      "hp": 158,
+      "atk": 21,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 34,
+        "material": 6,
+        "exp": 26
+      },
+      "scale": 1,
+      "as": 0.87
+    },
+    {
+      "id": "kitchen_t3",
+      "tier": 24,
+      "name": "冰櫃冷氣精",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "golem",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t2"
+      },
+      "catalogHint": "先擊敗「鍋鏟武士」",
+      "hp": 171,
+      "atk": 23,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 37,
+        "material": 6,
+        "exp": 28
+      },
+      "scale": 1,
+      "as": 0.65
+    },
+    {
+      "id": "kitchen_t4",
+      "tier": 25,
+      "name": "鹽酥雞油煙精",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "wolf",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t3"
+      },
+      "catalogHint": "先擊敗「冰櫃冷氣精」",
+      "hp": 183,
+      "atk": 24,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 39,
+        "material": 6,
+        "exp": 30
+      },
+      "scale": 1,
+      "as": 0.71
+    },
+    {
+      "id": "kitchen_t5",
+      "tier": 26,
+      "name": "砧板守衛",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "plant",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t4"
+      },
+      "catalogHint": "先擊敗「鹽酥雞油煙精」",
+      "hp": 196,
+      "atk": 26,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 42,
+        "material": 7,
+        "exp": 32
+      },
+      "scale": 1,
+      "as": 0.72
+    },
+    {
+      "id": "kitchen_t6",
+      "tier": 27,
+      "name": "汽水罐刺客",
+      "role": "trash",
+      "sceneId": "kitchen",
+      "shape": "skeleton",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t5"
+      },
+      "catalogHint": "先擊敗「砧板守衛」",
+      "hp": 209,
+      "atk": 28,
+      "defChance": 0.12,
+      "counterChance": 0.08,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 45,
+        "material": 7,
+        "exp": 34
+      },
+      "scale": 1,
+      "as": 0.73
+    },
+    {
+      "id": "kitchen_e1",
+      "tier": 28,
+      "name": "夜市冰箱王",
+      "role": "elite",
+      "sceneId": "kitchen",
+      "shape": "wolf",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_t6"
+      },
+      "catalogHint": "先擊敗「汽水罐刺客」",
+      "hp": 295,
+      "atk": 35,
+      "defChance": 0.18,
+      "counterChance": 0.13,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 69,
+        "material": 9,
+        "exp": 52
+      },
+      "scale": 1.1,
+      "as": 0.84
+    },
+    {
+      "id": "kitchen_e2",
+      "tier": 29,
+      "name": "炭火炎衛",
+      "role": "elite",
+      "sceneId": "kitchen",
+      "shape": "plant",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_e1"
+      },
+      "catalogHint": "先擊敗「夜市冰箱王」",
+      "hp": 312,
+      "atk": 37,
+      "defChance": 0.18,
+      "counterChance": 0.13,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 73,
+        "material": 10,
+        "exp": 56
+      },
+      "scale": 1.1,
+      "as": 0.85
+    },
+    {
+      "id": "kitchen_e3",
+      "tier": 30,
+      "name": "砧板剁斬者",
+      "role": "elite",
+      "sceneId": "kitchen",
+      "shape": "skeleton",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_e2"
+      },
+      "catalogHint": "先擊敗「炭火炎衛」",
+      "hp": 328,
+      "atk": 39,
+      "defChance": 0.18,
+      "counterChance": 0.13,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 77,
+        "material": 10,
+        "exp": 59
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "kitchen_b1",
+      "tier": 31,
+      "name": "燈海大火龍",
+      "role": "boss",
+      "sceneId": "kitchen",
+      "shape": "dragon",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_e3"
+      },
+      "catalogHint": "先擊敗「砧板剁斬者」",
+      "hp": 490,
+      "atk": 48,
+      "defChance": 0.24,
+      "counterChance": 0.17,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 128,
+        "material": 18,
+        "exp": 98
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "kitchen_b2",
+      "tier": 32,
+      "name": "錄音帶深淵主",
+      "role": "boss",
+      "sceneId": "kitchen",
+      "shape": "dragon",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "kitchen_b1"
+      },
+      "catalogHint": "先擊敗「燈海大火龍」",
+      "hp": 513,
+      "atk": 50,
+      "defChance": 0.24,
+      "counterChance": 0.17,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 134,
+        "material": 18,
+        "exp": 103
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "study_t1",
+      "tier": 33,
+      "name": "印泥史萊姆",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "slime",
+      "color": "#7d9edc",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "本階段起步 · 打贏後開下一隻",
+      "hp": 188,
+      "atk": 25,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 40,
+        "material": 7,
+        "exp": 31
+      },
+      "scale": 1,
+      "as": 0.78
+    },
+    {
+      "id": "study_t2",
+      "tier": 34,
+      "name": "名冊幽靈",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "bat",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t1"
+      },
+      "catalogHint": "先擊敗「印泥史萊姆」",
+      "hp": 200,
+      "atk": 27,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 43,
+        "material": 7,
+        "exp": 33
+      },
+      "scale": 1,
+      "as": 0.88
+    },
+    {
+      "id": "study_t3",
+      "tier": 35,
+      "name": "未簽到怪",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "golem",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t2"
+      },
+      "catalogHint": "先擊敗「名冊幽靈」",
+      "hp": 213,
+      "atk": 28,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 46,
+        "material": 7,
+        "exp": 35
+      },
+      "scale": 1,
+      "as": 0.74
+    },
+    {
+      "id": "study_t4",
+      "tier": 36,
+      "name": "擦槍布精",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "wolf",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t3"
+      },
+      "catalogHint": "先擊敗「未簽到怪」",
+      "hp": 225,
+      "atk": 30,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 48,
+        "material": 8,
+        "exp": 37
+      },
+      "scale": 1,
+      "as": 0.72
+    },
+    {
+      "id": "study_t5",
+      "tier": 37,
+      "name": "靶場灰兵",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "plant",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t4"
+      },
+      "catalogHint": "先擊敗「擦槍布精」",
+      "hp": 238,
+      "atk": 32,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 51,
+        "material": 8,
+        "exp": 39
+      },
+      "scale": 1,
+      "as": 0.73
+    },
+    {
+      "id": "study_t6",
+      "tier": 38,
+      "name": "公差錯勤妖",
+      "role": "trash",
+      "sceneId": "study",
+      "shape": "skeleton",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t5"
+      },
+      "catalogHint": "先擊敗「靶場灰兵」",
+      "hp": 251,
+      "atk": 33,
+      "defChance": 0.14,
+      "counterChance": 0.095,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 54,
+        "material": 8,
+        "exp": 41
+      },
+      "scale": 1,
+      "as": 0.73
+    },
+    {
+      "id": "study_e1",
+      "tier": 39,
+      "name": "公差文書長",
+      "role": "elite",
+      "sceneId": "study",
+      "shape": "wolf",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_t6"
+      },
+      "catalogHint": "先擊敗「公差錯勤妖」",
+      "hp": 351,
+      "atk": 41,
+      "defChance": 0.2,
+      "counterChance": 0.145,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 82,
+        "material": 11,
+        "exp": 63
+      },
+      "scale": 1.1,
+      "as": 0.85
+    },
+    {
+      "id": "study_e2",
+      "tier": 40,
+      "name": "櫃架倒塌衛",
+      "role": "elite",
+      "sceneId": "study",
+      "shape": "plant",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_e1"
+      },
+      "catalogHint": "先擊敗「公差文書長」",
+      "hp": 368,
+      "atk": 43,
+      "defChance": 0.2,
+      "counterChance": 0.145,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 86,
+        "material": 12,
+        "exp": 66
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "study_e3",
+      "tier": 41,
+      "name": "紅筆士官長",
+      "role": "elite",
+      "sceneId": "study",
+      "shape": "skeleton",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_e2"
+      },
+      "catalogHint": "先擊敗「櫃架倒塌衛」",
+      "hp": 385,
+      "atk": 45,
+      "defChance": 0.2,
+      "counterChance": 0.145,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 90,
+        "material": 12,
+        "exp": 69
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "study_b1",
+      "tier": 42,
+      "name": "值星名冊守護",
+      "role": "boss",
+      "sceneId": "study",
+      "shape": "dragon",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "study_e3"
+      },
+      "catalogHint": "先擊敗「紅筆士官長」",
+      "hp": 566,
+      "atk": 55,
+      "defChance": 0.26,
+      "counterChance": 0.185,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 148,
+        "material": 20,
+        "exp": 114
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "school_t1",
+      "tier": 43,
+      "name": "打卡鐘飛蝠",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "slime",
+      "color": "#c9a227",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "本階段起步 · 打贏後開下一隻",
+      "hp": 230,
+      "atk": 30,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 49,
+        "material": 8,
+        "exp": 38
+      },
+      "scale": 1,
+      "as": 0.78
+    },
+    {
+      "id": "school_t2",
+      "tier": 44,
+      "name": "影印沙塵精",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "bat",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t1"
+      },
+      "catalogHint": "先擊敗「打卡鐘飛蝠」",
+      "hp": 242,
+      "atk": 32,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 52,
+        "material": 8,
+        "exp": 40
+      },
+      "scale": 1,
+      "as": 0.88
+    },
+    {
+      "id": "school_t3",
+      "tier": 45,
+      "name": "下班鐘怨念",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "golem",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t2"
+      },
+      "catalogHint": "先擊敗「影印沙塵精」",
+      "hp": 255,
+      "atk": 34,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 55,
+        "material": 8,
+        "exp": 42
+      },
+      "scale": 1,
+      "as": 0.74
+    },
+    {
+      "id": "school_t4",
+      "tier": 46,
+      "name": "公文重壓怪",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "wolf",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t3"
+      },
+      "catalogHint": "先擊敗「下班鐘怨念」",
+      "hp": 267,
+      "atk": 35,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 57,
+        "material": 9,
+        "exp": 44
+      },
+      "scale": 1,
+      "as": 0.81
+    },
+    {
+      "id": "school_t5",
+      "tier": 47,
+      "name": "會議投影影",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "plant",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t4"
+      },
+      "catalogHint": "先擊敗「公文重壓怪」",
+      "hp": 280,
+      "atk": 37,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 60,
+        "material": 9,
+        "exp": 46
+      },
+      "scale": 1,
+      "as": 0.81
+    },
+    {
+      "id": "school_t6",
+      "tier": 48,
+      "name": "茶水間小弟",
+      "role": "trash",
+      "sceneId": "school",
+      "shape": "skeleton",
+      "color": "#e08060",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t5"
+      },
+      "catalogHint": "先擊敗「會議投影影」",
+      "hp": 293,
+      "atk": 39,
+      "defChance": 0.16,
+      "counterChance": 0.11,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 63,
+        "material": 10,
+        "exp": 48
+      },
+      "scale": 1,
+      "as": 0.73
+    },
+    {
+      "id": "school_e1",
+      "tier": 49,
+      "name": "月績魔導士",
+      "role": "elite",
+      "sceneId": "school",
+      "shape": "wolf",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_t6"
+      },
+      "catalogHint": "先擊敗「茶水間小弟」",
+      "hp": 408,
+      "atk": 47,
+      "defChance": 0.22,
+      "counterChance": 0.16,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 95,
+        "material": 13,
+        "exp": 73
+      },
+      "scale": 1.1,
+      "as": 0.85
+    },
+    {
+      "id": "school_e2",
+      "tier": 50,
+      "name": "倉庫守衛",
+      "role": "elite",
+      "sceneId": "school",
+      "shape": "plant",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_e1"
+      },
+      "catalogHint": "先擊敗「月績魔導士」",
+      "hp": 424,
+      "atk": 49,
+      "defChance": 0.22,
+      "counterChance": 0.16,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 99,
+        "material": 13,
+        "exp": 76
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "school_e3",
+      "tier": 51,
+      "name": "主管投影",
+      "role": "elite",
+      "sceneId": "school",
+      "shape": "skeleton",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_e2"
+      },
+      "catalogHint": "先擊敗「倉庫守衛」",
+      "hp": 441,
+      "atk": 52,
+      "defChance": 0.22,
+      "counterChance": 0.16,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 103,
+        "material": 14,
+        "exp": 79
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "school_b1",
+      "tier": 52,
+      "name": "業績鐘樓主",
+      "role": "boss",
+      "sceneId": "school",
+      "shape": "dragon",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_e3"
+      },
+      "catalogHint": "先擊敗「主管投影」",
+      "hp": 641,
+      "atk": 63,
+      "defChance": 0.28,
+      "counterChance": 0.2,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 168,
+        "material": 23,
+        "exp": 129
+      },
+      "scale": 1.25,
+      "as": 0.63
+    },
+    {
+      "id": "school_b2",
+      "tier": 53,
+      "name": "喝咖啡災厄",
+      "role": "boss",
+      "sceneId": "school",
+      "shape": "dragon",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "school_b1"
+      },
+      "catalogHint": "先擊敗「業績鐘樓主」",
+      "hp": 664,
+      "atk": 66,
+      "defChance": 0.28,
+      "counterChance": 0.2,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 174,
+        "material": 24,
+        "exp": 134
+      },
+      "scale": 1.25,
+      "as": 0.64
+    },
+    {
+      "id": "mall_t1",
+      "tier": 54,
+      "name": "紅包特價車",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "slime",
+      "color": "#8a6bb5",
+      "unlock": {
+        "type": "default"
+      },
+      "catalogHint": "本階段起步 · 打贏後開下一隻",
+      "hp": 272,
+      "atk": 36,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 58,
+        "material": 9,
+        "exp": 45
+      },
+      "scale": 1,
+      "as": 0.79
+    },
+    {
+      "id": "mall_t2",
+      "tier": 55,
+      "name": "試用奶粉精",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "bat",
+      "color": "#3cb8a0",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t1"
+      },
+      "catalogHint": "先擊敗「紅包特價車」",
+      "hp": 284,
+      "atk": 38,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 61,
+        "material": 9,
+        "exp": 47
+      },
+      "scale": 1,
+      "as": 0.89
+    },
+    {
+      "id": "mall_t3",
+      "tier": 56,
+      "name": "戶政排隊怨",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "golem",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t2"
+      },
+      "catalogHint": "先擊敗「試用奶粉精」",
+      "hp": 297,
+      "atk": 39,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 64,
+        "material": 10,
+        "exp": 49
+      },
+      "scale": 1,
+      "as": 0.75
+    },
+    {
+      "id": "mall_t4",
+      "tier": 57,
+      "name": "房貸會員幽靈",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "wolf",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t3"
+      },
+      "catalogHint": "先擊敗「戶政排隊怨」",
+      "hp": 309,
+      "atk": 41,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 66,
+        "material": 10,
+        "exp": 51
+      },
+      "scale": 1,
+      "as": 0.81
+    },
+    {
+      "id": "mall_t5",
+      "tier": 58,
+      "name": "安親接送風",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "plant",
+      "color": "#e08060",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t4"
+      },
+      "catalogHint": "先擊敗「房貸會員幽靈」",
+      "hp": 322,
+      "atk": 43,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 69,
+        "material": 10,
+        "exp": 53
+      },
+      "scale": 1,
+      "as": 0.82
+    },
+    {
+      "id": "mall_t6",
+      "tier": 59,
+      "name": "婚紗櫥窗影",
+      "role": "trash",
+      "sceneId": "mall",
+      "shape": "skeleton",
+      "color": "#6a7888",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t5"
+      },
+      "catalogHint": "先擊敗「安親接送風」",
+      "hp": 335,
+      "atk": 44,
+      "defChance": 0.18,
+      "counterChance": 0.125,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 72,
+        "material": 12,
+        "exp": 55
+      },
+      "scale": 1,
+      "as": 0.83
+    },
+    {
+      "id": "mall_e1",
+      "tier": 60,
+      "name": "親戚盯婚魔導",
+      "role": "elite",
+      "sceneId": "mall",
+      "shape": "wolf",
+      "color": "#d4a24c",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_t6"
+      },
+      "catalogHint": "先擊敗「婚紗櫥窗影」",
+      "hp": 463,
+      "atk": 54,
+      "defChance": 0.24,
+      "counterChance": 0.175,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 108,
+        "material": 15,
+        "exp": 83
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "mall_e2",
+      "tier": 61,
+      "name": "嬰兒室迷宮衛",
+      "role": "elite",
+      "sceneId": "mall",
+      "shape": "plant",
+      "color": "#9bb0b8",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_e1"
+      },
+      "catalogHint": "先擊敗「親戚盯婚魔導」",
+      "hp": 480,
+      "atk": 55,
+      "defChance": 0.24,
+      "counterChance": 0.175,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 112,
+        "material": 15,
+        "exp": 86
+      },
+      "scale": 1.1,
+      "as": 0.86
+    },
+    {
+      "id": "mall_e3",
+      "tier": 62,
+      "name": "家長LINE殺陣",
+      "role": "elite",
+      "sceneId": "mall",
+      "shape": "skeleton",
+      "color": "#e08060",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_e2"
+      },
+      "catalogHint": "先擊敗「嬰兒室迷宮衛」",
+      "hp": 497,
+      "atk": 57,
+      "defChance": 0.24,
+      "counterChance": 0.175,
+      "defendReduce": 0.35,
+      "rewards": {
+        "gold": 116,
+        "material": 16,
+        "exp": 89
+      },
+      "scale": 1.1,
+      "as": 0.87
+    },
+    {
+      "id": "mall_b1",
+      "tier": 63,
+      "name": "婚紗鎮場龍",
+      "role": "boss",
+      "sceneId": "mall",
+      "shape": "dragon",
+      "color": "#e08060",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_e3"
+      },
+      "catalogHint": "先擊敗「家長LINE殺陣」",
+      "hp": 718,
+      "atk": 71,
+      "defChance": 0.3,
+      "counterChance": 0.215,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 187,
+        "material": 25,
+        "exp": 144
+      },
+      "scale": 1.25,
+      "as": 0.64
+    },
+    {
+      "id": "mall_b2",
+      "tier": 64,
+      "name": "中年房貸獸",
+      "role": "boss",
+      "sceneId": "mall",
+      "shape": "dragon",
+      "color": "#e08060",
+      "unlock": {
+        "type": "defeat",
+        "monsterId": "mall_b1"
+      },
+      "catalogHint": "先擊敗「婚紗鎮場龍」",
+      "hp": 740,
+      "atk": 72,
+      "defChance": 0.3,
+      "counterChance": 0.215,
+      "defendReduce": 0.45,
+      "rewards": {
+        "gold": 193,
+        "material": 26,
+        "exp": 149
+      },
+      "scale": 1.25,
+      "as": 0.65
+    }
+  ],
+  "progression": {
+    "chainWithinScene": true,
+    "note": "同場景依 tier 排序鏈式解鎖：打贏前一隻才開放下一隻（含精英／Boss）。",
+    "playabilityNote": "2026-11 playability: mild elite/boss ease; living t3–t5 firmer soft-wall; trash mat +15%."
+  },
+  "note": "各怪 as（攻速）供顯示／節奏；玩家冷卻改由 combat.json + 武器 asBonus 計算。"
+}

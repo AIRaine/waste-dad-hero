@@ -1,0 +1,367 @@
+{
+  "rules": {
+    "note": "場景扭蛋：依目前場景抽人情角色 buff／debuff。輕諷刺、典型角色，不寫真人姓名。詳見 docs/scene-gacha-buffs.md。",
+    "unlock": {
+      "type": "sceneClears",
+      "sceneId": "living_room",
+      "count": 1
+    },
+    "maxActive": 1,
+    "defaultDurationBattles": 5,
+    "expireOnSceneChange": true,
+    "firstFreePerScene": true,
+    "drawGold": 14,
+    "rerollGold": 22,
+    "skipAllowed": true,
+    "blockDuringAutofight": true,
+    "trainingIgnoresTick": true
+  },
+  "effectKeys": [
+    "atkPct",
+    "asBonus",
+    "critChance",
+    "defPct",
+    "mitigation",
+    "hpPct",
+    "goldFindPct",
+    "materialFindPct"
+  ],
+  "pools": {
+    "living_room": [
+      {
+        "id": "lr_sausage_uncle",
+        "name": "賣香腸阿北",
+        "tagline": "多加辣，也多加攻。",
+        "tone": "buff",
+        "weight": 12,
+        "effects": { "atkPct": 0.14 },
+        "flavor": "騎樓煙霧裡遞出來的那根，比零用錢還燙手。"
+      },
+      {
+        "id": "lr_grocery_aunt",
+        "name": "雜貨店阿婆",
+        "tagline": "記帳本翻一頁，防禦就厚一層。",
+        "tone": "buff",
+        "weight": 11,
+        "effects": { "defPct": 0.12, "hpPct": 0.06 },
+        "flavor": "欠帳可以，但要叫聲阿婆。"
+      },
+      {
+        "id": "lr_marble_king",
+        "name": "彈珠大王同學",
+        "tagline": "手穩，暴擊也穩。",
+        "tone": "buff",
+        "weight": 10,
+        "effects": { "critChance": 0.08 },
+        "flavor": "巷口稱王的不是力氣，是角度。"
+      },
+      {
+        "id": "lr_mahjong_uncle",
+        "name": "騎樓麻將叔",
+        "tagline": "胡了就猛，防線漏洞百出。",
+        "tone": "mixed",
+        "weight": 9,
+        "effects": { "critChance": 0.1, "defPct": -0.08 },
+        "flavor": "自摸的爽感，換你扛一下漏風。"
+      },
+      {
+        "id": "lr_tv_host",
+        "name": "電視購物播報",
+        "tagline": "語速超快，砍價也砍攻。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "asBonus": 0.08, "atkPct": -0.06 },
+        "flavor": "倒數三秒——你的出手也跟著催促。"
+      },
+      {
+        "id": "lr_nosy_neighbor",
+        "name": "窺屏鄰居",
+        "tagline": "閒話降低氣勢，卻讓你更小心。",
+        "tone": "debuff",
+        "weight": 7,
+        "effects": { "atkPct": -0.08, "mitigation": 0.04 },
+        "flavor": "鐵窗後那雙眼睛，比怪還先到。"
+      }
+    ],
+    "bathroom": [
+      {
+        "id": "ba_eraser_crush",
+        "name": "鄰班借橡皮的她",
+        "tagline": "心跳加速，攻速與暴擊一起上來。",
+        "tone": "buff",
+        "weight": 11,
+        "effects": { "asBonus": 0.06, "critChance": 0.06 },
+        "flavor": "下課鐘響前，橡皮擦比情書好借。"
+      },
+      {
+        "id": "ba_lunch_aunt",
+        "name": "營養午餐阿姨",
+        "tagline": "多吃一口，血厚手慢。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "hpPct": 0.12, "asBonus": -0.04 },
+        "flavor": "菜瓜煮太爛，但熱量是真的。"
+      },
+      {
+        "id": "ba_correction_monitor",
+        "name": "訂正本班長",
+        "tagline": "規矩加防，銳氣打折。",
+        "tone": "mixed",
+        "weight": 9,
+        "effects": { "defPct": 0.14, "atkPct": -0.07 },
+        "flavor": "紅筆比你的藉口還快。"
+      },
+      {
+        "id": "ba_toilet_legend",
+        "name": "廁所傳說學長",
+        "tagline": "嚇出腎上腺素：暴擊↑、血量↓。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "critChance": 0.09, "hpPct": -0.08 },
+        "flavor": "洗手台的水聲，永遠多一段。"
+      },
+      {
+        "id": "ba_flag_heat",
+        "name": "升旗熱暈司令",
+        "tagline": "曬到站不穩，減傷換攻速。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "mitigation": 0.05, "asBonus": -0.05 },
+        "flavor": "操場柏油會發光，人會融化。"
+      },
+      {
+        "id": "ba_office_summons",
+        "name": "叫去辦公室通知",
+        "tagline": "腿軟：攻降、防升。",
+        "tone": "debuff",
+        "weight": 7,
+        "effects": { "atkPct": -0.1, "defPct": 0.06 },
+        "flavor": "廣播叫到名字時，世界靜音三秒。"
+      }
+    ],
+    "kitchen": [
+      {
+        "id": "ki_ambiguous_crush",
+        "name": "高中曖昧女同學",
+        "tagline": "心跳亂拍：攻速＋暴擊。",
+        "tone": "buff",
+        "weight": 11,
+        "effects": { "asBonus": 0.07, "critChance": 0.07 },
+        "flavor": "汽水罐碰一下，比告白還大聲。"
+      },
+      {
+        "id": "ki_fried_chicken_boss",
+        "name": "鹽酥雞攤老闆",
+        "tagline": "油煙加攻，防線也油。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "atkPct": 0.15, "defPct": -0.08 },
+        "flavor": "多撒椒鹽，世界都變鋒利。"
+      },
+      {
+        "id": "ki_claw_master",
+        "name": "夾娃娃達人",
+        "tagline": "手準暴擊高，口袋變薄。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "critChance": 0.1, "goldFindPct": -0.15 },
+        "flavor": "中一次，再投十次。"
+      },
+      {
+        "id": "ki_scooter_senior",
+        "name": "載人機車學長",
+        "tagline": "風速很快，護甲很薄。",
+        "tone": "mixed",
+        "weight": 9,
+        "effects": { "asBonus": 0.09, "mitigation": -0.04 },
+        "flavor": "後座抓衣角，比抓安全帽真實。"
+      },
+      {
+        "id": "ki_tape_clerk",
+        "name": "錄音帶店店員",
+        "tagline": "節奏感提升攻擊。",
+        "tone": "buff",
+        "weight": 9,
+        "effects": { "atkPct": 0.1 },
+        "flavor": "試聽耳機裡，全是未說出口的詞。"
+      },
+      {
+        "id": "ki_rejected_soda",
+        "name": "被退回的汽水告白",
+        "tagline": "心涼：攻速掉、暴擊賭氣升。",
+        "tone": "mixed",
+        "weight": 7,
+        "effects": { "asBonus": -0.05, "critChance": 0.08 },
+        "flavor": "罐還是冰的，臉先熱完。"
+      }
+    ],
+    "study": [
+      {
+        "id": "st_duty_officer",
+        "name": "值星官嗓門",
+        "tagline": "吼到你出手變重、變慢。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "atkPct": 0.16, "asBonus": -0.06 },
+        "flavor": "口令比子彈早到。"
+      },
+      {
+        "id": "st_chore_buddy",
+        "name": "公差推車夥伴",
+        "tagline": "一起扛，血防升、輸出讓。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "hpPct": 0.1, "defPct": 0.08, "atkPct": -0.06 },
+        "flavor": "菜箱比步槍重，友誼也是。"
+      },
+      {
+        "id": "st_letter_clerk",
+        "name": "家書收發兵",
+        "tagline": "想家加血。",
+        "tone": "buff",
+        "weight": 9,
+        "effects": { "hpPct": 0.11 },
+        "flavor": "信封邊角被翻破，心還在。"
+      },
+      {
+        "id": "st_phone_queue",
+        "name": "電話亭排隊哥",
+        "tagline": "焦慮暴擊，出手變頓。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "critChance": 0.09, "asBonus": -0.05 },
+        "flavor": "還有十二個人，母親在線的那頭。"
+      },
+      {
+        "id": "st_pt_leader",
+        "name": "新訓體能班長",
+        "tagline": "操到防升攻升、血微扣。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "atkPct": 0.08, "defPct": 0.08, "hpPct": -0.05 },
+        "flavor": "伏地挺身不是懲罰，是日常問候。"
+      },
+      {
+        "id": "st_rain_sentry",
+        "name": "夜哨雨衣影",
+        "tagline": "又冷又醒：減傷換攻。",
+        "tone": "mixed",
+        "weight": 7,
+        "effects": { "mitigation": 0.06, "atkPct": -0.07 },
+        "flavor": "雨打帽簷，比打瞌睡大聲。"
+      }
+    ],
+    "school": [
+      {
+        "id": "sc_overtime_boss",
+        "name": "加班投影主管",
+        "tagline": "業績加攻，身心減速掉血。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "atkPct": 0.18, "asBonus": -0.07, "hpPct": -0.06 },
+        "flavor": "投影片第 47 頁，還有『最後一題』。"
+      },
+      {
+        "id": "sc_tea_gossip",
+        "name": "茶水間八卦同事",
+        "tagline": "情報暴擊，站得不穩。",
+        "tone": "mixed",
+        "weight": 9,
+        "effects": { "critChance": 0.1, "defPct": -0.07 },
+        "flavor": "小聲到整層樓都聽得到。"
+      },
+      {
+        "id": "sc_punch_clock",
+        "name": "打卡鐘幽靈",
+        "tagline": "準時＝攻速。",
+        "tone": "buff",
+        "weight": 10,
+        "effects": { "asBonus": 0.08 },
+        "flavor": "差一秒就變故事主角。"
+      },
+      {
+        "id": "sc_month_end_sales",
+        "name": "月終業績業務",
+        "tagline": "拼了：攻與金↑，防↓。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "atkPct": 0.12, "goldFindPct": 0.12, "defPct": -0.1 },
+        "flavor": "口號比產品還長。"
+      },
+      {
+        "id": "sc_mrt_crowd",
+        "name": "通勤車廂人潮",
+        "tagline": "擠到只能防，很難揮。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "mitigation": 0.06, "asBonus": -0.06 },
+        "flavor": "扶手是假的，肩膀是真的。"
+      },
+      {
+        "id": "sc_keyboard_hot",
+        "name": "熱搜鍵盤鄉民",
+        "tagline": "帶風向暴擊，自己也脆。",
+        "tone": "mixed",
+        "weight": 7,
+        "effects": { "critChance": 0.11, "hpPct": -0.07 },
+        "flavor": "標題黨不是職業，是天分。（不影射真人）"
+      }
+    ],
+    "mall": [
+      {
+        "id": "ma_pta_mom",
+        "name": "家長會志工媽",
+        "tagline": "護盾模式：防血升、輸出讓。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "defPct": 0.12, "hpPct": 0.1, "atkPct": -0.08 },
+        "flavor": "簽名單比刀還利，但她站你這邊。"
+      },
+      {
+        "id": "ma_realtor_pitch",
+        "name": "房仲話術先生",
+        "tagline": "說到你加攻，也說到你少賺。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "atkPct": 0.14, "goldFindPct": -0.18 },
+        "flavor": "『只差一點點』通常差很多。"
+      },
+      {
+        "id": "ma_diaper_night",
+        "name": "尿布夜班奶爸",
+        "tagline": "精神緊繃：攻速↑防↓。",
+        "tone": "mixed",
+        "weight": 10,
+        "effects": { "asBonus": 0.08, "defPct": -0.08 },
+        "flavor": "三點的哭聲，是最新的戰鬥音樂。"
+      },
+      {
+        "id": "ma_wedding_photog",
+        "name": "婚紗攝影師",
+        "tagline": "抓瞬間＝暴擊。",
+        "tone": "buff",
+        "weight": 9,
+        "effects": { "critChance": 0.09 },
+        "flavor": "微笑再說一次，這次要真的。"
+      },
+      {
+        "id": "ma_village_broadcast",
+        "name": "社區里長廣播",
+        "tagline": "公告減傷，節奏被打斷。",
+        "tone": "mixed",
+        "weight": 8,
+        "effects": { "mitigation": 0.05, "asBonus": -0.04 },
+        "flavor": "資源回收日提醒，永遠恰逢其時。"
+      },
+      {
+        "id": "ma_price_index",
+        "name": "物價行情播報",
+        "tagline": "精打細算多掉素材，出手縮手。",
+        "tone": "mixed",
+        "weight": 7,
+        "effects": { "materialFindPct": 0.15, "atkPct": -0.07 },
+        "flavor": "蛋價新聞人人懂，沒人真的比較開心。"
+      }
+    ]
+  }
+}

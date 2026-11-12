@@ -1,0 +1,80 @@
+{
+  "defaultName": "廢材老爸",
+  "maxNameLength": 8,
+  "defaults": {
+    "hair": "short",
+    "hairColor": "black",
+    "face": "round",
+    "skin": "warm",
+    "body": "dad",
+    "trait": "none"
+  },
+  "categories": [
+    {
+      "id": "hair",
+      "label": "髮型",
+      "options": [
+        { "id": "short", "label": "清爽短髮" },
+        { "id": "bowl", "label": "鍋蓋頭" },
+        { "id": "spiky", "label": "抓狂刺刺" },
+        { "id": "bald", "label": "地中海" },
+        { "id": "ponytail", "label": "小馬尾" }
+      ]
+    },
+    {
+      "id": "hairColor",
+      "label": "髮色",
+      "options": [
+        { "id": "black", "label": "烏黑", "color": "#2a2430" },
+        { "id": "brown", "label": "茶棕", "color": "#6b4423" },
+        { "id": "gray", "label": "花白", "color": "#9aa3ad" },
+        { "id": "blonde", "label": "淺金", "color": "#d4b06a" },
+        { "id": "blue", "label": "爸味藍", "color": "#3a5f8a" }
+      ]
+    },
+    {
+      "id": "face",
+      "label": "臉型",
+      "options": [
+        { "id": "round", "label": "圓臉" },
+        { "id": "square", "label": "國字臉" },
+        { "id": "oval", "label": "鵝蛋臉" },
+        { "id": "cheeky", "label": "肉肉臉" },
+        { "id": "slim", "label": "瘦長臉" }
+      ]
+    },
+    {
+      "id": "skin",
+      "label": "膚色",
+      "options": [
+        { "id": "warm", "label": "暖米", "color": "#f0d2b0" },
+        { "id": "fair", "label": "白皙", "color": "#f7e4d0" },
+        { "id": "tan", "label": "小麥", "color": "#d0a07a" },
+        { "id": "deep", "label": "深褐", "color": "#8d5a3c" },
+        { "id": "rosy", "label": "紅潤", "color": "#efc0b0" }
+      ]
+    },
+    {
+      "id": "body",
+      "label": "身形",
+      "options": [
+        { "id": "dad", "label": "標準老爸" },
+        { "id": "stocky", "label": "壯碩" },
+        { "id": "slim", "label": "纖細" },
+        { "id": "tall", "label": "高挑" },
+        { "id": "round", "label": "圓潤" }
+      ]
+    },
+    {
+      "id": "trait",
+      "label": "特徵",
+      "options": [
+        { "id": "none", "label": "無" },
+        { "id": "glasses", "label": "粗框眼鏡" },
+        { "id": "beard", "label": "落腮鬍" },
+        { "id": "mole", "label": "幸運痣" },
+        { "id": "blush", "label": "易臉紅" }
+      ]
+    }
+  ]
+}

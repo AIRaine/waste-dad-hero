@@ -1,0 +1,43 @@
+{
+  "catalog": [
+    {
+      "id": "bless_scroll",
+      "name": "阿嬤香火袋",
+      "desc": "強化時提高成功率（可疊）。阿嬤說會保佑。",
+      "priceGold": 32,
+      "effect": {
+        "type": "successBoost",
+        "perStack": 0.08,
+        "maxStack": 3
+      }
+    },
+    {
+      "id": "protect_scroll",
+      "name": "平安符",
+      "desc": "失敗時避免炸裝。廟口請回來的。",
+      "priceGold": 45,
+      "effect": {
+        "type": "destroyProtect"
+      }
+    },
+    {
+      "id": "stable_charm",
+      "name": "安定金牌",
+      "desc": "失敗時避免降階。像那種別在書包的小金牌。",
+      "priceGold": 42,
+      "effect": {
+        "type": "downgradeProtect"
+      }
+    },
+    {
+      "id": "double_loot",
+      "name": "雙倍壓歲券",
+      "desc": "接下來數場戰鬥素材加倍。過年餘威。",
+      "priceGold": 52,
+      "effect": {
+        "type": "doubleLoot",
+        "battles": 5
+      }
+    }
+  ]
+}

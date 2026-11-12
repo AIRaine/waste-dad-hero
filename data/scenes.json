@@ -1,0 +1,141 @@
+{
+  "defaultId": "living_room",
+  "scenes": [
+    {
+      "id": "living_room",
+      "name": "巷口童年",
+      "emoji": "🏘️",
+      "flavor": "民國70年代：鐵窗騎樓、電視雪花與彈珠的戰場。",
+      "order": 1,
+      "unlock": {
+        "type": "default"
+      },
+      "accent": "#c9a227",
+      "bg": [
+        "#1a3340",
+        "#122028"
+      ]
+    },
+    {
+      "id": "bathroom",
+      "name": "校園求學",
+      "emoji": "🏫",
+      "flavor": "營養午餐與訂正本的年代，廁所傳說尚未退散。",
+      "order": 2,
+      "unlock": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "sceneClears",
+            "sceneId": "living_room",
+            "count": 5
+          },
+          {
+            "type": "enhance",
+            "level": 3
+          }
+        ]
+      },
+      "accent": "#3cb8a0",
+      "bg": [
+        "#163840",
+        "#102428"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "夜市情芽",
+      "emoji": "🍜",
+      "flavor": "鹽酥雞油煙裡，第一次想變得帥一點。",
+      "order": 3,
+      "unlock": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "sceneClears",
+            "sceneId": "bathroom",
+            "count": 3
+          },
+          {
+            "type": "enhance",
+            "level": 5
+          }
+        ]
+      },
+      "accent": "#d4655c",
+      "bg": [
+        "#3a2420",
+        "#1c1412"
+      ]
+    },
+    {
+      "id": "study",
+      "name": "當兵日常",
+      "emoji": "🪖",
+      "flavor": "新訓、公差、哨音與家書——個人意志先學會排隊。",
+      "order": 4,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "accent": "#7d9edc",
+      "bg": [
+        "#1c2438",
+        "#121820"
+      ]
+    },
+    {
+      "id": "school",
+      "name": "出社會",
+      "emoji": "🏢",
+      "flavor": "打卡鐘比校長鈴更準時；世界改用業績算分。",
+      "order": 5,
+      "unlock": {
+        "type": "sceneClears",
+        "sceneId": "study",
+        "count": 2
+      },
+      "accent": "#6fbf7a",
+      "bg": [
+        "#1a3028",
+        "#101c18"
+      ]
+    },
+    {
+      "id": "mall",
+      "name": "成家立業",
+      "emoji": "👨‍👧",
+      "flavor": "婚紗、尿布、家長LINE與房貸——一路打到2026，英雄名叫爸爸。",
+      "order": 6,
+      "unlock": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "anyOf",
+            "rules": [
+              {
+                "type": "sceneClears",
+                "sceneId": "kitchen",
+                "count": 4
+              },
+              {
+                "type": "sceneClears",
+                "sceneId": "school",
+                "count": 2
+              }
+            ]
+          },
+          {
+            "type": "kills",
+            "count": 35
+          }
+        ]
+      },
+      "accent": "#e0b35a",
+      "bg": [
+        "#302418",
+        "#1a1410"
+      ]
+    }
+  ]
+}

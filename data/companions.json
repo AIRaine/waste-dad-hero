@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "implemented": false,
+  "notes": "未來「抽盲盒角色」同伴系統的資料骨架。目前不進戰鬥計算、無抽取 UI。",
+  "blindBox": {
+    "currencyItemId": "blind_ticket",
+    "pitySoft": 10,
+    "pityHard": 30,
+    "rates": { "N": 0.62, "R": 0.28, "SR": 0.08, "SSR": 0.02 }
+  },
+  "buffKinds": ["atkPct", "hp", "critChance", "goldFind", "materialFind", "enhanceSuccess"],
+  "companions": [
+    {
+      "id": "comp_slippers",
+      "name": "飛天拖鞋",
+      "rarity": "N",
+      "theme": "living_room",
+      "flavor": "專打遙控器失蹤案。",
+      "buffs": { "atkPct": 0.03 },
+      "source": "blindbox",
+      "implemented": false
+    },
+    {
+      "id": "comp_rubber_duck",
+      "name": "橡膠鴨參謀",
+      "rarity": "R",
+      "theme": "bathroom",
+      "flavor": "會在你格擋失敗時叫一聲。",
+      "buffs": { "hp": 8, "critChance": 0.02 },
+      "source": "blindbox",
+      "implemented": false
+    },
+    {
+      "id": "comp_ladle",
+      "name": "湯勺勇者",
+      "rarity": "SR",
+      "theme": "kitchen",
+      "flavor": "炒菜與炒怪的界線很模糊。",
+      "buffs": { "atkPct": 0.08, "materialFind": 0.1 },
+      "source": "blindbox",
+      "implemented": false
+    },
+    {
+      "id": "comp_report_card",
+      "name": "成績單幽靈",
+      "rarity": "SSR",
+      "theme": "school",
+      "flavor": "看到紅字會讓敵人暴擊上升——開開玩笑。",
+      "buffs": { "atkPct": 0.12, "enhanceSuccess": 0.05, "goldFind": 0.1 },
+      "source": "blindbox",
+      "implemented": false
+    }
+  ]
+}

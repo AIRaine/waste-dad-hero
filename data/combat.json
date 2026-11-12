@@ -1,0 +1,51 @@
+{
+  "playerBaseAs": 0.85,
+  "minCooldownMs": 480,
+  "maxCooldownMs": 1200,
+  "autoFight": {
+    "note": "掛機間隔 = 玩家攻擊冷卻（由玩家攻速換算）。夾在 min/max；與怪物出手脫鉤。",
+    "minWaitMs": 450,
+    "maxWaitMs": 1150,
+    "paceBias": 1
+  },
+  "monsterAttack": {
+    "note": "僅在掛機打怪（allowMonsterSwing）時依 as 冷卻出手；未開打不偷打玩家。命中套減傷／格擋，並觸發受擊閃爍與「怪物攻擊」紀錄。",
+    "hitFlashMs": 420,
+    "attackPoseMs": 340,
+    "openingDelayFrac": 0.55
+  },
+  "monsterAsDefaults": {
+    "trash": 0.75,
+    "elite": 0.88,
+    "boss": 0.68
+  },
+  "paidSpeedBoost": {
+    "implemented": false,
+    "id": "speed_boost_pass",
+    "name": "疾風加速券",
+    "asBonus": 0.12,
+    "source": "iap_stub",
+    "note": "未來付費加速 stub；asBonus 刻意偏低以免後期穿頂。implemented:false 不加計算。"
+  },
+  "tuning": {
+    "note": "2026-11 放慢可讀節奏：低基底 + 高 CD 下限，裝備加成就不容易頂穿。",
+    "targetEarlyCdMs": 1100,
+    "targetLateCdMs": 550,
+    "formula": "cooldownMs = clamp(1000 / AS, minCooldownMs, maxCooldownMs); AS = playerBaseAs + Σ gear.asBonus"
+  },
+  "trainingDummy": {
+    "id": "training_dummy",
+    "name": "練功木頭人",
+    "shape": "dummy",
+    "color": "#a67c3a",
+    "scale": 1.05,
+    "displayHp": 9999,
+    "hint": "訓練用 · 不扣血、不反擊、不主動攻擊",
+    "note": "固定減傷依難度；傷害只飄字，不改木頭人／玩家 HP。對手選單置頂。",
+    "defByDifficulty": {
+      "easy": 0.15,
+      "normal": 0.3,
+      "hard": 0.45
+    }
+  }
+}

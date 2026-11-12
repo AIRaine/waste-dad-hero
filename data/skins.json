@@ -1,0 +1,1686 @@
+{
+  "catalog": [
+    {
+      "id": "blade_default",
+      "slot": "weapon",
+      "name": "竹枝試煉刃",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 1,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "客廳沙發下撿到的入門劍。",
+      "desc": "巷口撿的第一根竹枝",
+      "palette": {
+        "primary": "#d8dde2",
+        "accent": "#8a93a3",
+        "edge": "#3d4654"
+      },
+      "asBonus": 0.04,
+      "critChance": 0.03
+    },
+    {
+      "id": "frame_default",
+      "slot": "frame",
+      "name": "鐵窗素框",
+      "rarity": 1,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "簡潔雙線框——低調但看得見。",
+      "desc": "透天厝鐵窗線條",
+      "bonuses": {
+        "hp": 0,
+        "atkPct": 0,
+        "critChance": 0
+      },
+      "palette": {
+        "primary": "#a8b4c0",
+        "accent": "#4a5564",
+        "edge": "#2a3340"
+      },
+      "art": "plain"
+    },
+    {
+      "id": "fx_aura_white",
+      "slot": "victoryFx",
+      "name": "白氣",
+      "aura": "white",
+      "rarity": 1,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "最基礎的氣焰——微亮白焰。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.02,
+        "asBonus": 0.02
+      },
+      "palette": {
+        "primary": "#f4f7ff",
+        "accent": "#b8c4e0",
+        "core": "#ffffff"
+      }
+    },
+    {
+      "id": "fx_aura_red",
+      "slot": "victoryFx",
+      "name": "紅氣",
+      "aura": "red",
+      "rarity": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 68
+      },
+      "flavor": "躁動紅焰，出手更狠一點。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.05,
+        "asBonus": 0.03
+      },
+      "palette": {
+        "primary": "#ff6b4a",
+        "accent": "#c02020",
+        "core": "#ffd0c0"
+      }
+    },
+    {
+      "id": "fx_aura_yellow",
+      "slot": "victoryFx",
+      "name": "黃氣",
+      "aura": "yellow",
+      "rarity": 2,
+      "unlock": {
+        "type": "kills",
+        "count": 12
+      },
+      "flavor": "經典金黃氣焰，攻守節奏上揚。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.06,
+        "asBonus": 0.04
+      },
+      "palette": {
+        "primary": "#ffe566",
+        "accent": "#e0a020",
+        "core": "#fff6c8"
+      }
+    },
+    {
+      "id": "fx_aura_blue",
+      "slot": "victoryFx",
+      "name": "藍氣",
+      "aura": "blue",
+      "rarity": 2,
+      "unlock": {
+        "type": "kills",
+        "count": 20
+      },
+      "flavor": "冷靜藍焰，攻速優先。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.04,
+        "asBonus": 0.06
+      },
+      "palette": {
+        "primary": "#6ec8ff",
+        "accent": "#2060c8",
+        "core": "#d8f0ff"
+      }
+    },
+    {
+      "id": "fx_aura_yellow_bolt",
+      "slot": "victoryFx",
+      "name": "黃氣．超",
+      "aura": "yellow_bolt",
+      "rarity": 4,
+      "unlock": {
+        "type": "kills",
+        "count": 35
+      },
+      "flavor": "金黃超階氣焰——近白內核、短促脈衝。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.09,
+        "asBonus": 0.05
+      },
+      "palette": {
+        "primary": "#ffe566",
+        "accent": "#e8a010",
+        "core": "#ffffff"
+      }
+    },
+    {
+      "id": "fx_aura_blue_bolt",
+      "slot": "victoryFx",
+      "name": "藍氣．超",
+      "aura": "blue_bolt",
+      "rarity": 4,
+      "unlock": {
+        "type": "enhance",
+        "level": 8
+      },
+      "flavor": "藍色超階氣焰——近白內核、短促脈衝。",
+      "desc": "氣焰特效",
+      "bonuses": {
+        "atkPct": 0.07,
+        "asBonus": 0.08
+      },
+      "palette": {
+        "primary": "#7ad0ff",
+        "accent": "#1e6ad0",
+        "core": "#ffffff"
+      }
+    },
+    {
+      "id": "w_刀_1",
+      "slot": "weapon",
+      "name": "雜貨菜刀",
+      "type": "刀",
+      "motif": "dao",
+      "rarity": 2,
+      "atkBonus": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 78
+      },
+      "flavor": "客廳風格的刀。",
+      "desc": "刀 · 成長帶 2",
+      "palette": {
+        "primary": "#5a9a7a",
+        "accent": "#c9a227",
+        "edge": "#243040"
+      },
+      "asBonus": 0.06,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_刀_2",
+      "slot": "weapon",
+      "name": "中秋砍骨刀",
+      "type": "刀",
+      "motif": "dao",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 94
+      },
+      "flavor": "客廳風格的刀。",
+      "desc": "刀 · 成長帶 4",
+      "palette": {
+        "primary": "#c45c5c",
+        "accent": "#8a6bb5",
+        "edge": "#243040"
+      },
+      "asBonus": 0.06,
+      "critChance": 0.08,
+      "affix": "curse"
+    },
+    {
+      "id": "w_刀_3",
+      "slot": "weapon",
+      "name": "工廠美工刀",
+      "type": "刀",
+      "motif": "dao",
+      "rarity": 4,
+      "atkBonus": 8,
+      "unlock": {
+        "type": "kills",
+        "count": 55
+      },
+      "flavor": "浴室風格的刀。",
+      "desc": "刀 · 成長帶 8",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3cb8a0",
+        "edge": "#243040"
+      },
+      "asBonus": 0.08,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_刀_4",
+      "slot": "weapon",
+      "name": "家長會開山刀",
+      "type": "刀",
+      "motif": "dao",
+      "rarity": 5,
+      "atkBonus": 10,
+      "unlock": {
+        "type": "kills",
+        "count": 64
+      },
+      "flavor": "浴室風格的刀。",
+      "desc": "刀 · 家長日開路（成家後期）",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#d4a24c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.09,
+      "critChance": 0.15,
+      "affix": "bless"
+    },
+    {
+      "id": "w_劍_0",
+      "slot": "weapon",
+      "name": "木劍教具",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 1,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 68
+      },
+      "flavor": "客廳風格的劍。",
+      "desc": "劍 · 成長帶 0",
+      "palette": {
+        "primary": "#5a9a7a",
+        "accent": "#c9a227",
+        "edge": "#243040"
+      },
+      "asBonus": 0.04,
+      "critChance": 0.03
+    },
+    {
+      "id": "w_劍_1",
+      "slot": "weapon",
+      "name": "溪邊竹劍",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 2,
+      "atkBonus": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 130
+      },
+      "flavor": "客廳風格的劍。",
+      "desc": "劍 · 成長帶 2",
+      "palette": {
+        "primary": "#c45c5c",
+        "accent": "#8a6bb5",
+        "edge": "#243040"
+      },
+      "asBonus": 0.05,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_劍_2",
+      "slot": "weapon",
+      "name": "教官木劍",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 148
+      },
+      "flavor": "浴室風格的劍。",
+      "desc": "劍 · 成長帶 4",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3cb8a0",
+        "edge": "#243040"
+      },
+      "asBonus": 0.05,
+      "critChance": 0.08,
+      "affix": "curse"
+    },
+    {
+      "id": "w_劍_3",
+      "slot": "weapon",
+      "name": "晨跑勤務劍",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 4,
+      "atkBonus": 8,
+      "unlock": {
+        "type": "kills",
+        "count": 60
+      },
+      "flavor": "浴室風格的劍。",
+      "desc": "劍 · 成長帶 8",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#d4a24c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.07,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_劍_4",
+      "slot": "weapon",
+      "name": "房貸斷雲劍",
+      "type": "劍",
+      "motif": "jian",
+      "rarity": 5,
+      "atkBonus": 10,
+      "unlock": {
+        "type": "kills",
+        "count": 69
+      },
+      "flavor": "浴室風格的劍。",
+      "desc": "劍 · 房貸壓力具現",
+      "palette": {
+        "primary": "#8a6bb5",
+        "accent": "#9bb0b8",
+        "edge": "#243040"
+      },
+      "asBonus": 0.08,
+      "critChance": 0.15,
+      "affix": "bless"
+    },
+    {
+      "id": "w_短劍_0",
+      "slot": "weapon",
+      "name": "彈珠短刃",
+      "type": "短劍",
+      "motif": "duanjian",
+      "rarity": 1,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 86
+      },
+      "flavor": "客廳風格的短劍。",
+      "desc": "短劍 · 成長帶 0",
+      "palette": {
+        "primary": "#c45c5c",
+        "accent": "#8a6bb5",
+        "edge": "#243040"
+      },
+      "asBonus": 0.09,
+      "critChance": 0.03
+    },
+    {
+      "id": "w_短劍_1",
+      "slot": "weapon",
+      "name": "放學捷徑短劍",
+      "type": "短劍",
+      "motif": "duanjian",
+      "rarity": 2,
+      "atkBonus": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 180
+      },
+      "flavor": "浴室風格的短劍。",
+      "desc": "短劍 · 成長帶 2",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3cb8a0",
+        "edge": "#243040"
+      },
+      "asBonus": 0.1,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_短劍_2",
+      "slot": "weapon",
+      "name": "夜市銀棘",
+      "type": "短劍",
+      "motif": "duanjian",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 202
+      },
+      "flavor": "浴室風格的短劍。",
+      "desc": "短劍 · 成長帶 4",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#d4a24c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.1,
+      "critChance": 0.08,
+      "affix": "curse"
+    },
+    {
+      "id": "w_短劍_3",
+      "slot": "weapon",
+      "name": "加班夜行短劍",
+      "type": "短劍",
+      "motif": "duanjian",
+      "rarity": 4,
+      "atkBonus": 8,
+      "unlock": {
+        "type": "kills",
+        "count": 65
+      },
+      "flavor": "浴室風格的短劍。",
+      "desc": "短劍 · 成長帶 8",
+      "palette": {
+        "primary": "#8a6bb5",
+        "accent": "#9bb0b8",
+        "edge": "#243040"
+      },
+      "asBonus": 0.12,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_匕首_0",
+      "slot": "weapon",
+      "name": "縫衣針匕",
+      "type": "匕首",
+      "motif": "bishou",
+      "rarity": 1,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 210
+      },
+      "flavor": "浴室風格的匕首。",
+      "desc": "匕首 · 成長帶 1",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3cb8a0",
+        "edge": "#243040"
+      },
+      "asBonus": 0.14,
+      "critChance": 0.03
+    },
+    {
+      "id": "w_匕首_1",
+      "slot": "weapon",
+      "name": "信封拆信匕",
+      "type": "匕首",
+      "motif": "bishou",
+      "rarity": 2,
+      "atkBonus": 3,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 222
+      },
+      "flavor": "浴室風格的匕首。",
+      "desc": "匕首 · 成長帶 3",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#d4a24c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.15,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_匕首_2",
+      "slot": "weapon",
+      "name": "公差小刀",
+      "type": "匕首",
+      "motif": "bishou",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 244
+      },
+      "flavor": "浴室風格的匕首。",
+      "desc": "匕首 · 成長帶 5",
+      "palette": {
+        "primary": "#8a6bb5",
+        "accent": "#9bb0b8",
+        "edge": "#243040"
+      },
+      "asBonus": 0.16,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_匕首_3",
+      "slot": "weapon",
+      "name": "保母剪線匕",
+      "type": "匕首",
+      "motif": "bishou",
+      "rarity": 4,
+      "atkBonus": 9,
+      "unlock": {
+        "type": "kills",
+        "count": 69
+      },
+      "flavor": "廚房風格的匕首。",
+      "desc": "匕首 · 成長帶 9",
+      "palette": {
+        "primary": "#3cb8a0",
+        "accent": "#e08060",
+        "edge": "#243040"
+      },
+      "asBonus": 0.17,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_弓_0",
+      "slot": "weapon",
+      "name": "彈弓玩具",
+      "type": "弓",
+      "motif": "gong",
+      "rarity": 1,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 252
+      },
+      "flavor": "浴室風格的弓。",
+      "desc": "弓 · 成長帶 1",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#d4a24c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.15,
+      "critChance": 0.03
+    },
+    {
+      "id": "w_弓_1",
+      "slot": "weapon",
+      "name": "竹脈彈弓",
+      "type": "弓",
+      "motif": "gong",
+      "rarity": 2,
+      "atkBonus": 3,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 262
+      },
+      "flavor": "浴室風格的弓。",
+      "desc": "弓 · 成長帶 3",
+      "palette": {
+        "primary": "#8a6bb5",
+        "accent": "#9bb0b8",
+        "edge": "#243040"
+      },
+      "asBonus": 0.16,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_弓_2",
+      "slot": "weapon",
+      "name": "鴿羽練習弓",
+      "type": "弓",
+      "motif": "gong",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 288
+      },
+      "flavor": "廚房風格的弓。",
+      "desc": "弓 · 成長帶 5",
+      "palette": {
+        "primary": "#3cb8a0",
+        "accent": "#e08060",
+        "edge": "#243040"
+      },
+      "asBonus": 0.17,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_弓_3",
+      "slot": "weapon",
+      "name": "業績穿雲弓",
+      "type": "弓",
+      "motif": "gong",
+      "rarity": 4,
+      "atkBonus": 9,
+      "unlock": {
+        "type": "kills",
+        "count": 73
+      },
+      "flavor": "廚房風格的弓。",
+      "desc": "弓 · 成長帶 9",
+      "palette": {
+        "primary": "#d4a24c",
+        "accent": "#6a7888",
+        "edge": "#243040"
+      },
+      "asBonus": 0.18,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_長槍_0",
+      "slot": "weapon",
+      "name": "晾衣長竿",
+      "type": "長槍",
+      "motif": "qiang",
+      "rarity": 1,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 292
+      },
+      "flavor": "浴室風格的長槍。",
+      "desc": "長槍 · 成長帶 1",
+      "palette": {
+        "primary": "#8a6bb5",
+        "accent": "#9bb0b8",
+        "edge": "#243040"
+      },
+      "asBonus": 0.03,
+      "critChance": 0.03
+    },
+    {
+      "id": "w_長槍_1",
+      "slot": "weapon",
+      "name": "掃把尖槍",
+      "type": "長槍",
+      "motif": "qiang",
+      "rarity": 2,
+      "atkBonus": 3,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 302
+      },
+      "flavor": "廚房風格的長槍。",
+      "desc": "長槍 · 成長帶 3",
+      "palette": {
+        "primary": "#3cb8a0",
+        "accent": "#e08060",
+        "edge": "#243040"
+      },
+      "asBonus": 0.04,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_長槍_2",
+      "slot": "weapon",
+      "name": "刺槍術木槍",
+      "type": "長槍",
+      "motif": "qiang",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 332
+      },
+      "flavor": "廚房風格的長槍。",
+      "desc": "長槍 · 成長帶 5",
+      "palette": {
+        "primary": "#d4a24c",
+        "accent": "#6a7888",
+        "edge": "#243040"
+      },
+      "asBonus": 0.05,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_長槍_3",
+      "slot": "weapon",
+      "name": "機車龍頭槍",
+      "type": "長槍",
+      "motif": "qiang",
+      "rarity": 4,
+      "atkBonus": 9,
+      "unlock": {
+        "type": "kills",
+        "count": 77
+      },
+      "flavor": "廚房風格的長槍。",
+      "desc": "長槍 · 成長帶 9",
+      "palette": {
+        "primary": "#9bb0b8",
+        "accent": "#5a9a7a",
+        "edge": "#243040"
+      },
+      "asBonus": 0.06,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_斧_0",
+      "slot": "weapon",
+      "name": "劈柴斧",
+      "type": "斧",
+      "motif": "fu",
+      "rarity": 2,
+      "atkBonus": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 374
+      },
+      "flavor": "廚房風格的斧。",
+      "desc": "斧 · 成長帶 2",
+      "palette": {
+        "primary": "#d4a24c",
+        "accent": "#6a7888",
+        "edge": "#243040"
+      },
+      "asBonus": -0.03,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_斧_1",
+      "slot": "weapon",
+      "name": "開山斧",
+      "type": "斧",
+      "motif": "fu",
+      "rarity": 3,
+      "atkBonus": 4,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 406
+      },
+      "flavor": "廚房風格的斧。",
+      "desc": "斧 · 成長帶 4",
+      "palette": {
+        "primary": "#9bb0b8",
+        "accent": "#5a9a7a",
+        "edge": "#243040"
+      },
+      "asBonus": -0.02,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_斧_2",
+      "slot": "weapon",
+      "name": "工地雙刃斧",
+      "type": "斧",
+      "motif": "fu",
+      "rarity": 4,
+      "atkBonus": 8,
+      "unlock": {
+        "type": "kills",
+        "count": 84
+      },
+      "flavor": "書房風格的斧。",
+      "desc": "斧 · 成長帶 8",
+      "palette": {
+        "primary": "#e08060",
+        "accent": "#c45c5c",
+        "edge": "#243040"
+      },
+      "asBonus": -0.01,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_斧_3",
+      "slot": "weapon",
+      "name": "翻修雷裂斧",
+      "type": "斧",
+      "motif": "fu",
+      "rarity": 5,
+      "atkBonus": 10,
+      "unlock": {
+        "type": "kills",
+        "count": 93
+      },
+      "flavor": "書房風格的斧。",
+      "desc": "斧 · 成長帶 10",
+      "palette": {
+        "primary": "#6a7888",
+        "accent": "#7d9edc",
+        "edge": "#243040"
+      },
+      "asBonus": 0,
+      "critChance": 0.15,
+      "affix": "bless"
+    },
+    {
+      "id": "w_法杖_0",
+      "slot": "weapon",
+      "name": "掃把杖",
+      "type": "法杖",
+      "motif": "fazhang",
+      "rarity": 2,
+      "atkBonus": 2,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 414
+      },
+      "flavor": "廚房風格的法杖。",
+      "desc": "法杖 · 成長帶 2",
+      "palette": {
+        "primary": "#9bb0b8",
+        "accent": "#5a9a7a",
+        "edge": "#243040"
+      },
+      "asBonus": 0.07,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_法杖_1",
+      "slot": "weapon",
+      "name": "班長教鞭",
+      "type": "法杖",
+      "motif": "fazhang",
+      "rarity": 3,
+      "atkBonus": 4,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 450
+      },
+      "flavor": "書房風格的法杖。",
+      "desc": "法杖 · 成長帶 4",
+      "palette": {
+        "primary": "#e08060",
+        "accent": "#c45c5c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.08,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_法杖_2",
+      "slot": "weapon",
+      "name": "值星指揮杖",
+      "type": "法杖",
+      "motif": "fazhang",
+      "rarity": 4,
+      "atkBonus": 8,
+      "unlock": {
+        "type": "kills",
+        "count": 88
+      },
+      "flavor": "書房風格的法杖。",
+      "desc": "法杖 · 成長帶 8",
+      "palette": {
+        "primary": "#6a7888",
+        "accent": "#7d9edc",
+        "edge": "#243040"
+      },
+      "asBonus": 0.09,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_法杖_3",
+      "slot": "weapon",
+      "name": "家規權杖",
+      "type": "法杖",
+      "motif": "fazhang",
+      "rarity": 6,
+      "atkBonus": 12,
+      "unlock": {
+        "type": "kills",
+        "count": 97
+      },
+      "flavor": "書房風格的法杖。",
+      "desc": "法杖 · 家規最終權",
+      "palette": {
+        "primary": "#5a9a7a",
+        "accent": "#c9a227",
+        "edge": "#243040"
+      },
+      "asBonus": 0.11,
+      "critChance": 0.2,
+      "affix": "bless"
+    },
+    {
+      "id": "w_雙刀_0",
+      "slot": "weapon",
+      "name": "雙筷刃",
+      "type": "雙刀",
+      "motif": "shuangdao",
+      "rarity": 2,
+      "atkBonus": 3,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 456
+      },
+      "flavor": "書房風格的雙刀。",
+      "desc": "雙刀 · 成長帶 3",
+      "palette": {
+        "primary": "#e08060",
+        "accent": "#c45c5c",
+        "edge": "#243040"
+      },
+      "asBonus": 0.12,
+      "critChance": 0.05
+    },
+    {
+      "id": "w_雙刀_1",
+      "slot": "weapon",
+      "name": "夜市雙剪",
+      "type": "雙刀",
+      "motif": "shuangdao",
+      "rarity": 3,
+      "atkBonus": 5,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 494
+      },
+      "flavor": "書房風格的雙刀。",
+      "desc": "雙刀 · 成長帶 5",
+      "palette": {
+        "primary": "#6a7888",
+        "accent": "#7d9edc",
+        "edge": "#243040"
+      },
+      "asBonus": 0.13,
+      "critChance": 0.08
+    },
+    {
+      "id": "w_雙刀_2",
+      "slot": "weapon",
+      "name": "打卡雙戳",
+      "type": "雙刀",
+      "motif": "shuangdao",
+      "rarity": 4,
+      "atkBonus": 9,
+      "unlock": {
+        "type": "kills",
+        "count": 92
+      },
+      "flavor": "書房風格的雙刀。",
+      "desc": "雙刀 · 成長帶 9",
+      "palette": {
+        "primary": "#5a9a7a",
+        "accent": "#c9a227",
+        "edge": "#243040"
+      },
+      "asBonus": 0.14,
+      "critChance": 0.11
+    },
+    {
+      "id": "w_雙刀_3",
+      "slot": "weapon",
+      "name": "親子亂舞筷",
+      "type": "雙刀",
+      "motif": "shuangdao",
+      "rarity": 6,
+      "atkBonus": 13,
+      "unlock": {
+        "type": "kills",
+        "count": 101
+      },
+      "flavor": "學校風格的雙刀。",
+      "desc": "雙刀 · 親子早餐亂舞",
+      "palette": {
+        "primary": "#c45c5c",
+        "accent": "#8a6bb5",
+        "edge": "#243040"
+      },
+      "asBonus": 0.16,
+      "critChance": 0.2
+    },
+    {
+      "id": "frame_sofa",
+      "name": "騎樓皮框",
+      "bonuses": {
+        "hp": 10,
+        "atkPct": 0,
+        "critChance": 0
+      },
+      "unlock": {
+        "type": "shop",
+        "priceGold": 76
+      },
+      "flavor": "圓潤曲線皮邊，客廳戰意。",
+      "slot": "frame",
+      "rarity": 2,
+      "desc": "騎樓沙發時代感",
+      "palette": {
+        "primary": "#d4a24c",
+        "accent": "#6a4520",
+        "edge": "#3a2810"
+      },
+      "art": "sofa"
+    },
+    {
+      "id": "frame_steam",
+      "name": "校園水氣框",
+      "bonuses": {
+        "hp": 0,
+        "atkPct": 0.06,
+        "critChance": 0
+      },
+      "unlock": {
+        "type": "kills",
+        "count": 12
+      },
+      "flavor": "波浪蒸汽線，浴室加持。",
+      "slot": "frame",
+      "rarity": 2,
+      "desc": "洗手台水氣與鐘聲",
+      "palette": {
+        "primary": "#7ec8d8",
+        "accent": "#2a6a7a",
+        "edge": "#143848"
+      },
+      "art": "steam"
+    },
+    {
+      "id": "frame_apron",
+      "name": "夜市圍裙框",
+      "bonuses": {
+        "hp": 6,
+        "atkPct": 0.04,
+        "critChance": 0.02
+      },
+      "unlock": {
+        "type": "enhance",
+        "level": 5
+      },
+      "flavor": "縫線虛線＋綁帶，廚房戰甲。",
+      "slot": "frame",
+      "rarity": 2,
+      "desc": "打工圍裙與燈串",
+      "palette": {
+        "primary": "#e07070",
+        "accent": "#f0e8e0",
+        "edge": "#702828"
+      },
+      "art": "apron"
+    },
+    {
+      "id": "frame_gold",
+      "name": "成家金框",
+      "bonuses": {
+        "hp": 12,
+        "atkPct": 0.08,
+        "critChance": 0.05
+      },
+      "unlock": {
+        "type": "kills",
+        "count": 40
+      },
+      "flavor": "捲曲線角與頂飾，會員金光。",
+      "slot": "frame",
+      "rarity": 2,
+      "desc": "結婚到現在的紀念框",
+      "palette": {
+        "primary": "#f0d45c",
+        "accent": "#a07820",
+        "edge": "#5a4010"
+      },
+      "art": "ornate"
+    },
+    {
+      "id": "helmet_default",
+      "slot": "helmet",
+      "name": "紙箱盔",
+      "type": "helmet",
+      "motif": "box",
+      "rarity": 1,
+      "def": 2,
+      "hp": 2,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "紙箱盔——老爸的防具櫃珍藏。",
+      "desc": "巷口紙箱改造",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "blockChance": 0.01,
+      "counterChance": 0.01
+    },
+    {
+      "id": "helmet_1",
+      "slot": "helmet",
+      "name": "安全帽",
+      "type": "helmet",
+      "motif": "hardhat",
+      "rarity": 2,
+      "def": 5,
+      "hp": 4,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "安全帽——老爸的防具櫃珍藏。",
+      "desc": "機車與工地的標配",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "blockChance": 0.02,
+      "counterChance": 0.02
+    },
+    {
+      "id": "helmet_2",
+      "slot": "helmet",
+      "name": "鐵皮盔",
+      "type": "helmet",
+      "motif": "iron",
+      "rarity": 3,
+      "def": 8,
+      "hp": 6,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "鐵皮盔——老爸的防具櫃珍藏。",
+      "desc": "工廠年代",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "blockChance": 0.03,
+      "counterChance": 0.035
+    },
+    {
+      "id": "helmet_3",
+      "slot": "helmet",
+      "name": "鋼盔練習",
+      "type": "helmet",
+      "motif": "knight",
+      "rarity": 4,
+      "def": 11,
+      "hp": 8,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "騎士盔——老爸的防具櫃珍藏。",
+      "desc": "新訓記憶",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.045,
+      "counterChance": 0.05
+    },
+    {
+      "id": "helmet_4",
+      "slot": "helmet",
+      "name": "家長會金盔",
+      "type": "helmet",
+      "motif": "crown",
+      "rarity": 6,
+      "def": 16,
+      "hp": 11,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "金冠盔——老爸的防具櫃珍藏。",
+      "desc": "為人父最終防具（現在）",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.08,
+      "counterChance": 0.09
+    },
+    {
+      "id": "armor_default",
+      "slot": "armor",
+      "name": "家居背心",
+      "type": "armor",
+      "motif": "vest",
+      "rarity": 1,
+      "def": 4,
+      "hp": 4,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "家居背心——老爸的防具櫃珍藏。",
+      "desc": "透天厝日常",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "blockChance": 0.01,
+      "counterChance": 0.01
+    },
+    {
+      "id": "armor_1",
+      "slot": "armor",
+      "name": "校服外套",
+      "type": "armor",
+      "motif": "leather",
+      "rarity": 2,
+      "def": 8,
+      "hp": 7,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "皮甲——老爸的防具櫃珍藏。",
+      "desc": "求學防寒",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "blockChance": 0.02,
+      "counterChance": 0.02
+    },
+    {
+      "id": "armor_2",
+      "slot": "armor",
+      "name": "迷彩勤務衣",
+      "type": "armor",
+      "motif": "mail",
+      "rarity": 3,
+      "def": 12,
+      "hp": 10,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "鎖子甲——老爸的防具櫃珍藏。",
+      "desc": "當兵外層",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "blockChance": 0.03,
+      "counterChance": 0.035
+    },
+    {
+      "id": "armor_3",
+      "slot": "armor",
+      "name": "公司制服",
+      "type": "armor",
+      "motif": "plate",
+      "rarity": 4,
+      "def": 16,
+      "hp": 13,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "板甲——老爸的防具櫃珍藏。",
+      "desc": "出社會皮層",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.045,
+      "counterChance": 0.05
+    },
+    {
+      "id": "armor_4",
+      "slot": "armor",
+      "name": "爸氣戰袍",
+      "type": "armor",
+      "motif": "robe",
+      "rarity": 6,
+      "def": 22,
+      "hp": 18,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "爸氣戰袍——老爸的防具櫃珍藏。",
+      "desc": "家長日決戰服（中年）",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.08,
+      "counterChance": 0.09
+    },
+    {
+      "id": "boots_default",
+      "slot": "boots",
+      "name": "塑膠拖",
+      "type": "boots",
+      "motif": "slipper",
+      "rarity": 1,
+      "def": 1,
+      "asBonus": 0.01,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "拖鞋——老爸的防具櫃珍藏。",
+      "desc": "騎樓標配",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "blockChance": 0.01,
+      "counterChance": 0.01
+    },
+    {
+      "id": "boots_1",
+      "slot": "boots",
+      "name": "白布鞋",
+      "type": "boots",
+      "motif": "sneaker",
+      "rarity": 2,
+      "def": 3,
+      "asBonus": 0.02,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "運動鞋——老爸的防具櫃珍藏。",
+      "desc": "校園指定",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "blockChance": 0.02,
+      "counterChance": 0.02
+    },
+    {
+      "id": "boots_2",
+      "slot": "boots",
+      "name": "打綁腿靴",
+      "type": "boots",
+      "motif": "hike",
+      "rarity": 3,
+      "def": 5,
+      "asBonus": 0.03,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "登山靴——老爸的防具櫃珍藏。",
+      "desc": "部隊回憶",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "blockChance": 0.03,
+      "counterChance": 0.035
+    },
+    {
+      "id": "boots_3",
+      "slot": "boots",
+      "name": "皮鞋加班靴",
+      "type": "boots",
+      "motif": "iron",
+      "rarity": 4,
+      "def": 7,
+      "asBonus": 0.05,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "鐵靴——老爸的防具櫃珍藏。",
+      "desc": "職場耐久",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.045,
+      "counterChance": 0.05
+    },
+    {
+      "id": "boots_4",
+      "slot": "boots",
+      "name": "接送疾風鞋",
+      "type": "boots",
+      "motif": "swift",
+      "rarity": 6,
+      "def": 10,
+      "asBonus": 0.06999999999999999,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "疾風靴——老爸的防具櫃珍藏。",
+      "desc": "安親班接送時速",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.08,
+      "counterChance": 0.09
+    },
+    {
+      "id": "gloves_default",
+      "slot": "gloves",
+      "name": "洗碗手套",
+      "type": "gloves",
+      "motif": "rubber",
+      "rarity": 1,
+      "atkBonus": 1,
+      "def": 1,
+      "critChance": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "洗碗手套——老爸的防具櫃珍藏。",
+      "desc": "家務起步",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "blockChance": 0.005,
+      "counterChance": 0.01
+    },
+    {
+      "id": "gloves_1",
+      "slot": "gloves",
+      "name": "勞動布手套",
+      "type": "gloves",
+      "motif": "cloth",
+      "rarity": 2,
+      "atkBonus": 3,
+      "def": 2,
+      "critChance": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "布手套——老爸的防具櫃珍藏。",
+      "desc": "打工用",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "blockChance": 0.01,
+      "counterChance": 0.02
+    },
+    {
+      "id": "gloves_2",
+      "slot": "gloves",
+      "name": "射擊手套",
+      "type": "gloves",
+      "motif": "leather",
+      "rarity": 3,
+      "atkBonus": 5,
+      "def": 3,
+      "critChance": 0,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "皮手套——老爸的防具櫃珍藏。",
+      "desc": "靶場餘溫",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "blockChance": 0.015,
+      "counterChance": 0.035
+    },
+    {
+      "id": "gloves_3",
+      "slot": "gloves",
+      "name": "打卡皮手套",
+      "type": "gloves",
+      "motif": "iron",
+      "rarity": 4,
+      "atkBonus": 7,
+      "def": 4,
+      "critChance": 0.02,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "鐵手套——老爸的防具櫃珍藏。",
+      "desc": "辦公室手感",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.0225,
+      "counterChance": 0.05
+    },
+    {
+      "id": "gloves_4",
+      "slot": "gloves",
+      "name": "換尿布爆擊手套",
+      "type": "gloves",
+      "motif": "crit",
+      "rarity": 6,
+      "atkBonus": 10,
+      "def": 6,
+      "critChance": 0.05,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "爆擊手套——老爸的防具櫃珍藏。",
+      "desc": "換尿布／開家長群神技",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.04,
+      "counterChance": 0.09
+    },
+    {
+      "id": "shield_default",
+      "slot": "shield",
+      "name": "鍋蓋盾",
+      "type": "shield",
+      "motif": "pot",
+      "rarity": 1,
+      "def": 5,
+      "mitigation": 0.03,
+      "atkBonus": 0,
+      "blockChance": 0.02,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "鍋蓋盾——老爸的防具櫃珍藏。",
+      "desc": "巷口防衛",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "counterChance": 0.006
+    },
+    {
+      "id": "shield_1",
+      "slot": "shield",
+      "name": "書包圓盾",
+      "type": "shield",
+      "motif": "wood",
+      "rarity": 2,
+      "def": 9,
+      "mitigation": 0.05,
+      "atkBonus": 0,
+      "blockChance": 0.04,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "木圓盾——老爸的防具櫃珍藏。",
+      "desc": "求學擋災",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "counterChance": 0.012
+    },
+    {
+      "id": "shield_2",
+      "slot": "shield",
+      "name": "鋼盔蓋盾",
+      "type": "shield",
+      "motif": "iron",
+      "rarity": 3,
+      "def": 13,
+      "mitigation": 0.07,
+      "atkBonus": 0,
+      "blockChance": 0.06,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "鐵壁盾——老爸的防具櫃珍藏。",
+      "desc": "部隊應變",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "counterChance": 0.021
+    },
+    {
+      "id": "shield_3",
+      "slot": "shield",
+      "name": "會議資料夾塔盾",
+      "type": "shield",
+      "motif": "tower",
+      "rarity": 4,
+      "def": 17,
+      "mitigation": 0.09,
+      "atkBonus": 0,
+      "blockChance": 0.08,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "塔盾——老爸的防具櫃珍藏。",
+      "desc": "出社會防禦",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "counterChance": 0.03
+    },
+    {
+      "id": "shield_4",
+      "slot": "shield",
+      "name": "嬰兒車守護盾",
+      "type": "shield",
+      "motif": "guard",
+      "rarity": 6,
+      "def": 24,
+      "mitigation": 0.11,
+      "atkBonus": 0,
+      "blockChance": 0.12,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "守護盾——老爸的防具櫃珍藏。",
+      "desc": "嬰兒車→腳踏車守護盾",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "counterChance": 0.054
+    }
+  ]
+}
