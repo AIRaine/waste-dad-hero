@@ -75,6 +75,7 @@ import {
   installSfxUnlock,
   isSfxMuted,
   toggleSfxMuted,
+  unlockSfx,
   weaponSfxGroup,
 } from './sfx.js';
 import {
@@ -316,6 +317,8 @@ export function createApp(root, data, state) {
 
   function startAutoFight() {
     if (autoFighting) return;
+    // iOS: unlock Web Audio inside this tap gesture (打怪).
+    unlockSfx();
     // Never fight under an open scene/foe picker overlay.
     scenePickerOpen = false;
     tierPickerOpen = false;
@@ -1404,10 +1407,13 @@ export function createApp(root, data, state) {
 
   function bind() {
     root.querySelector('[data-action="sfx-toggle"]')?.addEventListener('click', () => {
+      // Gesture unlock even when turning sound on/off.
+      unlockSfx();
       toggleSfxMuted();
       render({ skipCapture: true });
     });
     root.querySelector('[data-action="onboard-dismiss"]')?.addEventListener('click', () => {
+      unlockSfx();
       state.firstRunGuideSeen = true;
       persist();
       render();
@@ -1478,8 +1484,13 @@ export function createApp(root, data, state) {
       b.addEventListener('click', () => chooseMonster(b.getAttribute('data-monster-id'))),
     );
 
-    root.querySelector('[data-action="autofight"]')?.addEventListener('click', () => toggleAutoFight());
+    root.querySelector('[data-action="autofight"]')?.addEventListener('pointerdown', () => unlockSfx());
+    root.querySelector('[data-action="autofight"]')?.addEventListener('click', () => {
+      unlockSfx();
+      toggleAutoFight();
+    });
     root.querySelector('[data-action="rematch"]')?.addEventListener('click', () => {
+      unlockSfx();
       stopAutoFight();
       battle = createBattle(data, state, currentMonster());
       victoryFx = false;
