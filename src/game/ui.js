@@ -766,11 +766,28 @@ export function createApp(root, data, state) {
     const showAdvance = canManualAdvanceScene(data, state);
     const showChallengeBtn = !training && meter?.canChallenge && meter.mode === 'farm';
     const showReturnFarm = !training && meter?.mode === 'challenge';
+    const armorEmpty = ARMOR_SLOTS.every((s) => !state.equipped?.[s]);
+    const needsEquipHint =
+      !!state.firstRunGuideSeen &&
+      !state.equipHintDismissed &&
+      (!state.equipped?.weapon || armorEmpty);
 
     return `
       <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''}">
         <div class="battle-scroll">
           <div class="fight-setup">
+            ${
+              needsEquipHint
+                ? `<div class="equip-nudge" role="status">
+                    <p>還沒穿裝？新手裝備在「強化」或「圖鑑」穿戴（沒有獨立背包）。</p>
+                    <div class="equip-nudge-actions">
+                      <button type="button" class="btn" data-action="equip-hint-enhance">去強化穿戴</button>
+                      <button type="button" class="btn" data-action="equip-hint-catalog">去圖鑑</button>
+                      <button type="button" class="btn ghost" data-action="equip-hint-dismiss">知道了</button>
+                    </div>
+                  </div>`
+                : ''
+            }
             <button type="button" class="setup-btn setup-scene" data-action="scene-picker" aria-expanded="${scenePickerOpen}">
               <span class="setup-main">${sceneIconHtml(scene, 28)} <span>${scene.name}</span></span>
               <span class="setup-meta">${diff.name}</span>
@@ -1604,7 +1621,7 @@ export function createApp(root, data, state) {
                   <ol class="onboard-steps">
                     <li><strong>戰鬥</strong>：選場景與對手，點「打怪」掛機連攻；雙方各自冷卻。</li>
                     <li><strong>強化</strong>：衝裝是主軸，無安定區；失敗可能降階／炸裝，輔助道具可護體。</li>
-                    <li><strong>穿戴</strong>：新手裝備只在背包；到強化或圖鑑「穿戴」，也可「卸下」留空槽。</li>
+                    <li><strong>穿戴</strong>：沒有獨立背包——到<strong>強化</strong>或<strong>圖鑑</strong>穿上新手裝備；發脾氣特效預設空槽，可之後再裝。</li>
                     <li><strong>場景</strong>：戰鬥頁上方選家庭場景；解鎖後往下一站人生推進。</li>
                   </ol>
                   <button type="button" class="btn primary wide" data-action="onboard-dismiss">知道了，開始</button>
@@ -1711,6 +1728,17 @@ export function createApp(root, data, state) {
       persist();
       render();
     });
+    root.querySelector('[data-action="equip-hint-enhance"]')?.addEventListener('click', () => {
+      setTab('enhance');
+    });
+    root.querySelector('[data-action="equip-hint-catalog"]')?.addEventListener('click', () => {
+      setTab('collection');
+    });
+    root.querySelector('[data-action="equip-hint-dismiss"]')?.addEventListener('click', () => {
+      state.equipHintDismissed = true;
+      persist();
+      render({ skipCapture: true });
+    });
     root.querySelectorAll('[data-action="run-retreat"]').forEach((btn) =>
       btn.addEventListener('click', () => {
         stopAutoFight();
@@ -1727,6 +1755,8 @@ export function createApp(root, data, state) {
         showPageNotice(res.message, 'info', 'battle');
         persist();
         render();
+        // 撤回後立刻開打（等同打怪）
+        startAutoFight();
       }),
     );
     root.querySelector('[data-action="run-advance"]')?.addEventListener('click', () => {
@@ -1759,6 +1789,8 @@ export function createApp(root, data, state) {
       pushLog(state, res.message, 'info');
       persist();
       render();
+      // 挑戰 T 王後立刻開打
+      startAutoFight();
     });
     root.querySelector('[data-action="farm-return"]')?.addEventListener('click', () => {
       stopAutoFight();
@@ -1769,6 +1801,8 @@ export function createApp(root, data, state) {
       pushLog(state, res.message, 'info');
       persist();
       render();
+      // 回刷小怪後立刻開打
+      startAutoFight();
     });
 
     root.querySelector('[data-action="enhance"]')?.addEventListener('click', () => {

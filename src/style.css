@@ -779,28 +779,45 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .weapon-badge { right: -10px; bottom: -4px; }
 .shield-badge { left: -10px; bottom: -4px; }
-.fighter-meta { width: 100%; margin-top: 8px; }
-.fighter .name { font-size: 0.82rem; font-weight: 800; margin-bottom: 6px; }
+.fighter-meta {
+  width: 100%; margin-top: 8px;
+  text-align: left;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.fighter .name { font-size: 0.82rem; font-weight: 800; margin-bottom: 6px; text-align: left; width: 100%; }
 .vs {
   font-family: var(--pixel); font-size: 0.55rem; color: var(--accent);
   align-self: start; margin-top: calc(16px + (var(--portrait-h) / 2) - 0.55em); opacity: 0.85;
 }
 .stat-pills {
-  display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;
+  display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-start;
   width: 100%; /* no nested scroll — badges must fully wrap */
 }
+.monster-stat-pills,
 .player-stat-pills {
-  gap: 3px;
+  gap: 5px;
   max-width: 100%;
+  justify-content: flex-start;
 }
-.player-stat-pills .stat-pill {
-  min-height: 18px; padding: 0 5px; font-size: 0.58rem; border-radius: 6px;
+.player-stat-pills .stat-pill,
+.monster-stat-pills .stat-pill {
+  min-height: 18px; padding: 0 6px; font-size: 0.58rem; border-radius: 6px;
 }
 @media (max-width: 430px) {
-  .player-stat-pills { gap: 2px; }
-  .player-stat-pills .stat-pill { min-height: 17px; font-size: 0.55rem; padding: 0 4px; }
+  .monster-stat-pills,
+  .player-stat-pills { gap: 4px; }
+  .player-stat-pills .stat-pill,
+  .monster-stat-pills .stat-pill { min-height: 17px; font-size: 0.55rem; padding: 0 5px; }
   .fighter-meta .name { font-size: 0.78rem; }
 }
+.equip-nudge {
+  margin: 0 0 8px; padding: 8px 10px; border-radius: 10px;
+  border: 1px solid rgba(224,179,90,0.4); background: rgba(180,140,40,0.14);
+  font-size: 0.78rem; line-height: 1.35; color: #f0d9a0;
+}
+.equip-nudge p { margin: 0 0 8px; font-weight: 700; }
+.equip-nudge-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.equip-nudge-actions .btn { flex: 1 1 auto; min-height: 36px; font-size: 0.75rem; }
 .stat-pill, .bonus-chip {
   display: inline-flex; align-items: center; justify-content: center;
   min-height: 22px; padding: 0 7px; border-radius: 999px; font-size: 0.65rem; font-weight: 800;
