@@ -67,14 +67,14 @@
     {
       "id": "fx_aura_red",
       "slot": "victoryFx",
-      "name": "火氣上衝",
+      "name": "捲起袖子",
       "aura": "red",
       "rarity": 2,
       "unlock": {
         "type": "shop",
         "priceGold": 68
       },
-      "flavor": "耳根發燙、語氣變急——出手也跟著重一點。",
+      "flavor": "捲起袖子、準備動手——出手也跟著重一點。",
       "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.05,
@@ -111,14 +111,14 @@
     {
       "id": "fx_aura_blue",
       "slot": "victoryFx",
-      "name": "忍住頂真",
+      "name": "心如止水",
       "aura": "blue",
       "rarity": 2,
       "unlock": {
         "type": "kills",
         "count": 20
       },
-      "flavor": "深呼吸、眼神變冷——不吼，但動作更快。",
+      "flavor": "心如止水——不吼，但動作更快。",
       "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.04,
@@ -133,14 +133,14 @@
     {
       "id": "fx_aura_yellow_bolt",
       "slot": "victoryFx",
-      "name": "金光暴吼",
+      "name": "老爸發威．超",
       "aura": "yellow_bolt",
       "rarity": 4,
       "unlock": {
         "type": "kills",
         "count": 35
       },
-      "flavor": "房貸、家長日、加班——金焰炸開，近白內核連閃。",
+      "flavor": "老爸發威．超——金焰炸開，近白內核連閃。",
       "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.09,
@@ -155,14 +155,14 @@
     {
       "id": "fx_aura_blue_bolt",
       "slot": "victoryFx",
-      "name": "藍焰暴吼",
+      "name": "心如止水．超",
       "aura": "blue_bolt",
       "rarity": 4,
       "unlock": {
         "type": "enhance",
         "level": 8
       },
-      "flavor": "忍到極限的藍焰爆發——近白內核、短促連擊。",
+      "flavor": "心如止水．超——近白內核、短促連擊。",
       "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.07,
