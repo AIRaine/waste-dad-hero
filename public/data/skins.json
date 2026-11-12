@@ -1326,125 +1326,6 @@
       "counterChance": 0.09
     },
     {
-      "id": "boots_default",
-      "slot": "boots",
-      "name": "塑膠拖",
-      "type": "boots",
-      "motif": "slipper",
-      "rarity": 1,
-      "def": 1,
-      "asBonus": 0.01,
-      "atkBonus": 0,
-      "unlock": {
-        "type": "default"
-      },
-      "flavor": "拖鞋——老爸的防具櫃珍藏。",
-      "desc": "騎樓標配",
-      "palette": {
-        "primary": "#c9a227",
-        "accent": "#6a5a20",
-        "edge": "#243040"
-      },
-      "blockChance": 0.01,
-      "counterChance": 0.01
-    },
-    {
-      "id": "boots_1",
-      "slot": "boots",
-      "name": "白布鞋",
-      "type": "boots",
-      "motif": "sneaker",
-      "rarity": 2,
-      "def": 3,
-      "asBonus": 0.02,
-      "atkBonus": 0,
-      "unlock": {
-        "type": "shop",
-        "priceGold": 80
-      },
-      "flavor": "運動鞋——老爸的防具櫃珍藏。",
-      "desc": "校園指定",
-      "palette": {
-        "primary": "#8a93a3",
-        "accent": "#3d4654",
-        "edge": "#243040"
-      },
-      "blockChance": 0.02,
-      "counterChance": 0.02
-    },
-    {
-      "id": "boots_2",
-      "slot": "boots",
-      "name": "打綁腿靴",
-      "type": "boots",
-      "motif": "hike",
-      "rarity": 3,
-      "def": 5,
-      "asBonus": 0.03,
-      "atkBonus": 1,
-      "unlock": {
-        "type": "kills",
-        "count": 18
-      },
-      "flavor": "登山靴——老爸的防具櫃珍藏。",
-      "desc": "部隊回憶",
-      "palette": {
-        "primary": "#6fbf7a",
-        "accent": "#2f6b45",
-        "edge": "#243040"
-      },
-      "blockChance": 0.03,
-      "counterChance": 0.035
-    },
-    {
-      "id": "boots_3",
-      "slot": "boots",
-      "name": "皮鞋加班靴",
-      "type": "boots",
-      "motif": "iron",
-      "rarity": 4,
-      "def": 7,
-      "asBonus": 0.05,
-      "atkBonus": 1,
-      "unlock": {
-        "type": "enhance",
-        "level": 6
-      },
-      "flavor": "鐵靴——老爸的防具櫃珍藏。",
-      "desc": "職場耐久",
-      "palette": {
-        "primary": "#7d9edc",
-        "accent": "#3a4f7a",
-        "edge": "#243040"
-      },
-      "blockChance": 0.045,
-      "counterChance": 0.05
-    },
-    {
-      "id": "boots_4",
-      "slot": "boots",
-      "name": "接送疾風鞋",
-      "type": "boots",
-      "motif": "swift",
-      "rarity": 6,
-      "def": 10,
-      "asBonus": 0.06999999999999999,
-      "atkBonus": 1,
-      "unlock": {
-        "type": "kills",
-        "count": 57
-      },
-      "flavor": "疾風靴——老爸的防具櫃珍藏。",
-      "desc": "安親班接送時速",
-      "palette": {
-        "primary": "#d4655c",
-        "accent": "#6b2e2a",
-        "edge": "#243040"
-      },
-      "blockChance": 0.08,
-      "counterChance": 0.09
-    },
-    {
       "id": "gloves_default",
       "slot": "gloves",
       "name": "洗碗手套",
@@ -1561,6 +1442,125 @@
         "edge": "#243040"
       },
       "blockChance": 0.04,
+      "counterChance": 0.09
+    },
+    {
+      "id": "boots_default",
+      "slot": "boots",
+      "name": "塑膠拖",
+      "type": "boots",
+      "motif": "slipper",
+      "rarity": 1,
+      "def": 1,
+      "asBonus": 0.01,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "default"
+      },
+      "flavor": "拖鞋——老爸的防具櫃珍藏。",
+      "desc": "騎樓標配",
+      "palette": {
+        "primary": "#c9a227",
+        "accent": "#6a5a20",
+        "edge": "#243040"
+      },
+      "blockChance": 0.01,
+      "counterChance": 0.01
+    },
+    {
+      "id": "boots_1",
+      "slot": "boots",
+      "name": "白布鞋",
+      "type": "boots",
+      "motif": "sneaker",
+      "rarity": 2,
+      "def": 3,
+      "asBonus": 0.02,
+      "atkBonus": 0,
+      "unlock": {
+        "type": "shop",
+        "priceGold": 80
+      },
+      "flavor": "運動鞋——老爸的防具櫃珍藏。",
+      "desc": "校園指定",
+      "palette": {
+        "primary": "#8a93a3",
+        "accent": "#3d4654",
+        "edge": "#243040"
+      },
+      "blockChance": 0.02,
+      "counterChance": 0.02
+    },
+    {
+      "id": "boots_2",
+      "slot": "boots",
+      "name": "打綁腿靴",
+      "type": "boots",
+      "motif": "hike",
+      "rarity": 3,
+      "def": 5,
+      "asBonus": 0.03,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "kills",
+        "count": 18
+      },
+      "flavor": "登山靴——老爸的防具櫃珍藏。",
+      "desc": "部隊回憶",
+      "palette": {
+        "primary": "#6fbf7a",
+        "accent": "#2f6b45",
+        "edge": "#243040"
+      },
+      "blockChance": 0.03,
+      "counterChance": 0.035
+    },
+    {
+      "id": "boots_3",
+      "slot": "boots",
+      "name": "皮鞋加班靴",
+      "type": "boots",
+      "motif": "iron",
+      "rarity": 4,
+      "def": 7,
+      "asBonus": 0.05,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "enhance",
+        "level": 6
+      },
+      "flavor": "鐵靴——老爸的防具櫃珍藏。",
+      "desc": "職場耐久",
+      "palette": {
+        "primary": "#7d9edc",
+        "accent": "#3a4f7a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.045,
+      "counterChance": 0.05
+    },
+    {
+      "id": "boots_4",
+      "slot": "boots",
+      "name": "接送疾風鞋",
+      "type": "boots",
+      "motif": "swift",
+      "rarity": 6,
+      "def": 10,
+      "asBonus": 0.06999999999999999,
+      "atkBonus": 1,
+      "unlock": {
+        "type": "kills",
+        "count": 57
+      },
+      "flavor": "疾風靴——老爸的防具櫃珍藏。",
+      "desc": "安親班接送時速",
+      "palette": {
+        "primary": "#d4655c",
+        "accent": "#6b2e2a",
+        "edge": "#243040"
+      },
+      "blockChance": 0.08,
       "counterChance": 0.09
     },
     {

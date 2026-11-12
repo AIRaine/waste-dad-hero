@@ -57,6 +57,19 @@ export function filterOwnedWeapons(data, state, q = '') {
   return filterOwnedGear(data, state, q, 'weapon');
 }
 
+/** Catalog / list order: slot (盔→甲→手套→靴→盾) → rarity → name. */
+export function sortCatalogGear(list) {
+  const order = Object.fromEntries(ARMOR_SLOTS.map((id, i) => [id, i]));
+  return list
+    .slice()
+    .sort(
+      (a, b) =>
+        (order[a.slot] ?? 99) - (order[b.slot] ?? 99) ||
+        (Number(a.rarity) || 0) - (Number(b.rarity) || 0) ||
+        (a.name || '').localeCompare(b.name || '', 'zh-Hant'),
+    );
+}
+
 export function filterOwnedGear(data, state, q = '', slot = null) {
   const query = (q || '').trim();
   const order = Object.fromEntries(ENHANCEABLE_SLOTS.map((id, i) => [id, i]));
@@ -70,7 +83,53 @@ export function filterOwnedGear(data, state, q = '', slot = null) {
         (s.slot || '').includes(query),
     );
   }
-  return list.sort((a, b) => (order[a.slot] ?? 99) - (order[b.slot] ?? 99) || a.name.localeCompare(b.name, 'zh-Hant'));
+  return list.sort(
+    (a, b) =>
+      (order[a.slot] ?? 99) - (order[b.slot] ?? 99) ||
+      (Number(a.rarity) || 0) - (Number(b.rarity) || 0) ||
+      a.name.localeCompare(b.name, 'zh-Hant'),
+  );
+}
+
+export function ensureHiddenGearVisual(state) {
+  if (!state.hiddenGearVisual || typeof state.hiddenGearVisual !== 'object') {
+    state.hiddenGearVisual = {};
+  }
+  for (const slot of ARMOR_SLOTS) {
+    if (typeof state.hiddenGearVisual[slot] !== 'boolean') {
+      state.hiddenGearVisual[slot] = !!state.hiddenGearVisual[slot];
+    }
+  }
+  return state.hiddenGearVisual;
+}
+
+export function isGearVisualHidden(state, slot) {
+  ensureHiddenGearVisual(state);
+  return !!state.hiddenGearVisual[slot];
+}
+
+export function setGearVisualHidden(state, slot, hidden) {
+  if (!ARMOR_SLOTS.includes(slot)) return false;
+  ensureHiddenGearVisual(state);
+  state.hiddenGearVisual[slot] = !!hidden;
+  return state.hiddenGearVisual[slot];
+}
+
+export function toggleGearVisualHidden(state, slot) {
+  if (!ARMOR_SLOTS.includes(slot)) return false;
+  ensureHiddenGearVisual(state);
+  state.hiddenGearVisual[slot] = !state.hiddenGearVisual[slot];
+  return state.hiddenGearVisual[slot];
+}
+
+/** Equipped gear for avatar drawing — armor slots can be worn but visually hidden. */
+export function visibleGearBundle(data, state) {
+  const bundle = equippedGearBundle(data, state);
+  ensureHiddenGearVisual(state);
+  for (const slot of ARMOR_SLOTS) {
+    if (state.hiddenGearVisual[slot]) bundle[slot] = null;
+  }
+  return bundle;
 }
 
 export function getGearLevel(state, gearId) {
