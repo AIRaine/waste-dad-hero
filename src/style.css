@@ -603,6 +603,13 @@ button.admin-badge:active { transform: scale(0.98); }
   color: #c5d4e0; background: rgba(120,160,180,0.14);
   border: 1px solid rgba(120,160,180,0.32);
 }
+.role-badge.kind-role-tier {
+  color: #9edcf5; background: rgba(78, 196, 239, 0.14);
+  border: 1px solid rgba(78, 196, 239, 0.35);
+}
+.fighter-card.monster.role-tier .fighter-card-face {
+  border-color: rgba(78, 196, 239, 0.45);
+}
 .card-core-stats {
   display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;
   width: 100%; min-height: 18px; margin-top: 2px;
