@@ -42,10 +42,10 @@ export function equipSkin(state, skin) {
   return true;
 }
 
-/** Unequip enhanceable gear slots to empty. Cosmetics (frame / victoryFx) stay put. */
+/** Unequip gear or 發脾氣特效 to empty. Frame stays (portrait needs a frame). */
 export function unequipSkin(state, slot) {
-  const GEAR_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'shield'];
-  if (!GEAR_SLOTS.includes(slot)) return false;
+  const CLEARABLE = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'shield', 'victoryFx'];
+  if (!CLEARABLE.includes(slot)) return false;
   if (!state.equipped) state.equipped = {};
   if (!state.equipped[slot]) return false;
   state.equipped[slot] = null;
@@ -113,7 +113,7 @@ export function getFrameBonuses(data, state) {
   };
 }
 
-/** Equipped 氣焰（slot victoryFx）— ATK% + AS; balanced in skins.json. */
+/** Equipped 發脾氣特效（slot victoryFx）— ATK% + AS; balanced in skins.json. */
 export function getAuraBonuses(data, state) {
   const fx = getEquippedSkin(data, state, 'victoryFx');
   const b = fx?.bonuses || {};

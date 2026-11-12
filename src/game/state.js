@@ -78,6 +78,8 @@ export function createInitialState(data) {
       boots: false,
       shield: false,
     },
+    /** First-run guide dismissed — do not show again after persist. */
+    firstRunGuideSeen: false,
     log: [],
   };
 }
@@ -122,6 +124,7 @@ export function loadState(data) {
         ...base.hiddenGearVisual,
         ...(parsed.hiddenGearVisual || {}),
       },
+      firstRunGuideSeen: !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen),
       gearFilter: '',
       log: [],
     };
@@ -176,6 +179,7 @@ export function saveState(data, state) {
     selectedMonsterId: state.selectedMonsterId,
     playerName: state.playerName,
     avatar: state.avatar,
+    firstRunGuideSeen: !!state.firstRunGuideSeen,
   };
   localStorage.setItem(data.meta.storageKey, JSON.stringify(payload));
 }

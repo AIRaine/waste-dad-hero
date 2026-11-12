@@ -28,7 +28,7 @@ npm run dev
 | `public/data/scenes.json` | 場景與解鎖門檻 |
 | `public/data/difficulty.json` | 難度倍率 |
 | `public/data/monsters.json` | 怪物（含 sceneId／unlock） |
-| `public/data/skins.json` | 武器／外框／特效 |
+| `public/data/skins.json` | 武器／外框／發脾氣特效 |
 | `public/data/enhance.json` | 強化率與消耗 |
 | `public/data/companions.json` | 未來盲盒同伴（僅骨架） |
 | `public/data/combat.json` | 攻速基準、冷卻夾值、掛機節奏、付費加速 stub |

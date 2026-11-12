@@ -46,14 +46,14 @@
     {
       "id": "fx_aura_white",
       "slot": "victoryFx",
-      "name": "白氣",
+      "name": "小聲碎念",
       "aura": "white",
       "rarity": 1,
       "unlock": {
         "type": "default"
       },
-      "flavor": "最基礎的氣焰——微亮白焰。",
-      "desc": "氣焰特效",
+      "flavor": "騎樓邊唉一聲——還沒真的發火，氣場先亮了。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.02,
         "asBonus": 0.02
@@ -67,15 +67,15 @@
     {
       "id": "fx_aura_red",
       "slot": "victoryFx",
-      "name": "紅氣",
+      "name": "火氣上衝",
       "aura": "red",
       "rarity": 2,
       "unlock": {
         "type": "shop",
         "priceGold": 68
       },
-      "flavor": "躁動紅焰，出手更狠一點。",
-      "desc": "氣焰特效",
+      "flavor": "耳根發燙、語氣變急——出手也跟著重一點。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.05,
         "asBonus": 0.03
@@ -89,15 +89,15 @@
     {
       "id": "fx_aura_yellow",
       "slot": "victoryFx",
-      "name": "黃氣",
+      "name": "老爸發威",
       "aura": "yellow",
       "rarity": 2,
       "unlock": {
         "type": "kills",
         "count": 12
       },
-      "flavor": "經典金黃氣焰，攻守節奏上揚。",
-      "desc": "氣焰特效",
+      "flavor": "金光一閃：這次輪到老爸站出來扛。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.06,
         "asBonus": 0.04
@@ -111,15 +111,15 @@
     {
       "id": "fx_aura_blue",
       "slot": "victoryFx",
-      "name": "藍氣",
+      "name": "忍住頂真",
       "aura": "blue",
       "rarity": 2,
       "unlock": {
         "type": "kills",
         "count": 20
       },
-      "flavor": "冷靜藍焰，攻速優先。",
-      "desc": "氣焰特效",
+      "flavor": "深呼吸、眼神變冷——不吼，但動作更快。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.04,
         "asBonus": 0.06
@@ -133,15 +133,15 @@
     {
       "id": "fx_aura_yellow_bolt",
       "slot": "victoryFx",
-      "name": "黃氣．超",
+      "name": "金光暴吼",
       "aura": "yellow_bolt",
       "rarity": 4,
       "unlock": {
         "type": "kills",
         "count": 35
       },
-      "flavor": "金黃超階氣焰——近白內核、短促脈衝。",
-      "desc": "氣焰特效",
+      "flavor": "房貸、家長日、加班——金焰炸開，近白內核連閃。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.09,
         "asBonus": 0.05
@@ -155,15 +155,15 @@
     {
       "id": "fx_aura_blue_bolt",
       "slot": "victoryFx",
-      "name": "藍氣．超",
+      "name": "藍焰暴吼",
       "aura": "blue_bolt",
       "rarity": 4,
       "unlock": {
         "type": "enhance",
         "level": 8
       },
-      "flavor": "藍色超階氣焰——近白內核、短促脈衝。",
-      "desc": "氣焰特效",
+      "flavor": "忍到極限的藍焰爆發——近白內核、短促連擊。",
+      "desc": "發脾氣特效",
       "bonuses": {
         "atkPct": 0.07,
         "asBonus": 0.08
