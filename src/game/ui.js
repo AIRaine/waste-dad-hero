@@ -668,6 +668,7 @@ export function createApp(root, data, state) {
     if (role === 'boss') return 'Boss';
     if (role === 'elite') return '精英';
     if (role === 'training') return '訓練';
+    if (role === 'tier') return 'T階';
     return '雜兵';
   }
 
@@ -675,7 +676,30 @@ export function createApp(root, data, state) {
     if (role === 'boss') return '【Boss】';
     if (role === 'elite') return '【精英】';
     if (role === 'training') return '【訓練】';
+    if (role === 'tier') return '【T階】';
     return '';
+  }
+
+  /**
+   * Combat card role badge:
+   * - farm minions → always 雜兵
+   * - challenge / catalog foes → Boss／精英／T階 from data (trash-role T targets → T階, not 雜兵)
+   */
+  function combatRoleBadge(monster, { training = false } = {}) {
+    if (training || monster?.role === 'training') {
+      return { kind: 'role-training', label: '訓練', role: 'training' };
+    }
+    if (monster?.isFarmMinion) {
+      return { kind: 'role-trash', label: '雜兵', role: 'trash' };
+    }
+    if (monster?.role === 'boss') {
+      return { kind: 'role-boss', label: 'Boss', role: 'boss' };
+    }
+    if (monster?.role === 'elite') {
+      return { kind: 'role-elite', label: '精英', role: 'elite' };
+    }
+    // Formal T-tier challenge with data role trash (or missing) → T階, not 雜兵.
+    return { kind: 'role-tier', label: 'T階', role: 'tier' };
   }
 
   function ownershipBadge(owned, eq) {
@@ -763,15 +787,9 @@ export function createApp(root, data, state) {
             ? [{ kind: 'counter', label: `反${Math.round((m.counterChance || 0) * 100)}%` }]
             : []),
         ];
-    const monsterRoleKind =
-      training
-        ? 'role-training'
-        : m.role === 'boss'
-          ? 'role-boss'
-          : m.role === 'elite'
-            ? 'role-elite'
-            : 'role-trash';
-    const monsterRoleLabel = training ? '訓練' : roleLabel(m.role);
+    const combatRole = combatRoleBadge(m, { training });
+    const monsterRoleKind = combatRole.kind;
+    const monsterRoleLabel = combatRole.label;
     const recentLog = (state.log || []).slice(0, 4);
     const run = training ? null : runProgress(data, state, state.selectedSceneId);
     const meter = training ? null : farmMeterView(data, state, state.selectedSceneId);
@@ -836,7 +854,7 @@ export function createApp(root, data, state) {
               <span class="setup-main">${
                 training
                   ? `${roleTag('training')}${trainCopy.foeLabel}`
-                  : `T${raw.tier} ${roleTag(raw.role)}${raw.name}`
+                  : `T${raw.tier} ${roleTag(combatRole.role)}${raw.name}`
               }</span>
               <span class="tier-caret">▾</span>
             </button>
