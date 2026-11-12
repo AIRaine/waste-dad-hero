@@ -17,11 +17,14 @@ import { armedCount, cycleBoost, ensureBoostState, ownedCount, topUpAdminBoosts 
 import { createBattle, playerAttack, playerIsHit, tickBattle } from './combat.js';
 import {
   clearGacha,
+  confirmEquipGacha,
+  discardPendingGacha,
   drawCost,
   drawGacha,
   ensureGachaState,
   formatGachaEffectLines,
   getGachaBonuses,
+  getGachaPending,
   gachaUnlockHint,
   isGachaUnlocked,
   onGachaSceneChange,
@@ -118,9 +121,7 @@ import { buyItem, buySkin } from './shop.js';
 import { framedPortraitHtml } from './frameAuraArt.js';
 import {
   equipSkin,
-  formatAuraBonusChips,
   formatAuraBonusLines,
-  formatFrameBonusChips,
   formatFrameBonusLines,
   getAuraBonuses,
   getEquippedSkin,
@@ -388,6 +389,17 @@ export function createApp(root, data, state) {
     }, wait);
   }
 
+  function frameArenaInView() {
+    requestAnimationFrame(() => {
+      const scroller = root.querySelector('.battle-scroll');
+      const arena = root.querySelector('.arena');
+      if (!scroller || !arena) return;
+      const top = Math.max(0, arena.offsetTop - 10);
+      scroller.scrollTo({ top, behavior: 'smooth' });
+      scrollMemory['main:battle'] = top;
+    });
+  }
+
   function startAutoFight() {
     if (autoFighting) return;
     // iOS: unlock Web Audio inside this tap gesture (打怪).
@@ -407,10 +419,12 @@ export function createApp(root, data, state) {
     const res = playerAttack(data, state, battle, currentMonster());
     if (res.blocked) {
       render();
+      frameArenaInView();
       scheduleAutoStrike();
       return;
     }
     handleAutoFightOutcome(res);
+    frameArenaInView();
   }
 
   function toggleAutoFight() {
@@ -547,13 +561,40 @@ export function createApp(root, data, state) {
       render();
       return;
     }
+    // Pending only — bonuses apply after 「上場／實裝」.
+    pushLog(
+      state,
+      `抽到「${res.card.name}」· 尚未上場（${toneLabel(res.card.tone)} · ${res.duration}場）`,
+      'info',
+    );
+    showPageNotice(`抽到 ${res.card.name} — 請確認上場`, 'info', 'battle');
+    persist();
+    render();
+  }
+
+  function doGachaConfirm() {
+    stopAutoFight();
+    const res = confirmEquipGacha(data, state);
+    if (!res.ok) {
+      showPageNotice(res.reason || '無法上場', 'warn', 'battle');
+      render();
+      return;
+    }
     battle = createBattle(data, state, currentMonster());
     pushLog(
       state,
-      `扭蛋：${res.card.name}（${toneLabel(res.card.tone)} · ${res.duration}場）`,
+      `人情上場：${res.card.name}（${toneLabel(res.card.tone)} · ${res.duration}場）`,
       res.card.tone === 'debuff' ? 'warn' : 'good',
     );
-    showPageNotice(`${res.card.name} · ${res.card.tagline}`, 'good', 'battle');
+    showPageNotice(`${res.card.name} 已實裝`, 'good', 'battle');
+    persist();
+    render();
+  }
+
+  function doGachaDiscardPending() {
+    stopAutoFight();
+    discardPendingGacha(state);
+    pushLog(state, '放棄這次抽到的人情（未上場）', 'info');
     persist();
     render();
   }
@@ -562,7 +603,7 @@ export function createApp(root, data, state) {
     stopAutoFight();
     clearGacha(state);
     battle = createBattle(data, state, currentMonster());
-    pushLog(state, '卸下人情效果', 'info');
+    pushLog(state, '卸下人情效果（再抽價格依抽次計算，不重設）', 'info');
     persist();
     render();
   }
@@ -672,29 +713,33 @@ export function createApp(root, data, state) {
     const monsterAs = training ? 0 : monsterAttackSpeed(m, data);
     const monsterCd = training ? 0 : monsterAttackCooldownMs(m, data);
     // Slim chips: HP lives on the bar; AS lives on .as-readout — do not repeat.
-    const frameBonusChips = formatFrameBonusChips(frame).filter(
-      (c) => c.kind !== 'none' && c.kind !== 'hp' && c.kind !== 'crit',
-    );
-    const auraBonusChips = formatAuraBonusChips(fx).filter((c) => c.kind !== 'none');
     const gachaEffectLines = gachaBonuses.card
       ? formatGachaEffectLines(gachaBonuses.card.effects || {})
       : [];
+    // Dense under-portrait chips (mobile): core + one packed line — no frame/aura chip wall.
     const playerChips = [
       { kind: 'atk', label: `攻${displayAtk}` },
       { kind: 'def', label: `防${def}` },
-      ...(mit > 0 ? [{ kind: 'mit', label: `減傷${Math.round(mit * 100)}%` }] : []),
-      ...(block > 0 ? [{ kind: 'block', label: `格擋${Math.round(block * 100)}%` }] : []),
-      ...(counter > 0 ? [{ kind: 'counter', label: `反擊${Math.round(counter * 100)}%` }] : []),
-      ...(critTotal > 0 ? [{ kind: 'crit', label: `暴擊${Math.round(critTotal * 100)}%` }] : []),
-      ...frameBonusChips,
-      ...auraBonusChips,
-      ...(gachaBonuses.card
-        ? [{ kind: 'gacha', label: `${gachaBonuses.card.name}·${gachaBonuses.active?.battlesLeft || 0}場` }]
-        : []),
     ];
+    const packed = [];
+    if (mit > 0) packed.push(`減${Math.round(mit * 100)}%`);
+    if (block > 0) packed.push(`格${Math.round(block * 100)}%`);
+    if (counter > 0) packed.push(`反${Math.round(counter * 100)}%`);
+    if (critTotal > 0) packed.push(`爆${Math.round(critTotal * 100)}%`);
+    if (packed.length) playerChips.push({ kind: 'mit', label: packed.join('·') });
+    if (gachaBonuses.card) {
+      playerChips.push({
+        kind: 'gacha',
+        label: `人情·${gachaBonuses.active?.battlesLeft || 0}`,
+      });
+    }
     const gachaOpen = isGachaUnlocked(data, state);
     const gachaCost = drawCost(data, state, state.selectedSceneId);
     const gachaCard = gachaBonuses.card;
+    const gachaPending = getGachaPending(data, state);
+    const pendingLines = gachaPending
+      ? formatGachaEffectLines(gachaPending.card.effects || {})
+      : [];
     const monsterChips = training
       ? [
           { kind: 'role-training', label: '訓練' },
@@ -771,7 +816,9 @@ export function createApp(root, data, state) {
                 : ''
             }
 
-            <div class="gacha-panel tone-${gachaCard?.tone || (gachaOpen ? 'idle' : 'locked')}" data-gacha-panel>
+            <div class="gacha-panel tone-${
+              gachaPending?.card?.tone || gachaCard?.tone || (gachaOpen ? 'idle' : 'locked')
+            }" data-gacha-panel>
               <div class="gacha-head">
                 <strong>場景扭蛋</strong>
                 <span class="gacha-scene">${sceneIconHtml(scene, 22)} ${scene.name}</span>
@@ -779,37 +826,40 @@ export function createApp(root, data, state) {
               ${
                 !gachaOpen
                   ? `<p class="gacha-lock muted">${gachaUnlockHint(data)}</p>`
-                  : gachaCard
-                    ? `<div class="gacha-active">
-                        <div class="gacha-name">${gachaCard.name}<span class="gacha-tone">${toneLabel(gachaCard.tone)}</span></div>
-                        <p class="gacha-tag">${gachaCard.tagline}</p>
-                        <div class="gacha-effects">${gachaEffectLines.map((l) => `<span>${l}</span>`).join('')}</div>
-                        <p class="gacha-left muted">剩餘 ${gachaBonuses.active?.battlesLeft ?? 0} 場 · 換場景會退場</p>
+                  : gachaPending
+                    ? `<div class="gacha-pending">
+                        <div class="gacha-name">待上場：${gachaPending.card.name}<span class="gacha-tone">${toneLabel(gachaPending.card.tone)}</span></div>
+                        <p class="gacha-tag">${gachaPending.card.tagline}</p>
+                        <div class="gacha-effects">${pendingLines.map((l) => `<span>${l}</span>`).join('')}</div>
+                        <p class="gacha-left muted">抽到尚未實裝 · ${gachaPending.pending.duration || 5} 場</p>
                       </div>`
-                    : `<p class="gacha-idle muted">抽一位本場景人情（含增益／互換／惡搞減益）</p>`
+                    : gachaCard
+                      ? `<div class="gacha-active">
+                          <div class="gacha-name">${gachaCard.name}<span class="gacha-tone">${toneLabel(gachaCard.tone)}</span></div>
+                          <p class="gacha-tag">${gachaCard.tagline}</p>
+                          <div class="gacha-effects">${gachaEffectLines.map((l) => `<span>${l}</span>`).join('')}</div>
+                          <p class="gacha-left muted">上場中 · 剩 ${gachaBonuses.active?.battlesLeft ?? 0} 場 · 換場景退場</p>
+                        </div>`
+                      : `<p class="gacha-idle muted">抽人情後需點「上場／實裝」才生效</p>`
               }
               ${
-                gachaOpen
+                gachaOpen && gachaPending
                   ? `<div class="gacha-actions">
-                      <button type="button" class="btn gacha-draw" data-action="gacha-draw">${
-                        gachaCard ? `再抽 · ${gachaCost.label}` : `抽一次 · ${gachaCost.label}`
-                      }</button>
-                      ${
-                        gachaCard && data.gacha?.rules?.skipAllowed !== false
-                          ? `<button type="button" class="btn ghost" data-action="gacha-clear">卸下</button>`
-                          : ''
-                      }
+                      <button type="button" class="btn primary gacha-equip" data-action="gacha-equip">上場／實裝</button>
+                      <button type="button" class="btn ghost" data-action="gacha-discard">放棄</button>
                     </div>`
-                  : ''
-              }
-              ${
-                gachaOpen && state.gacha?.revealOpen && gachaCard
-                  ? `<div class="gacha-reveal" role="status">
-                      <p class="gacha-reveal-title">抽到：${gachaCard.name}</p>
-                      <p class="gacha-reveal-flavor">${gachaCard.flavor || gachaCard.tagline}</p>
-                      <button type="button" class="btn ghost compact" data-action="gacha-reveal-close">知道了</button>
-                    </div>`
-                  : ''
+                  : gachaOpen
+                    ? `<div class="gacha-actions">
+                        <button type="button" class="btn gacha-draw" data-action="gacha-draw" ${
+                          state.gacha?.pending ? 'disabled' : ''
+                        }>${gachaCard ? `再抽 · ${gachaCost.label}` : `抽一次 · ${gachaCost.label}`}</button>
+                        ${
+                          gachaCard && data.gacha?.rules?.skipAllowed !== false
+                            ? `<button type="button" class="btn ghost" data-action="gacha-clear">卸下</button>`
+                            : ''
+                        }
+                      </div>`
+                    : ''
               }
             </div>
           </div>
@@ -1627,12 +1677,8 @@ export function createApp(root, data, state) {
 
     root.querySelector('[data-action="gacha-draw"]')?.addEventListener('click', () => doGachaDraw());
     root.querySelector('[data-action="gacha-clear"]')?.addEventListener('click', () => doGachaClear());
-    root.querySelector('[data-action="gacha-reveal-close"]')?.addEventListener('click', () => {
-      ensureGachaState(state);
-      state.gacha.revealOpen = false;
-      persist();
-      render();
-    });
+    root.querySelector('[data-action="gacha-equip"]')?.addEventListener('click', () => doGachaConfirm());
+    root.querySelector('[data-action="gacha-discard"]')?.addEventListener('click', () => doGachaDiscardPending());
 
     root.querySelector('[data-action="tier-picker"]')?.addEventListener('click', () => {
       stopAutoFight();

@@ -1,6 +1,6 @@
 {
   "rules": {
-    "note": "場景扭蛋：依目前場景抽人情角色 buff／debuff。輕諷刺、典型角色，不寫真人姓名。詳見 docs/scene-gacha-buffs.md。",
+    "note": "場景扭蛋：抽次計價（卸下不重設）；抽到 pending，需「上場／實裝」才生效。詳見 docs/scene-gacha-buffs.md。",
     "unlock": {
       "type": "sceneClears",
       "sceneId": "living_room",
