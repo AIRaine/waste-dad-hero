@@ -821,8 +821,6 @@ export function createApp(root, data, state) {
       </section>`;
   }
 
-  // UI-only: hide enhance admin shortcuts for now (handlers + APIs kept for easy restore).
-  const SHOW_ENHANCE_ADMIN_TOOLS = false;
   const BOOST_STRIP = [
     { id: 'bless_scroll', short: '香火' },
     { id: 'protect_scroll', short: '平安' },
@@ -906,7 +904,7 @@ export function createApp(root, data, state) {
             <button type="button" class="btn primary wide enhance-cta-btn" data-action="enhance">嘗試強化</button>
           </div>
           ${
-            SHOW_ENHANCE_ADMIN_TOOLS && state.adminMode
+            state.adminMode
               ? `<div class="admin-tools compact">
                   <button type="button" class="btn wide" data-action="admin-max">一鍵滿強</button>
                   <button type="button" class="btn wide" data-action="admin-boosts">補滿輔助</button>

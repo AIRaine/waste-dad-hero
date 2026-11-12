@@ -1120,6 +1120,17 @@ button.admin-badge:active { transform: scale(0.98); }
 .page-cta.flash-good { box-shadow: inset 0 0 0 1px rgba(111,191,122,0.5); }
 .page-cta.flash-bad { box-shadow: inset 0 0 0 1px rgba(212,101,92,0.5); }
 .admin-tools { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.enhance-cta .admin-tools.compact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-top: 2px;
+}
+.enhance-cta .admin-tools.compact .btn {
+  min-height: 36px;
+  font-size: 0.78rem;
+  padding: 0 8px;
+}
 
 .shop-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
 .shop-row {
