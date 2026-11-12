@@ -1,6 +1,6 @@
 # 廢材老爸的英雄路
 
-手機優先的 2D 網頁遊戲原型：家庭場景推進、難度切換、機率強化、站樁打怪（格擋／反擊）、商店與圖鑑。數值在 `data/` JSON。
+手機優先的 2D 網頁遊戲原型：家庭場景推進、難度切換、機率強化、站樁打怪（格擋／反擊）、商店與圖鑑。數值在 `public/data/` JSON（Vite 會原樣拷進正式站）。
 
 ## 啟動
 
@@ -25,11 +25,11 @@ npm run dev
 
 | 檔案 | 用途 |
 |------|------|
-| `data/scenes.json` | 場景與解鎖門檻 |
-| `data/difficulty.json` | 難度倍率 |
-| `data/monsters.json` | 怪物（含 sceneId／unlock） |
-| `data/skins.json` | 武器／外框／特效 |
-| `data/enhance.json` | 強化率與消耗 |
-| `data/companions.json` | 未來盲盒同伴（僅骨架） |
-| `data/combat.json` | 攻速基準、冷卻夾值、掛機節奏、付費加速 stub |
-| `data/items.json` / `meta.json` | 商店道具、標題與初始資源 |
+| `public/data/scenes.json` | 場景與解鎖門檻 |
+| `public/data/difficulty.json` | 難度倍率 |
+| `public/data/monsters.json` | 怪物（含 sceneId／unlock） |
+| `public/data/skins.json` | 武器／外框／特效 |
+| `public/data/enhance.json` | 強化率與消耗 |
+| `public/data/companions.json` | 未來盲盒同伴（僅骨架） |
+| `public/data/combat.json` | 攻速基準、冷卻夾值、掛機節奏、付費加速 stub |
+| `public/data/items.json` / `meta.json` | 商店道具、標題與初始資源 |
