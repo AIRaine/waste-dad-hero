@@ -820,7 +820,14 @@ button.admin-badge:active { transform: scale(0.98); }
 .result-box.lose { color: #ffc4c0; }
 .result-box .reward { color: var(--muted); font-size: 0.85rem; margin: 0; }
 
-.gear-picker { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.enhance-browse {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.enhance-browse-head h2 { margin: 0 0 2px; }
+.enhance-browse-head .muted { margin: 0; font-size: 0.78rem; line-height: 1.35; }
+.gear-picker { display: flex; flex-direction: column; gap: 8px; margin-bottom: 0; flex: 1 1 auto; min-height: 0; }
 .gear-filter {
   min-height: 40px; border-radius: 10px; border: 1px solid var(--line); background: #182830;
   color: var(--ink); padding: 0 12px;
@@ -831,21 +838,92 @@ button.admin-badge:active { transform: scale(0.98); }
   /* page-level scroll only — no nested gear list scrollbar */
 }
 .gear-row {
-  display: flex; gap: 10px; align-items: center; min-height: 56px; padding: 8px; border-radius: 10px;
+  display: flex; gap: 10px; align-items: center; min-height: 52px; padding: 7px 8px; border-radius: 10px;
   border: 1px solid transparent; background: rgba(255,255,255,0.03); text-align: left; width: 100%;
   border-left: 3px solid var(--rarity, transparent);
 }
 .gear-row.selected { border-color: rgba(212,162,76,0.55); background: rgba(212,162,76,0.1); }
 .gear-row.is-equipped { border-color: rgba(125,206,160,0.4); }
 .gear-row span { display: block; font-size: 0.72rem; color: var(--muted); }
-.enhance-wear-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-  margin-bottom: 8px;
+.enhance-cta { display: flex; flex-direction: column; gap: 5px; padding-top: 6px; }
+.enhance-cta .cta-summary {
+  margin-bottom: 0;
+  padding: 6px 8px;
+  gap: 8px;
 }
-.enhance-wear-row:has(.enhance-hide-btn) {
-  grid-template-columns: 1fr 1fr;
+.enhance-cta .sticky-summary-icon { width: 44px; height: 44px; }
+.enhance-cta .sticky-summary-icon .weapon-mini.vivid { width: 36px; height: 36px; }
+.enhance-cta .cta-meta strong { font-size: 0.88rem; }
+.enhance-cta .cta-rate-line { font-size: 0.72rem; }
+.enhance-action-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.enhance-ops {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+.enhance-ops:has(.enhance-hide-btn) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.boost-chip,
+.ops-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-height: 40px;
+  padding: 4px 2px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1.05;
+  min-width: 0;
+}
+.boost-chip:disabled,
+.ops-chip:disabled { opacity: 0.45; cursor: not-allowed; }
+.boost-chip.on,
+.ops-chip.is-on {
+  border-color: rgba(125,206,160,0.6);
+  background: rgba(125,206,160,0.14);
+}
+.boost-chip-ico {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+.boost-chip-ico svg { width: 14px; height: 14px; display: block; }
+.boost-chip-text {
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1.05;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.boost-chip-count {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.boost-chip.on .boost-chip-count { color: #9be0c0; }
+.enhance-cta-btn {
+  min-height: 46px;
+  font-size: 0.98rem;
 }
 .enhance-hide-btn.on {
   border-color: rgba(125,158,220,0.55);
@@ -898,9 +976,9 @@ button.admin-badge:active { transform: scale(0.98); }
   color: #c5d4f0;
 }
 @media (max-width: 380px) {
-  .enhance-wear-row:has(.enhance-hide-btn) {
-    grid-template-columns: 1fr;
-  }
+  .boost-chip,
+  .ops-chip { min-height: 38px; padding: 3px 1px; }
+  .boost-chip-text { font-size: 0.58rem; }
 }
 .gear-row.rarity-1, .skin-card.rarity-1 { --rarity: #d8dde2; }
 .gear-row.rarity-2, .skin-card.rarity-2 { --rarity: #6fbf7a; }
@@ -1031,7 +1109,8 @@ button.admin-badge:active { transform: scale(0.98); }
     0 0 10px rgba(255, 200, 60, 0.75),
     0 1px 0 rgba(120, 60, 0, 0.45);
 }
-.boost-toggles { display: flex; flex-direction: column; gap: 6px; /* page scroll only */ }
+/* Legacy tall boost rows kept for easy restore of pre-declutter enhance UI */
+.boost-toggles { display: flex; flex-direction: column; gap: 6px; }
 .boost-toggle {
   display: flex; gap: 10px; align-items: center; width: 100%; min-height: 48px; padding: 8px 10px;
   border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.03); text-align: left;
