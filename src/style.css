@@ -1174,6 +1174,21 @@ button.admin-badge:active { transform: scale(0.98); }
 .result-box.lose { color: #ffc4c0; }
 .result-box .reward { color: var(--muted); font-size: 0.85rem; margin: 0; }
 .result-box .run-progress-msg .muted { font-weight: 600; font-size: 0.78rem; }
+.result-cta-row {
+  display: flex; flex-direction: column; gap: 8px; width: 100%;
+}
+.result-cta-row.has-return-farm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+@media (min-width: 360px) {
+  .result-cta-row.has-return-farm {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+  .result-cta-row.has-return-farm .btn { width: 100%; }
+}
 
 .enhance-browse {
   display: flex;

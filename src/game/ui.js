@@ -803,7 +803,12 @@ export function createApp(root, data, state) {
     const showRetreat = canRetreat(data, state);
     const showAdvance = canManualAdvanceScene(data, state);
     const showChallengeBtn = !training && meter?.canChallenge && meter.mode === 'farm';
-    const showReturnFarm = !training && meter?.mode === 'challenge';
+    // Challenge mid-fight / victory: return when still in challenge mode.
+    // Defeat: always offer 回刷小怪 beside/under 再戰 (even if still flagged challenge).
+    const showReturnFarm =
+      !training &&
+      !!meter &&
+      (meter.mode === 'challenge' || (battle.over && !battle.victory));
     const armorEmpty = ARMOR_SLOTS.every((s) => !state.equipped?.[s]);
     const needsEquipHint =
       !!state.firstRunGuideSeen &&
@@ -1110,12 +1115,14 @@ export function createApp(root, data, state) {
                       ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
                       : ''
                   }
-                  <button type="button" class="btn ${showChallengeBtn ? '' : 'primary '}wide" data-action="rematch">${showChallengeBtn ? '續刷小怪' : '再戰'}</button>
-                  ${
-                    showReturnFarm
-                      ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
-                      : ''
-                  }
+                  <div class="result-cta-row ${!battle.victory && showReturnFarm ? 'has-return-farm' : ''}">
+                    <button type="button" class="btn ${showChallengeBtn || (!battle.victory && showReturnFarm) ? '' : 'primary '}wide" data-action="rematch">${showChallengeBtn ? '續刷小怪' : '再戰'}</button>
+                    ${
+                      showReturnFarm
+                        ? `<button type="button" class="btn ${battle.victory ? '' : 'primary '}wide" data-action="farm-return">回刷小怪</button>`
+                        : ''
+                    }
+                  </div>
                   ${
                     battle.victory && showAdvance
                       ? `<button type="button" class="btn wide" data-action="run-advance">前往下一場景</button>`
