@@ -105,17 +105,22 @@ export function makeFarmMinion(data, challenge) {
   };
 }
 
+/**
+ * Resolve farm/challenge focus.
+ * Sticky: honor focusId when reachable — even if already cleared (manual rematch / prior farm).
+ * Only auto-advance when focusId is missing or unreachable.
+ */
 export function resolveFocusChallenge(data, state, sceneId = state.selectedSceneId) {
   ensureFarmState(state);
   const chain = challengeChain(data, sceneId);
   if (!chain.length) return null;
   if (state.farm.focusId) {
     const cur = chain.find((m) => m.id === state.farm.focusId);
-    if (cur && isChallengeReachable(data, state, cur) && !isChallengeCleared(state, cur.id)) {
+    if (cur && isChallengeReachable(data, state, cur)) {
       return cur;
     }
   }
-  // First uncleared reachable challenge; else last cleared / last in chain for endless farm.
+  // First uncleared reachable challenge; else last in chain for endless farm.
   for (const m of chain) {
     if (isChallengeReachable(data, state, m) && !isChallengeCleared(state, m.id)) return m;
   }
@@ -124,14 +129,19 @@ export function resolveFocusChallenge(data, state, sceneId = state.selectedScene
 
 export function syncFarmFocus(data, state, sceneId = state.selectedSceneId) {
   ensureFarmState(state);
+  const chain = challengeChain(data, sceneId);
+  // In challenge mode, selectedMonsterId is source of truth when it names a chain foe.
+  if (state.farm.mode === 'challenge') {
+    const selected = chain.find((m) => m.id === state.selectedMonsterId);
+    if (selected && isChallengeReachable(data, state, selected) && isChallengeUnlocked(data, state, selected.id)) {
+      state.farm.focusId = selected.id;
+      return selected;
+    }
+    // Invalid / locked selection — drop back to farm focus.
+    state.farm.mode = 'farm';
+  }
   const focus = resolveFocusChallenge(data, state, sceneId);
   state.farm.focusId = focus?.id || null;
-  if (state.farm.mode === 'challenge') {
-    const ch = focus && challengeChain(data, sceneId).find((m) => m.id === state.selectedMonsterId);
-    if (!ch || !isChallengeUnlocked(data, state, ch.id)) {
-      state.farm.mode = 'farm';
-    }
-  }
   return focus;
 }
 
@@ -142,8 +152,20 @@ export function currentFarmOrChallengeMonster(data, state) {
   const sceneId = state.selectedSceneId;
   const chain = challengeChain(data, sceneId);
   if (state.farm.mode === 'challenge') {
-    const id = state.farm.focusId || state.selectedMonsterId;
-    return chain.find((m) => m.id === id) || null;
+    // Prefer explicit picker / enterChallenge selection; do not let stale focusId win.
+    const selected = chain.find((m) => m.id === state.selectedMonsterId);
+    if (selected) return selected;
+    const focus = syncFarmFocus(data, state, sceneId);
+    return focus || null;
+  }
+  // Farm: if selectedMonsterId is farm__X, keep that stage (sticky), else sync focus.
+  if (isFarmMonsterId(data, state.selectedMonsterId)) {
+    const cid = challengeIdFromFarmId(data, state.selectedMonsterId);
+    const ch = chain.find((m) => m.id === cid);
+    if (ch && isChallengeReachable(data, state, ch)) {
+      state.farm.focusId = ch.id;
+      return makeFarmMinion(data, ch);
+    }
   }
   const focus = syncFarmFocus(data, state, sceneId);
   return focus ? makeFarmMinion(data, focus) : null;
@@ -191,8 +213,30 @@ export function enterChallenge(data, state, challengeId) {
 
 export function returnToFarm(data, state) {
   ensureFarmState(state);
-  const focus = syncFarmFocus(data, state);
+  const chain = challengeChain(data, state.selectedSceneId);
+  const wasChallenge = state.farm.mode === 'challenge';
+  const fromId =
+    (wasChallenge && state.selectedMonsterId && chain.some((m) => m.id === state.selectedMonsterId)
+      ? state.selectedMonsterId
+      : null) ||
+    state.farm.focusId ||
+    challengeIdFromFarmId(data, state.selectedMonsterId);
   state.farm.mode = 'farm';
+  // Leaving a T-challenge → farm the prior stage's minions (easier grind). T1 stays T1.
+  let focus = null;
+  if (wasChallenge && fromId) {
+    const idx = chain.findIndex((m) => m.id === fromId);
+    if (idx > 0) {
+      focus = chain[idx - 1];
+      state.farm.focusId = focus.id;
+    } else if (idx === 0) {
+      focus = chain[0];
+      state.farm.focusId = focus.id;
+    }
+  }
+  if (!focus) {
+    focus = syncFarmFocus(data, state);
+  }
   if (focus) state.selectedMonsterId = makeFarmMinion(data, focus).id;
   return {
     ok: true,
