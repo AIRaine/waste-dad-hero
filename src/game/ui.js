@@ -79,6 +79,18 @@ import {
   retreatToPreviousScene,
   runProgress,
 } from './run.js';
+import {
+  challengeIdFromFarmId,
+  currentFarmOrChallengeMonster,
+  enterChallenge,
+  ensureFarmState,
+  farmMeterView,
+  isFarmMonsterId,
+  makeFarmMinion,
+  migrateFarmFromDefeated,
+  returnToFarm,
+  syncFarmFocus,
+} from './farm.js';
 import { clearHitFloatDom, setPendingAttackSfxGroup, syncHitFloatDom } from './hitFloats.js';
 import {
   initSfx,
@@ -132,6 +144,8 @@ export function createApp(root, data, state) {
   initSfx(data.sfx);
   const uninstallSfxUnlock = installSfxUnlock();
   ensureRunState(state);
+  ensureFarmState(state);
+  migrateFarmFromDefeated(data, state);
 
   function armAttackSfx() {
     const weapon = getEquippedSkin(data, state, 'weapon');
@@ -148,11 +162,20 @@ export function createApp(root, data, state) {
   /** @type {{ kind: string, message: string, blockedHint?: string } | null} */
   let lastRunProgress = null;
 
+  function resolveFoughtMonster() {
+    if (!battle?.monsterId) return null;
+    if (battle.monsterId === TRAINING_DUMMY_ID) return { id: TRAINING_DUMMY_ID };
+    if (isFarmMonsterId(data, battle.monsterId)) {
+      const cid = challengeIdFromFarmId(data, battle.monsterId);
+      const ch = getMonster(data, cid);
+      return ch ? makeFarmMinion(data, ch) : null;
+    }
+    return getMonster(data, battle.monsterId);
+  }
+
   function noteVictoryProgression() {
     if (!battle?.over || !battle.victory || battle.progressionApplied) return lastRunProgress;
-    const fought =
-      getMonster(data, battle.monsterId) ||
-      (battle.monsterId === TRAINING_DUMMY_ID ? { id: TRAINING_DUMMY_ID } : null);
+    const fought = resolveFoughtMonster();
     const prog = applyVictoryProgression(data, state, fought, {
       training: !!battle.training || battle.monsterId === TRAINING_DUMMY_ID,
     });
@@ -236,15 +259,26 @@ export function createApp(root, data, state) {
 
   function currentMonsterRaw() {
     ensureSceneSelection(data, state);
+    ensureFarmState(state);
     if (state.selectedMonsterId === TRAINING_DUMMY_ID) {
       return getTrainingDummy(data, state.selectedDifficultyId);
     }
-    return data.monsters.tiers.find((m) => m.id === state.selectedMonsterId) || monstersInScene(data, state.selectedSceneId)[0];
+    const farmFoe = currentFarmOrChallengeMonster(data, state);
+    if (farmFoe) return farmFoe;
+    syncFarmFocus(data, state);
+    const focusMon = currentFarmOrChallengeMonster(data, state);
+    if (focusMon) return focusMon;
+    return monstersInScene(data, state.selectedSceneId)[0];
   }
 
   function currentMonster() {
     const raw = currentMonsterRaw();
     if (isTrainingDummy(raw)) return raw;
+    if (raw?.isFarmMinion) {
+      // Farm minion already stat-tuned; still apply difficulty mul.
+      const diff = getDifficulty(data, state.selectedDifficultyId);
+      return scaleMonster(raw, diff);
+    }
     const diff = getDifficulty(data, state.selectedDifficultyId);
     return scaleMonster(raw, diff);
   }
@@ -305,10 +339,10 @@ export function createApp(root, data, state) {
       battle = createBattle(data, state, foe);
       victoryFx = false;
       const label =
-        lastRunProgress?.kind === 'next_scene'
-          ? `掛機進入「${getScene(data, state.selectedSceneId)?.name}」· ${foe?.name}`
-          : lastRunProgress?.kind === 'next_monster'
-            ? `掛機推進「${foe?.name}」`
+        lastRunProgress?.kind === 'meter_full'
+          ? `農區已滿，續刷或手動挑戰 · ${foe?.name}`
+          : lastRunProgress?.kind === 'challenge_clear' || lastRunProgress?.kind === 'scene_gate_clear'
+            ? `回農區續刷「${foe?.name}」`
             : `掛機續戰「${foe?.name}」`;
       pushLog(state, label, 'info');
       persist();
@@ -454,12 +488,22 @@ export function createApp(root, data, state) {
   }
 
   function chooseMonster(id) {
-    if (id !== TRAINING_DUMMY_ID) {
-      const mon = (data.monsters?.tiers || []).find((x) => x.id === id);
-      if (mon && !isMonsterFightable(data, state, mon)) return;
-    }
     stopAutoFight();
-    state.selectedMonsterId = id;
+    ensureFarmState(state);
+    if (id === TRAINING_DUMMY_ID) {
+      state.selectedMonsterId = id;
+    } else {
+      const mon = (data.monsters?.tiers || []).find((x) => x.id === id);
+      if (!mon) return;
+      // Manual pick of a catalog foe = enter challenge if unlocked/reachable; else ignore.
+      const res = enterChallenge(data, state, mon.id);
+      if (!res.ok) {
+        showPageNotice(res.message, 'warn', 'battle');
+        tierPickerOpen = false;
+        render();
+        return;
+      }
+    }
     battle = createBattle(data, state, currentMonster());
     victoryFx = false;
     tierPickerOpen = false;
@@ -472,8 +516,16 @@ export function createApp(root, data, state) {
     stopAutoFight();
     const expired = onGachaSceneChange(data, state, id);
     state.selectedSceneId = id;
-    state.selectedMonsterId = null;
-    ensureSceneSelection(data, state);
+    ensureFarmState(state);
+    state.farm.mode = 'farm';
+    state.farm.focusId = null;
+    syncFarmFocus(data, state, id);
+    const farm = returnToFarm(data, state);
+    if (farm.monster) state.selectedMonsterId = farm.monster.id;
+    else {
+      state.selectedMonsterId = null;
+      ensureSceneSelection(data, state);
+    }
     battle = createBattle(data, state, currentMonster());
     victoryFx = false;
     scenePickerOpen = false;
@@ -657,15 +709,18 @@ export function createApp(root, data, state) {
         ];
     const recentLog = (state.log || []).slice(0, 4);
     const run = training ? null : runProgress(data, state, state.selectedSceneId);
-    const runLabel = !run
+    const meter = training ? null : farmMeterView(data, state, state.selectedSceneId);
+    const runLabel = !meter
       ? ''
-      : run.atGate
-        ? `Boss 關 · ${run.index + 1}/${run.total}`
-        : run.index >= 0
-          ? `本關進度 ${run.index + 1}/${run.total}`
-          : `本關進度 —/${run.total}`;
+      : meter.mode === 'challenge'
+        ? `挑戰中 · T${meter.index + 1}/${meter.total}`
+        : meter.cleared
+          ? `本階已過 · T${meter.index + 1}/${meter.total}`
+          : `農區 T${meter.index + 1}/${meter.total}`;
     const showRetreat = canRetreat(data, state);
     const showAdvance = canManualAdvanceScene(data, state);
+    const showChallengeBtn = !training && meter?.canChallenge && meter.mode === 'farm';
+    const showReturnFarm = !training && meter?.mode === 'challenge';
 
     return `
       <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''}">
@@ -704,14 +759,14 @@ export function createApp(root, data, state) {
               <span class="tier-caret">▾</span>
             </button>
             ${
-              runLabel
-                ? `<div class="run-strip" aria-label="本關進度">
-                    <span class="run-chip ${run?.atGate ? 'is-boss' : ''}">${runLabel}</span>
-                    ${
-                      run?.gate
-                        ? `<span class="run-gate-hint">通關閘：${run.gate.name}</span>`
-                        : ''
-                    }
+              runLabel && meter
+                ? `<div class="run-strip" aria-label="農區進度">
+                    <span class="run-chip ${meter.mode === 'challenge' ? 'is-boss' : ''}">${runLabel}</span>
+                    <span class="run-gate-hint">目標：${meter.focus.name}</span>
+                    <div class="farm-meter" role="progressbar" aria-valuemin="0" aria-valuemax="${meter.need}" aria-valuenow="${meter.have}" aria-label="農區擊殺進度">
+                      <div class="farm-meter-fill" style="width:${meter.pct}%"></div>
+                      <span class="farm-meter-label">${meter.unlocked || meter.cleared ? '可挑戰' : `${meter.have}/${meter.need}`}</span>
+                    </div>
                   </div>`
                 : ''
             }
@@ -915,6 +970,16 @@ export function createApp(root, data, state) {
                   }
                   <button type="button" class="btn primary wide" data-action="rematch">再戰</button>
                   ${
+                    showChallengeBtn
+                      ? `<button type="button" class="btn wide" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                      : ''
+                  }
+                  ${
+                    showReturnFarm
+                      ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
+                      : ''
+                  }
+                  ${
                     battle.victory && showAdvance
                       ? `<button type="button" class="btn wide" data-action="run-advance">前往下一場景</button>`
                       : ''
@@ -937,8 +1002,18 @@ export function createApp(root, data, state) {
                     ${autoFighting ? '暫停' : training ? '練功' : '打怪'}
                   </button>
                   ${
+                    !autoFighting && showChallengeBtn
+                      ? `<button type="button" class="btn wide" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                      : ''
+                  }
+                  ${
+                    !autoFighting && showReturnFarm
+                      ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
+                      : ''
+                  }
+                  ${
                     !autoFighting && showRetreat
-                      ? `<button type="button" class="btn ghost wide run-retreat-inline" data-action="run-retreat">撤回上一場景練功</button>`
+                      ? `<button type="button" class="btn ghost wide run-retreat-inline" data-action="run-retreat">撤回上一場景無限農區</button>`
                       : ''
                   }
                 </div>`
@@ -1599,7 +1674,6 @@ export function createApp(root, data, state) {
           render();
           return;
         }
-        ensureSceneSelection(data, state);
         battle = createBattle(data, state, currentMonster());
         victoryFx = false;
         lastRunProgress = { kind: 'retreat', message: res.message };
@@ -1617,11 +1691,36 @@ export function createApp(root, data, state) {
         render();
         return;
       }
-      ensureSceneSelection(data, state);
       battle = createBattle(data, state, currentMonster());
       victoryFx = false;
       lastRunProgress = { kind: 'next_scene', message: res.message };
       pushLog(state, res.message, 'good');
+      persist();
+      render();
+    });
+    root.querySelector('[data-action="farm-challenge"]')?.addEventListener('click', () => {
+      stopAutoFight();
+      const focusId = state.farm?.focusId;
+      const res = enterChallenge(data, state, focusId);
+      if (!res.ok) {
+        showPageNotice(res.message, 'warn', 'battle');
+        render();
+        return;
+      }
+      battle = createBattle(data, state, currentMonster());
+      victoryFx = false;
+      lastRunProgress = { kind: 'enter_challenge', message: res.message };
+      pushLog(state, res.message, 'info');
+      persist();
+      render();
+    });
+    root.querySelector('[data-action="farm-return"]')?.addEventListener('click', () => {
+      stopAutoFight();
+      const res = returnToFarm(data, state);
+      battle = createBattle(data, state, currentMonster());
+      victoryFx = false;
+      lastRunProgress = { kind: 'return_farm', message: res.message };
+      pushLog(state, res.message, 'info');
       persist();
       render();
     });

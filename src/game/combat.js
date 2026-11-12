@@ -357,7 +357,10 @@ function finishVictory(data, state, battle, monster) {
   }
   state.exp += exp;
   state.kills += 1;
-  state.defeated[monster.id] = (state.defeated[monster.id] || 0) + 1;
+  // Farm minions are synthetic — meter lives in state.farm; do not mark catalog defeated.
+  if (!monster.isFarmMinion) {
+    state.defeated[monster.id] = (state.defeated[monster.id] || 0) + 1;
+  }
   recordSceneClear(state, monster, state.selectedDifficultyId);
   battle.rewards = { gold, material, exp, doubled };
   const gachaTick = tickGachaAfterBattle(data, state, {
