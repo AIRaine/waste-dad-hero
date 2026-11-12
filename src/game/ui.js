@@ -778,7 +778,7 @@ export function createApp(root, data, state) {
             }
             ${autoFighting ? `<span class="auto-live">${training ? '練功中' : '掛機中'}</span>` : ''}
             <span class="as-hint">${
-              training ? '訓練：只算你的冷卻；傷害飄字、雙方 HP 不變' : '雙方獨立冷卻（碼錶請分邊量）'
+              training ? '訓練：只算你的冷卻；傷害飄字、雙方 HP 不變' : '雙方各自冷卻，互不干擾'
             }</span>
           </div>
 
@@ -912,21 +912,21 @@ export function createApp(root, data, state) {
       <section class="shop page-with-cta">
         <div class="page-scroll">
           <h2>商店</h2>
-          <p class="muted">輔助道具與外觀。下方「支援方案」為課金路徑 stub（無真實金流）。</p>
+          <p class="muted">輔助道具、外觀，以及支援老爸闖關的方案。</p>
           ${
             iapPacks.length
-              ? `<h3>支援方案（stub）</h3>
-                <p class="muted iap-hint">小額→大額預覽；點「試領」寫入權益旗標，方便接真金流前驗收。</p>
+              ? `<h3>支援方案</h3>
+                <p class="muted iap-hint">由小到大，點「試領」立刻生效（示範商店，不會真實扣款）。</p>
                 <div class="shop-list iap-list">
                   ${iapPacks
                     .map((pack) => {
                       const owned = state.iapEntitlements.purchased?.includes(pack.id);
                       return `<div class="shop-row iap-row tier-${pack.tier || 'mid'}">
                         <div class="shop-ico iap-ico">${iapTierLabel(pack.tier).slice(0, 1)}</div>
-                        <div>
+                        <div class="shop-copy">
                           <h3>${pack.name} <span class="iap-tier">${iapTierLabel(pack.tier)}</span></h3>
                           <p>${pack.desc}</p>
-                          <p class="price">${pack.priceHint || ''}${owned ? ' · 已試領' : ''} · stub</p>
+                          <p class="price">${pack.priceHint || ''}${owned ? ' · 已試領' : ''}</p>
                         </div>
                         <button type="button" class="btn shop-buy" data-iap="${pack.id}">${owned ? '再領' : '試領'}</button>
                       </div>`;
@@ -941,7 +941,7 @@ export function createApp(root, data, state) {
               .map(
                 (item) => `<div class="shop-row">
                   <div class="shop-ico">${itemIconSvg(item.id)}</div>
-                  <div><h3>${item.name}</h3><p>${item.desc}</p><p class="price">${state.adminMode ? '免費' : `${item.priceGold} 金`}</p></div>
+                  <div class="shop-copy"><h3>${item.name}</h3><p>${item.desc}</p><p class="price">${state.adminMode ? '免費' : `${item.priceGold} 金`}</p></div>
                   <button type="button" class="btn shop-buy" data-buy="${item.id}">${state.adminMode ? '領' : '買'}</button>
                 </div>`,
               )
@@ -960,13 +960,13 @@ export function createApp(root, data, state) {
                       ? slotIcon(skin, 0)
                       : `<div class="swatch" style="--c1:${skin.palette.primary};--c2:${skin.palette.accent}"></div>`
                   }</div>
-                  <div><h3>${skin.name}</h3><p>${skin.desc}</p><p class="price">${owned ? '已擁有' : state.adminMode ? '免費' : `${price} 金${priceMul < 1 && price !== raw ? `（原 ${raw}）` : ''}`}</p></div>
+                  <div class="shop-copy"><h3>${skin.name}</h3><p>${skin.desc}</p><p class="price">${owned ? '已擁有' : state.adminMode ? '免費' : `${price} 金${priceMul < 1 && price !== raw ? `（原 ${raw}）` : ''}`}</p></div>
                   <button type="button" class="btn shop-buy" data-buy-skin="${skin.id}" ${owned ? 'disabled' : ''}>${owned ? '持有' : state.adminMode ? '領' : '買'}</button>
                 </div>`;
               })
               .join('')}
           </div>
-          <div class="banner muted">同伴盲盒：schema 見 data/companions.json（implemented: false）</div>
+          <div class="banner muted">同伴盲盒即將登場，敬請期待。</div>
         </div>
         <div class="page-cta shop-cta">
           ${noticeHtml('shop')}
@@ -1429,7 +1429,7 @@ export function createApp(root, data, state) {
         if (!res.ok) {
           showPageNotice(res.reason || '無法試領', 'bad', 'shop');
         } else {
-          showPageNotice(`已試領「${res.pack.name}」（stub）`, 'good', 'shop');
+          showPageNotice(`已試領「${res.pack.name}」`, 'good', 'shop');
           pushLog(state, `支援方案試領：${res.pack.name}`, 'info');
         }
         persist();

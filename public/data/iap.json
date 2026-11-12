@@ -9,7 +9,7 @@
       "name": "巷口零錢包",
       "priceHint": "NT$30",
       "priceTier": 1,
-      "desc": "小額：立刻多一點強化／扭蛋空間。",
+      "desc": "立刻多一點強化與扭蛋空間。",
       "grants": { "gold": 120, "material": 8 },
       "implemented": false
     },
@@ -19,7 +19,7 @@
       "name": "廟口防護組",
       "priceHint": "NT$60",
       "priceTier": 2,
-      "desc": "小額：香火袋＋平安符＋安定金牌，降低衝裝焦慮。",
+      "desc": "香火袋＋平安符＋安定金牌，降低衝裝焦慮。",
       "grants": {
         "items": { "bless_scroll": 3, "protect_scroll": 2, "stable_charm": 2 }
       },
@@ -31,7 +31,7 @@
       "name": "人情扭蛋券×5",
       "priceHint": "NT$90",
       "priceTier": 3,
-      "desc": "中額：場景扭蛋免費再抽額度（存 state.iapEntitlements.gachaTickets）。",
+      "desc": "場景扭蛋免費再抽額度，人情跑腿不用自己掏。",
       "grants": { "gachaTickets": 5 },
       "implemented": false
     },
@@ -41,7 +41,7 @@
       "name": "疾風加速券",
       "priceHint": "NT$120",
       "priceTier": 4,
-      "desc": "中額：掛機攻速小幅提升（接 combat.paidSpeedBoost）。",
+      "desc": "掛機攻速小幅提升，打怪節奏更順。",
       "grants": { "speedBoost": true },
       "implemented": false
     },
@@ -51,7 +51,7 @@
       "name": "成長加油包",
       "priceHint": "NT$320",
       "priceTier": 5,
-      "desc": "大額：金＋材＋防護＋扭蛋券一次補齊卡關。",
+      "desc": "金＋材＋防護＋扭蛋券一次補齊卡關。",
       "grants": {
         "gold": 600,
         "material": 40,
@@ -66,7 +66,7 @@
       "name": "圖鑑收藏家證",
       "priceHint": "NT$490",
       "priceTier": 6,
-      "desc": "大額：商店外觀 85 折（stub 旗標）；不送稀有殺敵解鎖。",
+      "desc": "商店外觀八五折；稀有殺敵解鎖仍需自己打。",
       "grants": { "shopDiscount": 0.15 },
       "implemented": false
     }
