@@ -821,6 +821,12 @@ export function createApp(root, data, state) {
       </section>`;
   }
 
+  const BOOST_STRIP = [
+    { id: 'bless_scroll', short: '香火' },
+    { id: 'protect_scroll', short: '平安' },
+    { id: 'stable_charm', short: '金牌' },
+  ];
+
   function renderEnhance() {
     ensureGearState(data, state);
     ensureHiddenGearVisual(state);
@@ -831,20 +837,22 @@ export function createApp(root, data, state) {
     const cost = enhanceCost(data, level);
     const rate = successRateAt(data, level);
     const owned = filterOwnedGear(data, state, state.gearFilter || '');
-    const frame = getEquippedSkin(data, state, 'frame');
     const focusIcon = slotIcon(focus, level);
     const focusSummary = formatPieceSummary(data, state, focus);
     const focusEquipped = !!(focus && state.equipped?.[focus.slot] === focus.id);
     const focusIsArmor = !!(focus && ARMOR_SLOTS.includes(focus.slot));
     const focusHidden = focusIsArmor && isGearVisualHidden(state, focus.slot);
+    const costLine = `金 ${state.adminMode ? '∞' : cost.gold}／材 ${state.adminMode ? '∞' : cost.material}`;
 
     return `
       <section class="enhance page-with-cta">
-        <div class="page-scroll">
-          <h2>裝備強化</h2>
-          <p class="muted">武器與防具皆可強化 · 點選聚焦，再點一次或下方按鈕穿戴 · 失敗可能停留／降階／炸裝。</p>
+        <div class="page-scroll enhance-browse">
+          <div class="enhance-browse-head">
+            <h2>裝備強化</h2>
+            <p class="muted">點選聚焦 · 再點穿戴 · 無安定區</p>
+          </div>
           <div class="gear-picker">
-            <input id="gear-filter" class="gear-filter" placeholder="搜尋已擁有裝備（武器／盔甲／盾…）" value="${state.gearFilter || ''}" />
+            <input id="gear-filter" class="gear-filter" placeholder="搜尋已擁有裝備…" value="${state.gearFilter || ''}" />
             <div class="gear-list" role="listbox">
               ${owned
                 .map((skin) => {
@@ -861,37 +869,8 @@ export function createApp(root, data, state) {
                 .join('') || `<p class="muted">尚無裝備</p>`}
             </div>
           </div>
-          <div class="rate-card">
-            <div class="enhance-rate-icon" aria-hidden="true">
-              <div class="weapon-mini vivid">${focusIcon}</div>
-            </div>
-            <div class="rate-card-body">
-              <div class="rate-card-title">衝到 +${Math.min(level + 1, data.enhance.maxLevel)} 成功率</div>
-              <div class="rate-card-main">
-                <span class="rate-pct">${(rate * 100).toFixed(0)}%</span>
-                <div class="rate-card-side">
-                  <span>基礎 ${(rate * 100).toFixed(0)}%</span>
-                  <span class="muted">消耗 金 ${state.adminMode ? '∞' : cost.gold}／材 ${state.adminMode ? '∞' : cost.material}</span>
-                  <span class="muted">${slotLabel(focus?.slot)} ${focus?.name || ''} +${level} · 外框 ${frame?.name || '無'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="boost-toggles">
-            ${['bless_scroll', 'protect_scroll', 'stable_charm']
-              .map((id) => {
-                const item = data.items.catalog.find((i) => i.id === id);
-                const n = ownedCount(state, id);
-                const on = armedCount(state, id);
-                return `<button type="button" class="boost-toggle ${on ? 'on' : ''}" data-cycle-boost="${id}" ${n <= 0 ? 'disabled' : ''}>
-                  <span class="boost-ico">${itemIconSvg(id)}</span>
-                  <span><strong>${item?.name}</strong><span>持有 ${n}${on ? ` · 已套 ${on}` : ''}</span></span>
-                </button>`;
-              })
-              .join('')}
-          </div>
         </div>
-        <div class="page-cta ${enhanceFlash || ''}">
+        <div class="page-cta enhance-cta ${enhanceFlash || ''}">
           ${noticeHtml('enhance')}
           <div class="cta-summary">
             <div class="enhance-rate-icon sticky-summary-icon" aria-hidden="true">
@@ -899,18 +878,31 @@ export function createApp(root, data, state) {
             </div>
             <div class="cta-meta">
               <strong>${focus?.name || '裝備'}+${level}${focusEquipped ? ' · 穿戴中' : ''}${focusHidden ? '（隱藏）' : ''}</strong>
-              <span class="cta-rate-line"><b class="rate-pct-inline">${(rate * 100).toFixed(0)}%</b> 成功率 · ${focusSummary}</span>
+              <span class="cta-rate-line"><b class="rate-pct-inline">${(rate * 100).toFixed(0)}%</b> · ${costLine} · ${focusSummary}</span>
             </div>
           </div>
-          <div class="enhance-wear-row">
-            <button type="button" class="btn ${focusEquipped ? 'ghost' : ''} wide enhance-wear-btn" data-action="wear-focus" ${focusEquipped ? 'disabled' : ''}>${focusEquipped ? '已穿戴' : '穿戴此裝'}</button>
-            ${
-              focusIsArmor
-                ? `<button type="button" class="btn ghost wide enhance-hide-btn ${focusHidden ? 'on' : ''}" data-action="toggle-hide-focus" aria-pressed="${focusHidden}">${focusHidden ? '顯示疊圖' : '隱藏疊圖'}</button>`
-                : ''
-            }
+          <div class="enhance-action-strip" role="group" aria-label="強化操作">
+            <div class="enhance-ops">
+              ${BOOST_STRIP.map(({ id, short }) => {
+                const item = data.items.catalog.find((i) => i.id === id);
+                const n = ownedCount(state, id);
+                const on = armedCount(state, id);
+                const label = item?.name || short;
+                return `<button type="button" class="boost-chip ${on ? 'on' : ''}" data-cycle-boost="${id}" ${n <= 0 ? 'disabled' : ''} title="${label}（持有 ${n}${on ? ` · 已套 ${on}` : ''}）" aria-pressed="${on > 0}">
+                  <span class="boost-chip-ico" aria-hidden="true">${itemIconSvg(id)}</span>
+                  <span class="boost-chip-text">${short}</span>
+                  <span class="boost-chip-count">${on ? `已套${on}` : `×${n}`}</span>
+                </button>`;
+              }).join('')}
+              <button type="button" class="ops-chip enhance-wear-btn ${focusEquipped ? 'is-on' : ''}" data-action="wear-focus" ${focusEquipped ? 'disabled' : ''} title="${focusEquipped ? '已穿戴' : '穿戴此裝'}">${focusEquipped ? '已穿戴' : '穿戴'}</button>
+              ${
+                focusIsArmor
+                  ? `<button type="button" class="ops-chip enhance-hide-btn ${focusHidden ? 'on' : ''}" data-action="toggle-hide-focus" aria-pressed="${focusHidden}" title="${focusHidden ? '顯示疊圖' : '隱藏疊圖'}">${focusHidden ? '顯示' : '隱藏'}</button>`
+                  : ''
+              }
+            </div>
+            <button type="button" class="btn primary wide enhance-cta-btn" data-action="enhance">嘗試強化</button>
           </div>
-          <button type="button" class="btn primary wide enhance-cta-btn" data-action="enhance">嘗試強化</button>
           ${
             state.adminMode
               ? `<div class="admin-tools compact">
