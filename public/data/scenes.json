@@ -1,5 +1,6 @@
 {
   "defaultId": "living_room",
+  "note": "Run→Boss：未設 run.gateMonsterId 時，以該場景怪物鏈尾為通關閘；打贏且下一場景已解鎖則自動前進。見 docs/run-boss-progression.md。",
   "scenes": [
     {
       "id": "living_room",

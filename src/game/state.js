@@ -62,6 +62,8 @@ export function createInitialState(data) {
     selectedSceneId: data.scenes.defaultId,
     selectedDifficultyId: data.difficulty.defaultId,
     selectedMonsterId: null,
+    /** Run→Boss→next scene: see docs/run-boss-progression.md */
+    run: { autoAdvance: true },
     playerName: data.avatar?.defaultName || '廢材老爸',
     avatar: defaultAvatar(data),
     adminMode: false,
@@ -125,9 +127,14 @@ export function loadState(data) {
         ...(parsed.hiddenGearVisual || {}),
       },
       firstRunGuideSeen: !!(parsed.firstRunGuideSeen ?? base.firstRunGuideSeen),
+      run: {
+        autoAdvance: true,
+        ...(parsed.run && typeof parsed.run === 'object' ? parsed.run : {}),
+      },
       gearFilter: '',
       log: [],
     };
+    if (typeof merged.run.autoAdvance !== 'boolean') merged.run.autoAdvance = true;
     migrateEquippedAura(merged);
     // Drop retired aura ids from owned list after remap
     merged.ownedSkins = merged.ownedSkins.filter((id) => data.skins.catalog.some((s) => s.id === id));
@@ -181,6 +188,7 @@ export function saveState(data, state) {
     selectedSceneId: state.selectedSceneId,
     selectedDifficultyId: state.selectedDifficultyId,
     selectedMonsterId: state.selectedMonsterId,
+    run: state.run || { autoAdvance: true },
     playerName: state.playerName,
     avatar: state.avatar,
     firstRunGuideSeen: !!state.firstRunGuideSeen,

@@ -58,6 +58,7 @@ import {
   difficultyUnlockHint,
   ensureSceneSelection,
   getDifficulty,
+  getMonster,
   getScene,
   isDifficultyUnlocked,
   isMonsterCatalogOwned,
@@ -69,6 +70,15 @@ import {
   scaleMonster,
   sceneUnlockHint,
 } from './scenes.js';
+import {
+  advanceToNextScene,
+  applyVictoryProgression,
+  canManualAdvanceScene,
+  canRetreat,
+  ensureRunState,
+  retreatToPreviousScene,
+  runProgress,
+} from './run.js';
 import { clearHitFloatDom, setPendingAttackSfxGroup, syncHitFloatDom } from './hitFloats.js';
 import {
   initSfx,
@@ -121,6 +131,7 @@ const TABS = TAB_META;
 export function createApp(root, data, state) {
   initSfx(data.sfx);
   const uninstallSfxUnlock = installSfxUnlock();
+  ensureRunState(state);
 
   function armAttackSfx() {
     const weapon = getEquippedSkin(data, state, 'weapon');
@@ -134,6 +145,25 @@ export function createApp(root, data, state) {
   let raf = 0;
   let autoFighting = false;
   let autoFightTimer = 0;
+  /** @type {{ kind: string, message: string, blockedHint?: string } | null} */
+  let lastRunProgress = null;
+
+  function noteVictoryProgression() {
+    if (!battle?.over || !battle.victory || battle.progressionApplied) return lastRunProgress;
+    const fought =
+      getMonster(data, battle.monsterId) ||
+      (battle.monsterId === TRAINING_DUMMY_ID ? { id: TRAINING_DUMMY_ID } : null);
+    const prog = applyVictoryProgression(data, state, fought, {
+      training: !!battle.training || battle.monsterId === TRAINING_DUMMY_ID,
+    });
+    battle.progressionApplied = true;
+    if (prog?.message) {
+      lastRunProgress = prog;
+      pushLog(state, prog.message, prog.kind === 'scene_blocked' ? 'warn' : 'good');
+      if (prog.blockedHint) pushLog(state, prog.blockedHint, 'info');
+    }
+    return prog;
+  }
   let tierPickerOpen = false;
   let scenePickerOpen = false;
   /** Ephemeral on-page banner: { tab, message, tone } — shown where the player is looking. */
@@ -249,6 +279,7 @@ export function createApp(root, data, state) {
       render();
       return;
     }
+    noteVictoryProgression();
     persist();
     render();
     scheduleAutoRematch();
@@ -269,9 +300,17 @@ export function createApp(root, data, state) {
         stopAutoFight({ renderAfter: true });
         return;
       }
-      battle = createBattle(data, state, currentMonster());
+      ensureSceneSelection(data, state);
+      const foe = currentMonster();
+      battle = createBattle(data, state, foe);
       victoryFx = false;
-      pushLog(state, `掛機續戰「${currentMonster().name}」`, 'info');
+      const label =
+        lastRunProgress?.kind === 'next_scene'
+          ? `掛機進入「${getScene(data, state.selectedSceneId)?.name}」· ${foe?.name}`
+          : lastRunProgress?.kind === 'next_monster'
+            ? `掛機推進「${foe?.name}」`
+            : `掛機續戰「${foe?.name}」`;
+      pushLog(state, label, 'info');
       persist();
       render();
       scheduleAutoStrike();
@@ -617,6 +656,16 @@ export function createApp(root, data, state) {
           ...(m.counterChance > 0 ? [{ kind: 'counter', label: `反擊${Math.round((m.counterChance || 0) * 100)}%` }] : []),
         ];
     const recentLog = (state.log || []).slice(0, 4);
+    const run = training ? null : runProgress(data, state, state.selectedSceneId);
+    const runLabel = !run
+      ? ''
+      : run.atGate
+        ? `Boss 關 · ${run.index + 1}/${run.total}`
+        : run.index >= 0
+          ? `本關進度 ${run.index + 1}/${run.total}`
+          : `本關進度 —/${run.total}`;
+    const showRetreat = canRetreat(data, state);
+    const showAdvance = canManualAdvanceScene(data, state);
 
     return `
       <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''}">
@@ -654,6 +703,18 @@ export function createApp(root, data, state) {
               }</span>
               <span class="tier-caret">▾</span>
             </button>
+            ${
+              runLabel
+                ? `<div class="run-strip" aria-label="本關進度">
+                    <span class="run-chip ${run?.atGate ? 'is-boss' : ''}">${runLabel}</span>
+                    ${
+                      run?.gate
+                        ? `<span class="run-gate-hint">通關閘：${run.gate.name}</span>`
+                        : ''
+                    }
+                  </div>`
+                : ''
+            }
 
             <div class="gacha-panel tone-${gachaCard?.tone || (gachaOpen ? 'idle' : 'locked')}" data-gacha-panel>
               <div class="gacha-head">
@@ -843,13 +904,43 @@ export function createApp(root, data, state) {
                       ? `<p class="reward">+${battle.rewards.gold} 金 · +${battle.rewards.material} 材 · +${battle.rewards.exp} 經驗${battle.rewards.doubled ? '（雙倍）' : ''}</p>`
                       : ''
                   }
+                  ${
+                    battle.victory && lastRunProgress?.message
+                      ? `<p class="run-progress-msg">${lastRunProgress.message}${
+                          lastRunProgress.blockedHint
+                            ? `<br><span class="muted">${lastRunProgress.blockedHint}</span>`
+                            : ''
+                        }</p>`
+                      : ''
+                  }
                   <button type="button" class="btn primary wide" data-action="rematch">再戰</button>
+                  ${
+                    battle.victory && showAdvance
+                      ? `<button type="button" class="btn wide" data-action="run-advance">前往下一場景</button>`
+                      : ''
+                  }
+                  ${
+                    showRetreat
+                      ? `<button type="button" class="btn ghost wide" data-action="run-retreat">撤回上一場景練功</button>`
+                      : ''
+                  }
                 </div>`
               : `<div class="auto-fight-bar">
-                  ${battle.over && autoFighting && battle.victory ? `<p class="auto-farm-banner">勝利！即將續戰…</p>` : ''}
+                  ${
+                    battle.over && autoFighting && battle.victory
+                      ? `<p class="auto-farm-banner">${
+                          lastRunProgress?.message || '勝利！即將續戰…'
+                        }</p>`
+                      : ''
+                  }
                   <button type="button" class="btn attack ${autoFighting ? 'is-auto' : ''}" data-action="autofight" aria-pressed="${autoFighting}">
                     ${autoFighting ? '暫停' : training ? '練功' : '打怪'}
                   </button>
+                  ${
+                    !autoFighting && showRetreat
+                      ? `<button type="button" class="btn ghost wide run-retreat-inline" data-action="run-retreat">撤回上一場景練功</button>`
+                      : ''
+                  }
                 </div>`
           }
         </div>
@@ -1492,8 +1583,46 @@ export function createApp(root, data, state) {
     root.querySelector('[data-action="rematch"]')?.addEventListener('click', () => {
       unlockSfx();
       stopAutoFight();
+      if (battle?.over && battle.victory) noteVictoryProgression();
+      ensureSceneSelection(data, state);
       battle = createBattle(data, state, currentMonster());
       victoryFx = false;
+      persist();
+      render();
+    });
+    root.querySelectorAll('[data-action="run-retreat"]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        stopAutoFight();
+        const res = retreatToPreviousScene(data, state);
+        if (!res.ok) {
+          showPageNotice(res.message, 'warn', 'battle');
+          render();
+          return;
+        }
+        ensureSceneSelection(data, state);
+        battle = createBattle(data, state, currentMonster());
+        victoryFx = false;
+        lastRunProgress = { kind: 'retreat', message: res.message };
+        pushLog(state, res.message, 'info');
+        showPageNotice(res.message, 'info', 'battle');
+        persist();
+        render();
+      }),
+    );
+    root.querySelector('[data-action="run-advance"]')?.addEventListener('click', () => {
+      stopAutoFight();
+      const res = advanceToNextScene(data, state);
+      if (!res.ok) {
+        showPageNotice(res.message, 'warn', 'battle');
+        render();
+        return;
+      }
+      ensureSceneSelection(data, state);
+      battle = createBattle(data, state, currentMonster());
+      victoryFx = false;
+      lastRunProgress = { kind: 'next_scene', message: res.message };
+      pushLog(state, res.message, 'good');
+      persist();
       render();
     });
 
