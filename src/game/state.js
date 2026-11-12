@@ -131,7 +131,11 @@ export function loadState(data) {
     migrateEquippedAura(merged);
     // Drop retired aura ids from owned list after remap
     merged.ownedSkins = merged.ownedSkins.filter((id) => data.skins.catalog.some((s) => s.id === id));
-    if (!data.skins.catalog.some((s) => s.id === merged.equipped.victoryFx)) {
+    // Allow victoryFx: null (fully unequipped). Only remap unknown non-null ids.
+    if (
+      merged.equipped.victoryFx != null &&
+      !data.skins.catalog.some((s) => s.id === merged.equipped.victoryFx)
+    ) {
       merged.equipped.victoryFx = 'fx_aura_white';
     }
     return merged;
