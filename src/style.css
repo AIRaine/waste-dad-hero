@@ -621,6 +621,26 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .card-atk { color: #f0d9a0; text-align: right; margin-left: auto; }
 .card-def { color: #c5d4f0; text-align: left; margin-left: 0; }
+.card-as {
+  display: flex; align-items: baseline; gap: 5px;
+  width: 100%; min-width: 0; margin-top: 1px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.card-as-k {
+  flex: 0 0 auto;
+  font-size: 0.55rem; font-weight: 800; letter-spacing: 0.04em;
+  color: rgba(155, 224, 212, 0.75);
+}
+.card-as.as-you .card-as-k { color: rgba(255, 224, 138, 0.7); }
+.card-as-v {
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.68rem; font-weight: 800; line-height: 1.25;
+  overflow-wrap: anywhere; text-align: left;
+}
+.card-as.as-mob .card-as-v { color: #b8d4dc; }
+.card-as.as-you .card-as-v { color: #ffe08a; }
+.fighter-card.player .card-as { justify-content: flex-start; }
 .hp-readout {
   font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 3px;
   font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: left;
@@ -927,6 +947,8 @@ button.admin-badge:active { transform: scale(0.98); }
   .player-stat-pills { gap: 3px; }
   .player-stat-pills .stat-pill,
   .monster-stat-pills .stat-pill { min-height: 16px; font-size: 0.54rem; padding: 0 5px; }
+  .card-as-v { font-size: 0.62rem; }
+  .as-ms { font-size: 0.54rem; }
 }
 .equip-nudge {
   margin: 0 0 8px; padding: 8px 10px; border-radius: 10px;
@@ -1129,46 +1151,15 @@ button.admin-badge:active { transform: scale(0.98); }
 .fighter.player.attacking .portrait-box {
   animation: playerSwing 0.28s ease-out;
 }
-.as-readout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 6px 10px;
-  align-items: start;
-  margin: 4px 0 2px; padding: 10px 10px 14px; border-radius: 12px;
-  background: rgba(60, 184, 160, 0.12); border: 1px solid rgba(60, 184, 160, 0.35);
-  font-size: 0.88rem; line-height: 1.45;
-  overflow: visible;
-}
-.as-col {
-  display: flex; flex-direction: column; gap: 3px; min-width: 0;
-  overflow: visible;
-}
-.as-mob-col { text-align: left; }
-.as-you-col { text-align: right; }
-.as-k {
-  font-size: 0.68rem; font-weight: 800; color: var(--muted); letter-spacing: 0.04em;
-  line-height: 1.3;
-}
-.as-you-col .as-k { color: rgba(255, 224, 138, 0.75); }
-.as-readout .as-you {
-  color: #ffe08a; font-size: 0.95rem; letter-spacing: 0.01em;
-  font-weight: 900; overflow-wrap: anywhere; line-height: 1.4; overflow: visible;
-}
-.as-readout .as-mob {
-  color: #b8d4dc; font-weight: 800; font-size: 0.92rem; overflow-wrap: anywhere;
-  line-height: 1.4; overflow: visible;
-}
 .as-ms {
-  font-size: 0.72rem; font-weight: 700; opacity: 0.85; white-space: nowrap;
-  line-height: 1.35; display: inline-block; padding-bottom: 1px;
+  font-size: 0.58rem; font-weight: 700; opacity: 0.85; white-space: nowrap;
+  line-height: 1.25; display: inline;
 }
-.as-readout .auto-live {
-  grid-column: 1 / -1;
-  text-align: center;
-  font-size: 0.78rem;
+.auto-live-strip {
+  display: flex; justify-content: center; margin: 2px 0 0;
 }
 .stance-hint { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
-.auto-live { color: #7dcea0; font-weight: 800; }
+.auto-live { color: #7dcea0; font-weight: 800; font-size: 0.72rem; }
 .kind-as { background: rgba(60,184,160,0.16); color: #9be0d4; border-color: rgba(60,184,160,0.35); }
 .battle-log-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
 .log { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; /* no inner scroll */ }

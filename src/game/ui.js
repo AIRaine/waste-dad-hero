@@ -750,7 +750,7 @@ export function createApp(root, data, state) {
     const playerCd = playerAttackCooldownMs(data, state);
     const monsterAs = training ? 0 : monsterAttackSpeed(m, data);
     const monsterCd = training ? 0 : monsterAttackCooldownMs(m, data);
-    // Slim chips: HP lives on the bar; AS lives on .as-readout — do not repeat.
+    // Slim chips: HP / 攻防 / 攻速 live on the fighter card — do not repeat in pills.
     const gachaEffectLines = gachaBonuses.card
       ? formatGachaEffectLines(gachaBonuses.card.effects || {})
       : [];
@@ -947,6 +947,21 @@ export function createApp(root, data, state) {
                 <div class="card-core-stats" aria-label="怪物攻擊">
                   <span class="card-atk">攻 ${training ? '—' : m.atk}</span>
                 </div>
+                <div
+                  class="card-as as-mob"
+                  data-monster-as="${training ? '0' : formatAs(monsterAs)}"
+                  data-monster-cd="${monsterCd}"
+                  data-training="${training ? '1' : '0'}"
+                  data-training-def="${trainingDefPct}"
+                  aria-label="怪物攻速"
+                >
+                  <span class="card-as-k">速</span>
+                  <strong class="card-as-v">${
+                    training
+                      ? trainCopy.asLine
+                      : `${formatAs(monsterAs)}<span class="as-ms">（${monsterCd}ms）</span>`
+                  }</strong>
+                </div>
               </div>
               <div class="fighter-meta">
                 ${renderStatPills(monsterChips, { className: 'monster-stat-pills' })}
@@ -973,6 +988,16 @@ export function createApp(root, data, state) {
                   <span class="card-def">防 ${def}</span>
                   <span class="card-atk">攻 ${displayAtk}</span>
                 </div>
+                <div
+                  class="card-as as-you"
+                  data-player-as="${formatAs(playerAs)}"
+                  data-player-cd="${playerCd}"
+                  data-combat-base="${data.combat?.playerBaseAs ?? ''}"
+                  aria-label="玩家攻速"
+                >
+                  <span class="card-as-k">速</span>
+                  <strong class="card-as-v">${formatAs(playerAs)}<span class="as-ms">（${playerCd}ms）</span></strong>
+                </div>
               </div>
               <div class="fighter-meta">
                 ${renderStatPills(playerChips, { className: 'player-stat-pills' })}
@@ -980,30 +1005,11 @@ export function createApp(root, data, state) {
             </div>
           </div>
 
-          <div
-            class="as-readout ${training ? 'is-training' : ''}"
-            data-player-as="${formatAs(playerAs)}"
-            data-player-cd="${playerCd}"
-            data-monster-as="${training ? '0' : formatAs(monsterAs)}"
-            data-monster-cd="${monsterCd}"
-            data-combat-base="${data.combat?.playerBaseAs ?? ''}"
-            data-training="${training ? '1' : '0'}"
-            data-training-def="${trainingDefPct}"
-          >
-            <div class="as-col as-mob-col">
-              <span class="as-k">${training ? '訓練' : '怪'}</span>
-              <strong class="as-mob">${
-                training
-                  ? trainCopy.asLine
-                  : `${formatAs(monsterAs)}<span class="as-ms">（${monsterCd}ms）</span>`
-              }</strong>
-            </div>
-            <div class="as-col as-you-col">
-              <span class="as-k">你</span>
-              <strong class="as-you">${formatAs(playerAs)}<span class="as-ms">（${playerCd}ms）</span></strong>
-            </div>
-            ${autoFighting ? `<span class="auto-live">${training ? '練功中' : '掛機中'}</span>` : ''}
-          </div>
+          ${
+            autoFighting
+              ? `<div class="auto-live-strip" role="status"><span class="auto-live">${training ? '練功中' : '掛機中'}</span></div>`
+              : ''
+          }
 
           <div class="battle-log-wrap">
             <div class="battle-log-label">最近紀錄</div>
