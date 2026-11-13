@@ -539,6 +539,8 @@ button.admin-badge:active { transform: scale(0.98); }
   display: flex; flex-direction: column; gap: 6px;
   padding: 8px 8px 7px;
   border-radius: 12px;
+  /* Keep weapon/shield badges from being clipped by the card chrome */
+  overflow: visible;
   background:
     linear-gradient(165deg, rgba(36,48,58,0.95) 0%, rgba(14,20,26,0.98) 100%);
   border: 2px solid rgba(180,200,210,0.28);
@@ -659,17 +661,25 @@ button.admin-badge:active { transform: scale(0.98); }
 .portrait-stage {
   position: relative; width: var(--portrait-w); height: var(--portrait-h);
   overflow: visible; margin: 2px auto 0;
+  /* Stacking context so badge z-index beats nested frame/aura layers */
+  isolation: isolate;
+  z-index: 1;
 }
 .portrait-with-aura {
   position: relative; width: 100%; height: 100%;
   display: grid; place-items: center;
   overflow: visible;
+  z-index: 1;
 }
 .portrait-box {
   position: relative; z-index: 2;
   width: 100%; height: 100%; border-radius: 14px; background: #0b1218;
   display: grid; place-items: center; overflow: hidden;
   box-shadow: inset 0 0 0 2px rgba(255,255,255,0.06);
+}
+/* Combat: keep on-avatar gear (盾／盔邊緣) from being cropped by the frame box */
+.fighter-card .portrait-box.player-portrait {
+  overflow: visible;
 }
 /* Let body-wrap aura read through/around the sprite */
 .portrait-box.with-aura {
@@ -683,6 +693,13 @@ button.admin-badge:active { transform: scale(0.98); }
   display: grid; place-items: center;
   width: 100%; height: 100%;
   filter: drop-shadow(0 0 3px rgba(0,0,0,0.65));
+}
+/* Frame border sits under the sprite so gear overlays stay readable */
+.fighter-card .portrait-box.player-portrait .frame-art-svg {
+  z-index: 1;
+}
+.fighter-card .portrait-box.player-portrait .portrait-avatar-slot {
+  z-index: 3;
 }
 /* Tight wrap around the standing sprite so aura bottom = SVG bottom ≈ feet */
 .avatar-aura-anchor {
@@ -904,11 +921,16 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .weapon-badge, .shield-badge {
   position: absolute; width: 32px; height: 36px;
+  /* Must beat .portrait-box (z-index:2) / frame art — otherwise badges hide under the thick frame */
+  z-index: 6;
   border-radius: 8px; background: #0b1218; border: 1px solid var(--line);
   display: grid; place-items: center; overflow: hidden;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.35);
 }
-.weapon-badge { right: -10px; bottom: -4px; }
-.shield-badge { left: -10px; bottom: -4px; }
+.weapon-badge:empty,
+.shield-badge:empty { display: none; }
+.weapon-badge { right: -12px; bottom: -2px; }
+.shield-badge { left: -12px; bottom: -2px; }
 .fighter-meta {
   width: 100%; margin-top: 6px;
   text-align: left;
