@@ -95,6 +95,7 @@ import {
   meterCount,
   migrateFarmFromDefeated,
   returnToFarm,
+  shouldContinueAutofight,
   syncFarmFocus,
 } from './farm.js';
 import { clearHitFloatDom, setPendingAttackSfxGroup, syncHitFloatDom } from './hitFloats.js';
@@ -311,15 +312,16 @@ export function createApp(root, data, state) {
       scheduleAutoStrike();
       return;
     }
-    if (!battle.victory) {
-      autoFighting = false;
-      persist();
-      render();
-      return;
+    ensureFarmState(state);
+    if (battle.victory) {
+      noteVictoryProgression();
     }
-    noteVictoryProgression();
-    // Meter full → pause autofight so 「挑戰」CTA is immediate (no dig for Pause).
-    if (lastRunProgress?.kind === 'meter_full') {
+    const continueFarm = shouldContinueAutofight({
+      farmMode: state.farm?.mode || 'farm',
+      victory: !!battle.victory,
+      progressKind: battle.victory ? lastRunProgress?.kind : null,
+    });
+    if (!continueFarm) {
       autoFighting = false;
       if (autoFightTimer) {
         clearTimeout(autoFightTimer);
@@ -329,6 +331,7 @@ export function createApp(root, data, state) {
       render();
       return;
     }
+    // 農區（含量條滿、小怪敗北）：掛機立刻續戰；「挑戰」CTA 仍顯示但不中斷。
     persist();
     render();
     scheduleAutoRematch();
@@ -336,11 +339,6 @@ export function createApp(root, data, state) {
 
   function scheduleAutoRematch() {
     if (!autoFighting || tab !== 'battle') {
-      stopAutoFight({ renderAfter: true });
-      return;
-    }
-    // Safety: never auto-continue past a full meter without showing challenge.
-    if (lastRunProgress?.kind === 'meter_full') {
       stopAutoFight({ renderAfter: true });
       return;
     }
@@ -355,12 +353,17 @@ export function createApp(root, data, state) {
         return;
       }
       ensureSceneSelection(data, state);
+      ensureFarmState(state);
+      // 敗北／回刷後確保仍在農區小怪（挑戰敗北不會走到這裡）
+      if (state.farm.mode !== 'farm') {
+        returnToFarm(data, state);
+      }
       const foe = currentMonster();
       battle = createBattle(data, state, foe);
       victoryFx = false;
       const label =
-        lastRunProgress?.kind === 'challenge_clear' || lastRunProgress?.kind === 'scene_gate_clear'
-          ? `回農區續刷「${foe?.name}」`
+        lastRunProgress?.kind === 'meter_full'
+          ? `農區已滿，掛機續刷「${foe?.name}」（可隨時點挑戰或暫停）`
           : `掛機續戰「${foe?.name}」`;
       pushLog(state, label, 'info');
       persist();
@@ -375,8 +378,7 @@ export function createApp(root, data, state) {
       return;
     }
     if (battle.over) {
-      if (battle.victory) scheduleAutoRematch();
-      else stopAutoFight({ renderAfter: true });
+      handleAutoFightOutcome({ victory: !!battle.victory });
       return;
     }
     if (autoFightTimer) {
@@ -431,7 +433,7 @@ export function createApp(root, data, state) {
     ensureBattle();
     if (!battle || battle.over) return;
     autoFighting = true;
-    pushLog(state, '掛機打怪開始——勝利後會自動再戰；點「暫停」停止。', 'info');
+    pushLog(state, '掛機打怪開始——農區無限續戰（滿條仍刷）；點「暫停」或「挑戰」才停。', 'info');
     armAttackSfx();
     const res = playerAttack(data, state, battle, currentMonster());
     if (res.blocked) {
@@ -1828,10 +1830,17 @@ export function createApp(root, data, state) {
       stopAutoFight();
       if (battle?.over && battle.victory) noteVictoryProgression();
       ensureSceneSelection(data, state);
+      ensureFarmState(state);
+      // 續刷／再戰：進農區無限掛網（挑戰通關後 rematch 也從當前農階開刷）
+      if (state.farm.mode !== 'farm' && state.selectedMonsterId !== TRAINING_DUMMY_ID) {
+        returnToFarm(data, state);
+      }
       battle = createBattle(data, state, currentMonster());
       victoryFx = false;
       persist();
       render();
+      // 立刻開掛機，避免「點了還要再點打怪」
+      startAutoFight();
     });
     root.querySelector('[data-action="equip-hint-enhance"]')?.addEventListener('click', () => {
       setTab('enhance');

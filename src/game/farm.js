@@ -310,6 +310,31 @@ export function applyFarmVictory(data, state, monster) {
   };
 }
 
+/**
+ * Autofight / 掛機 policy for farm grind.
+ * Product: farm (含回刷) 無限自動續戰到手動暫停；量條滿不中斷；
+ * 挑戰通關不強迫推下一 T 掛機；挑戰敗北停下來給「回刷」。
+ *
+ * @param {{ farmMode: 'farm'|'challenge', victory: boolean, progressKind?: string|null }} opts
+ */
+export function shouldContinueAutofight({ farmMode, victory, progressKind = null } = {}) {
+  if (!victory) {
+    // 農區小怪敗北 → 同一無限農迴圈；挑戰敗北 → 停下（回刷 CTA）
+    return farmMode === 'farm';
+  }
+  // 挑戰清階／場景閘：不強迫自動往下一 T 掛機推進
+  if (
+    progressKind === 'challenge_clear' ||
+    progressKind === 'scene_gate_clear' ||
+    progressKind === 'scene_blocked' ||
+    progressKind === 'enter_challenge'
+  ) {
+    return false;
+  }
+  // farm_kill / meter_full / stay / skip / return_farm / retreat → 續刷
+  return true;
+}
+
 /** Seed unlocked flags from existing defeated for migration comfort. */
 export function migrateFarmFromDefeated(data, state) {
   ensureFarmState(state);
