@@ -17,6 +17,7 @@ import {
   makeFarmMinion,
   syncFarmFocus,
   applyFarmVictory,
+  shouldContinueAutofight,
 } from '../src/game/farm.js';
 import {
   applyVictoryProgression,
@@ -313,6 +314,36 @@ function runPersona(data, persona, findings) {
     m = farmMeterView(data, state);
     const labelCleared = m.canChallenge ? '可挑戰' : m.cleared ? '已通關' : `${m.have}/${m.need}`;
     assert(labelCleared === '已通關', `已清標籤 ${labelCleared}`, findings, persona, 'P1');
+  }
+
+  // Farm autofight policy: infinite grind until pause (gap prior harness missed)
+  if (goals.has('farm') || goals.has('defeat') || goals.has('mixed') || goals.has('retreat')) {
+    assert(
+      shouldContinueAutofight({ farmMode: 'farm', victory: true, progressKind: 'meter_full' }),
+      'meter_full 不中斷掛機',
+      findings,
+      persona,
+      'P0',
+    );
+    assert(
+      shouldContinueAutofight({ farmMode: 'farm', victory: false }),
+      '農區敗北續掛',
+      findings,
+      persona,
+      'P0',
+    );
+    assert(
+      !shouldContinueAutofight({
+        farmMode: 'challenge',
+        victory: true,
+        progressKind: 'challenge_clear',
+      }),
+      '挑戰通關不強迫掛機推進',
+      findings,
+      persona,
+      'P0',
+    );
+    notes.push('autofight-policy');
   }
 
   return { persona: persona.name, notes, ok: true };

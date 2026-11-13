@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 5173"
+    "preview": "vite preview --host 0.0.0.0 --port 5173",
+    "test:farm-autofight": "node scripts/farm-autofight-continue.mjs",
+    "test:hundred": "node scripts/hundred-persona-playtest.mjs"
   },
   "devDependencies": {
     "vite": "^5.4.11"
