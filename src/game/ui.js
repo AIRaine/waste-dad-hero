@@ -978,9 +978,12 @@ export function createApp(root, data, state) {
             <div class="fighter fighter-card monster ${monsterRoleKind} ${battle.monsterState} ${monsterDetailOpen ? 'is-detail-open' : 'is-detail-collapsed'}" data-monster-hp="${battle.monsterHp}" data-monster-maxhp="${battle.monsterMaxHp}" data-training="${training ? '1' : '0'}">
               <div class="fighter-card-face">
                 <div class="card-hp">
-                  <div class="hp-readout" aria-label="${training ? '訓練假人' : '怪物生命'}">${
-                    training ? '訓練 ∞' : `${battle.monsterHp}/${battle.monsterMaxHp}`
-                  }</div>
+                  <div class="card-hp-top">
+                    <div class="hp-readout" aria-label="${training ? '訓練假人' : '怪物生命'}">${
+                      training ? '訓練 ∞' : `${battle.monsterHp}/${battle.monsterMaxHp}`
+                    }</div>
+                    <button type="button" class="card-detail-hint" data-action="card-detail-toggle" data-side="monster" aria-expanded="${monsterDetailOpen}" aria-label="${monsterDetailOpen ? '收合怪物細節' : '展開怪物細節'}">${monsterDetailOpen ? '收合' : '詳情'}</button>
+                  </div>
                   <div class="hpbar ${training ? 'is-training' : ''}" data-hp-pct="${training ? '100' : mHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${training ? 100 : mHpPct}%"></span></div>
                 </div>
                 <div class="card-title-row">
@@ -995,9 +998,9 @@ export function createApp(root, data, state) {
                   <div class="portrait-box monster-portrait" style="--mob1:${m.color || '#6a7888'};--mob2:#243040">
                     ${monsterSvg(m.shape, m.color, { scale: m.scale || 1, role: training ? null : m.role })}
                   </div>
-                  <span class="card-detail-hint" aria-hidden="true">${monsterDetailOpen ? '收合' : '詳情'}</span>
                 </button>
-                <div class="card-core-stats" aria-label="怪物攻擊">
+                <div class="card-core-stats" aria-label="怪物攻防">
+                  <span class="card-def">防 —</span>
                   <span class="card-atk">攻 ${training ? '—' : m.atk}</span>
                 </div>
                 ${
@@ -1033,7 +1036,10 @@ export function createApp(root, data, state) {
             <div class="fighter fighter-card player ${battle.playerState}${playerIsHit(battle) ? ' is-hit' : ''} ${playerDetailOpen ? 'is-detail-open' : 'is-detail-collapsed'}" data-player-hp="${battle.playerHp}">
               <div class="fighter-card-face">
                 <div class="card-hp">
-                  <div class="hp-readout" aria-label="玩家生命">${battle.playerHp}/${battle.playerMaxHp}</div>
+                  <div class="card-hp-top">
+                    <div class="hp-readout" aria-label="玩家生命">${battle.playerHp}/${battle.playerMaxHp}</div>
+                    <button type="button" class="card-detail-hint" data-action="card-detail-toggle" data-side="player" aria-expanded="${playerDetailOpen}" aria-label="${playerDetailOpen ? '收合玩家細節' : '展開玩家細節'}">${playerDetailOpen ? '收合' : '詳情'}</button>
+                  </div>
                   <div class="hpbar player" data-hp-pct="${pHpPct.toFixed(1)}"><span class="hpbar-fill" style="width:${pHpPct}%"></span></div>
                 </div>
                 <div class="card-title-row">
@@ -1048,7 +1054,6 @@ export function createApp(root, data, state) {
                   ${framedPortraitHtml(avatarSvg(frame?.palette), frame, fx, { burst: victoryFx })}
                   <div class="weapon-badge ${affixClass(weapon)}">${slotIcon(weapon, wLevel)}</div>
                   <div class="shield-badge ${affixClass(shield)}">${slotIcon(shield, getGearLevel(state, shield?.id))}</div>
-                  <span class="card-detail-hint" aria-hidden="true">${playerDetailOpen ? '收合' : '詳情'}</span>
                 </button>
                 <div class="card-core-stats" aria-label="玩家攻防">
                   <span class="card-def">防 ${def}</span>

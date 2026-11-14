@@ -622,6 +622,16 @@ button.admin-badge:active { transform: scale(0.98); }
   border-color: rgba(224,179,90,0.48);
 }
 .card-hp { width: 100%; }
+/* HP readout left + 詳情 right — flush with hpbar trailing edge on BOTH cards */
+.card-hp-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 3px;
+  min-height: 16px;
+}
 .card-title-row {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;
   min-width: 0; width: 100%;
@@ -666,22 +676,25 @@ button.admin-badge:active { transform: scale(0.98); }
 .fighter-card.monster.role-tier .fighter-card-face {
   border-color: rgba(78, 196, 239, 0.45);
 }
+/* Shared ATK/DEF rail — same two slots on both sides (鏡像對稱格子) */
 .card-core-stats {
-  display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
   width: 100%; min-height: 18px; margin-top: 2px;
+  position: relative; z-index: 3;
 }
-.fighter-card.player .card-core-stats { justify-content: space-between; }
 .card-atk, .card-def {
   font-family: var(--pixel); font-size: 0.58rem; font-weight: 700;
   letter-spacing: 0.02em; line-height: 1;
+  flex: 0 0 auto;
 }
-.card-atk { color: #f0d9a0; text-align: right; margin-left: auto; }
-.card-def { color: #c5d4f0; text-align: left; margin-left: 0; }
+.card-atk { color: #f0d9a0; text-align: right; }
+.card-def { color: #c5d4f0; text-align: left; }
 .card-as {
   display: flex; align-items: baseline; gap: 5px;
   width: 100%; min-width: 0; margin-top: 1px;
   padding-top: 4px;
   border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative; z-index: 3;
 }
 .card-as-k {
   flex: 0 0 auto;
@@ -696,9 +709,9 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .card-as.as-mob .card-as-v { color: #b8d4dc; }
 .card-as.as-you .card-as-v { color: #ffe08a; }
-.fighter-card.player .card-as { justify-content: flex-start; }
 .hp-readout {
-  font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 3px;
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 0;
   font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: left;
 }
 .hpbar {
@@ -725,41 +738,41 @@ button.card-portrait-hit {
   cursor: pointer; color: inherit;
   display: block;
   touch-action: manipulation;
+  /* Shared gutter under portrait — badges tuck in; 防／攻 rail stays clear on BOTH cards */
+  margin-bottom: 10px;
 }
-.card-detail-hint {
-  position: absolute; right: -2px; bottom: -2px; z-index: 4;
+/*
+ * 詳情／收合：血條上方、靠右與血條尾端切齊（左右卡同一位置）。
+ */
+button.card-detail-hint {
+  appearance: none; -webkit-appearance: none;
+  flex: 0 0 auto;
+  position: static;
+  margin: 0;
+  margin-left: auto;
+  align-self: center;
+  z-index: 3;
   min-height: 16px; padding: 1px 5px; border-radius: 4px;
   font-size: 0.52rem; font-weight: 800; line-height: 1.2;
-  color: #c5d4e0; background: rgba(8, 12, 16, 0.72);
-  border: 1px solid rgba(180, 200, 210, 0.28);
-  pointer-events: none;
+  color: #c5d4e0; background: rgba(8, 12, 16, 0.78);
+  border: 1px solid rgba(180, 200, 210, 0.32);
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: none;
 }
-/* Player card: weapon badge owns bottom-right — keep 詳情／收合 readable at top */
-.fighter-card.player .card-detail-hint {
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  top: -2px;
-  transform: translateX(-50%);
-  z-index: 7;
-}
+button.card-detail-hint:active { transform: scale(0.97); }
 .fighter-card.is-detail-collapsed .fighter-card-face {
   gap: 5px;
   padding-bottom: 6px;
 }
 .fighter-card.is-detail-open .card-portrait-hit {
+  margin-bottom: 12px;
   outline: 1px solid rgba(224, 179, 90, 0.35);
   outline-offset: 2px;
   border-radius: 8px;
 }
-/* Detail / core stats sit above badge overhang so 防／攻／速／角標文可讀 */
-.fighter-card.player .card-core-stats,
-.fighter-card.player .card-as,
-.fighter-card.player .card-title-row {
-  position: relative;
-  z-index: 3;
-}
-.fighter-card.player .fighter-meta {
+.card-title-row,
+.fighter-meta {
   position: relative;
   z-index: 3;
 }
@@ -1018,37 +1031,21 @@ button.card-portrait-hit {
   100% { transform: scale(1.35); opacity: 0; }
 }
 .weapon-badge, .shield-badge {
-  position: absolute; width: 32px; height: 36px;
+  position: absolute; width: 28px; height: 32px;
   /* Must beat .portrait-box (z-index:2) / frame art — otherwise badges hide under the thick frame */
   z-index: 6;
-  border-radius: 8px; background: #0b1218; border: 1px solid var(--line);
+  border-radius: 7px; background: #0b1218; border: 1px solid var(--line);
   display: grid; place-items: center; overflow: hidden;
   box-shadow: 0 2px 0 rgba(0,0,0,0.35);
 }
 .weapon-badge:empty,
 .shield-badge:empty { display: none; }
-.weapon-badge { right: -12px; bottom: -2px; }
-.shield-badge { left: -12px; bottom: -2px; }
 /*
- * Player combat card: reserve gutter under the portrait so weapon/shield badges
- * stay visible (PR #29) but do not cover 防／攻 (and expanded 速／pill rows).
- * Badges sit on the lower corners of the portrait; a bottom gutter keeps them
- * clear of the core-stat row. Stats also stack above any residual paint.
+ * Equip badges tuck into portrait lower corners (inside frame + slight overhang).
+ * Shared gutter on .card-portrait-hit keeps 防／攻 clear — same on both cards.
  */
-.fighter-card.player .card-portrait-hit {
-  margin-bottom: 10px;
-}
-.fighter-card.player .weapon-badge {
-  right: -8px;
-  bottom: 2px;
-}
-.fighter-card.player .shield-badge {
-  left: -8px;
-  bottom: 2px;
-}
-.fighter-card.player.is-detail-open .card-portrait-hit {
-  margin-bottom: 12px;
-}
+.weapon-badge { right: -4px; bottom: 0; }
+.shield-badge { left: -4px; bottom: 0; }
 .fighter-meta {
   width: 100%; margin-top: 6px;
   text-align: left;
