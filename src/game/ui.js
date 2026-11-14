@@ -997,7 +997,8 @@ export function createApp(root, data, state) {
                   </div>
                   <span class="card-detail-hint" aria-hidden="true">${monsterDetailOpen ? '收合' : '詳情'}</span>
                 </button>
-                <div class="card-core-stats" aria-label="怪物攻擊">
+                <div class="card-core-stats" aria-label="怪物攻防">
+                  <span class="card-def">防 —</span>
                   <span class="card-atk">攻 ${training ? '—' : m.atk}</span>
                 </div>
                 ${
