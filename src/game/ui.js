@@ -2473,6 +2473,7 @@ export function createApp(root, data, state) {
       uninstallSfxUnlock();
     },
     getState: () => state,
+    getData: () => data,
     getBattle: () => battle,
     attackOnce: () => {
       ensureBattle();
@@ -2480,6 +2481,79 @@ export function createApp(root, data, state) {
       const res = playerAttack(data, state, battle, currentMonster());
       syncHitFloatDom(root, battle);
       return res;
+    },
+    /** Playtest / Try Live: dismiss welcome without relying on overlay hit-testing. */
+    dismissOnboard() {
+      state.firstRunGuideSeen = true;
+      persist();
+      render();
+    },
+    /**
+     * Playtest: instantly resolve current foe as victory + farm/run progression.
+     * Used by scripts/unlock-cadence-ui-playtest.mjs — not a player cheat UI.
+     */
+    playtestInstantVictory() {
+      ensureBattle();
+      const mon = currentMonster();
+      if (!mon || !battle) return { ok: false, message: '無對手' };
+      if (battle.over) {
+        // Start a fresh bout against current focus, then resolve.
+        battle = createBattle(data, state, mon);
+        victoryFx = false;
+      }
+      battle.over = true;
+      battle.victory = true;
+      // Mirror finishVictory lightly; farm meter / unlocked flags are what we assert.
+      if (!mon.isFarmMinion) {
+        state.defeated[mon.id] = (state.defeated[mon.id] || 0) + 1;
+        state.sceneClears = state.sceneClears || {};
+        state.sceneClears[mon.sceneId] = (state.sceneClears[mon.sceneId] || 0) + 1;
+      }
+      state.kills = (state.kills || 0) + 1;
+      lastRunProgress = applyVictoryProgression(data, state, mon);
+      // Rematch into post-victory farm focus so meter UI updates.
+      battle = createBattle(data, state, currentMonster());
+      victoryFx = false;
+      persist();
+      render();
+      return { ok: true, progress: lastRunProgress, monsterId: mon.id };
+    },
+    playtestEnterChallenge(id) {
+      const focus = id || farmMeterView(data, state)?.focus?.id;
+      const res = enterChallenge(data, state, focus);
+      if (res.ok) {
+        battle = createBattle(data, state, currentMonster());
+        victoryFx = false;
+        persist();
+        render();
+      }
+      return res;
+    },
+    playtestOpenTierPicker(open = true) {
+      tierPickerOpen = !!open;
+      render();
+    },
+    playtestChooseScene(id) {
+      if (!isSceneUnlocked(data, state, id)) {
+        return { ok: false, message: '場景未解鎖' };
+      }
+      chooseScene(id);
+      return { ok: true, sceneId: state.selectedSceneId };
+    },
+    playtestSetProgress({ enhance, sceneClears } = {}) {
+      if (enhance != null) state.highestEnhance = enhance;
+      if (sceneClears && typeof sceneClears === 'object') {
+        state.sceneClears = { ...state.sceneClears, ...sceneClears };
+      }
+      persist();
+      render();
+      return { ok: true, enhance: state.highestEnhance, sceneClears: state.sceneClears };
+    },
+    playtestMeter() {
+      return farmMeterView(data, state);
+    },
+    playtestRefresh() {
+      render();
     },
   };
   if (typeof window !== 'undefined') window.__FEICAI__ = api;

@@ -111,7 +111,7 @@ function main() {
   const afterLose = currentFarmOrChallengeMonster(data, state);
   assert(afterLose?.isFarmMinion && afterLose.farmOf === t1.id, '敗北後對手仍為同階農怪', fails);
 
-  // Challenge clear → stop auto-push, but unlock next tier immediately (no re-farm)
+  // Challenge clear → stop auto-push; open next FARM only (must re-farm meter)
   state.farm.meters[t1.id] = need;
   state.farm.unlocked[t1.id] = true;
   enterChallenge(data, state, t1.id);
@@ -121,11 +121,13 @@ function main() {
   assert(cleared.kind === 'challenge_clear', `挑戰勝 kind=${cleared.kind}`, fails);
   const t2 = chain[1];
   assert(t2, '鏈上應有 T2', fails);
-  assert(state.farm.unlocked[t2.id], '挑戰通關應立刻解鎖下一階', fails);
-  assert(meterCount(state, t2.id) >= need, '下一階 meter 應視為已滿（可挑戰）', fails);
-  assert(cleared.nextUnlocked === true, 'nextUnlocked 旗標', fails);
+  assert(!state.farm.unlocked[t2.id], '挑戰通關不可跳農解鎖下一階挑戰', fails);
+  assert(meterCount(state, t2.id) < need, '下一階 meter 不可灌滿', fails);
+  assert(cleared.nextFarmOpened === true, 'nextFarmOpened 旗標', fails);
+  assert(cleared.nextUnlocked === false, 'nextUnlocked 應為 false', fails);
+  assert(state.farm.focusId === t2.id, 'focus 應移到下一階農區', fails);
   const enterNext = enterChallenge(data, state, t2.id);
-  assert(enterNext.ok, `下一階應可直接挑戰：${enterNext.message}`, fails);
+  assert(!enterNext.ok, `下一階未農滿不可挑戰：${enterNext.message}`, fails);
   // leave challenge mode for subsequent returnToFarm checks
   state.farm.mode = 'farm';
   state.farm.focusId = t2.id;
