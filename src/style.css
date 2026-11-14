@@ -622,6 +622,16 @@ button.admin-badge:active { transform: scale(0.98); }
   border-color: rgba(224,179,90,0.48);
 }
 .card-hp { width: 100%; }
+/* HP readout left + 詳情 right — flush with hpbar trailing edge on BOTH cards */
+.card-hp-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 3px;
+  min-height: 16px;
+}
 .card-title-row {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;
   min-width: 0; width: 100%;
@@ -700,7 +710,8 @@ button.admin-badge:active { transform: scale(0.98); }
 .card-as.as-mob .card-as-v { color: #b8d4dc; }
 .card-as.as-you .card-as-v { color: #ffe08a; }
 .hp-readout {
-  font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 3px;
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.68rem; font-weight: 800; color: #d5e6ea; margin-bottom: 0;
   font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: left;
 }
 .hpbar {
@@ -731,19 +742,25 @@ button.card-portrait-hit {
   margin-bottom: 10px;
 }
 /*
- * 詳情／收合：左右卡同一相對位置（肖像區右上角）。
- * 下緣留給武器／盾角標；勿再為躲角標把 hint 挪到怪位置。
+ * 詳情／收合：血條上方、靠右與血條尾端切齊（左右卡同一位置）。
  */
-.card-detail-hint {
-  position: absolute; top: 2px; right: 2px; bottom: auto; left: auto;
-  z-index: 7;
+button.card-detail-hint {
+  appearance: none; -webkit-appearance: none;
+  flex: 0 0 auto;
+  position: static;
+  margin: 0;
+  margin-left: auto;
+  align-self: center;
+  z-index: 3;
   min-height: 16px; padding: 1px 5px; border-radius: 4px;
   font-size: 0.52rem; font-weight: 800; line-height: 1.2;
   color: #c5d4e0; background: rgba(8, 12, 16, 0.78);
   border: 1px solid rgba(180, 200, 210, 0.32);
-  pointer-events: none;
+  cursor: pointer;
+  touch-action: manipulation;
   transform: none;
 }
+button.card-detail-hint:active { transform: scale(0.97); }
 .fighter-card.is-detail-collapsed .fighter-card-face {
   gap: 5px;
   padding-bottom: 6px;
