@@ -194,6 +194,8 @@ export function createApp(root, data, state) {
   }
   let tierPickerOpen = false;
   let scenePickerOpen = false;
+  /** Combat card detail: null | 'monster' | 'player' — tap portrait to expand 速／格反爆. */
+  let cardDetailSide = null;
   /** Ephemeral on-page banner: { tab, message, tone } — shown where the player is looking. */
   let pageNotice = null;
   let pageNoticeTimer = 0;
@@ -825,14 +827,33 @@ export function createApp(root, data, state) {
     // 「回刷小怪」only while in a T-challenge (含挑戰敗北；mode 敗時仍為 challenge)。
     // 農區小怪敗北不應出現此 CTA，否則會蓋過「再戰」主按鈕。
     const showReturnFarm = !training && !!meter && meter.mode === 'challenge';
+    const isChallengeMode = !training && meter?.mode === 'challenge';
+    const justClearedChallenge =
+      !!battle.over &&
+      !!battle.victory &&
+      (lastRunProgress?.kind === 'challenge_clear' ||
+        lastRunProgress?.kind === 'scene_gate_clear' ||
+        lastRunProgress?.kind === 'scene_blocked');
+    const monsterDetailOpen = cardDetailSide === 'monster';
+    const playerDetailOpen = cardDetailSide === 'player';
     const armorEmpty = ARMOR_SLOTS.every((s) => !state.equipped?.[s]);
     const needsEquipHint =
       !!state.firstRunGuideSeen &&
       !state.equipHintDismissed &&
       (!state.equipped?.weapon || armorEmpty);
 
+    // Sticky CTA：拇指位只留一顆 primary（見 docs/combat-ui-simplify.md）
+    const primaryIsChallenge = showChallengeBtn;
+    const primaryIsPause = autoFighting && !primaryIsChallenge;
+    const primaryIsStart = !autoFighting && !primaryIsChallenge;
+    const startFightLabel = training ? '練功' : '掛機打怪';
+    const secondaryRow = (bits) => {
+      const html = bits.filter(Boolean).join('');
+      return html ? `<div class="cta-secondary-row">${html}</div>` : '';
+    };
+
     return `
-      <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''}">
+      <section class="battle ${scenePickerOpen || tierPickerOpen ? 'is-picker-open' : ''} ${isChallengeMode ? 'is-challenge-mode' : ''}">
         <div class="battle-scroll">
           <div class="fight-setup">
             ${
@@ -894,11 +915,6 @@ export function createApp(root, data, state) {
                             : `${meter.have}/${meter.need}`
                       }</span>
                     </div>
-                    ${
-                      showChallengeBtn
-                        ? `<button type="button" class="btn primary farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
-                        : ''
-                    }
                   </div>`
                 : ''
             }
@@ -952,9 +968,14 @@ export function createApp(root, data, state) {
           </div>
 
           ${training ? `<div class="training-banner" role="status">${trainCopy.banner}</div>` : ''}
+          ${
+            isChallengeMode
+              ? `<div class="challenge-live-strip" role="status"><span class="challenge-live">挑戰中</span><span class="challenge-live-sub">打完回農 · 不強迫推關</span></div>`
+              : ''
+          }
 
-          <div class="arena ${victoryFx ? 'victory-fx' : ''} ${training ? 'is-training' : ''}" style="--fx1:${fx?.palette?.primary || '#ffe08a'};--fx2:${fx?.palette?.accent || '#ffb347'};--scene1:${scene.bg?.[0] || '#1a3340'};--scene2:${scene.bg?.[1] || '#122028'}">
-            <div class="fighter fighter-card monster ${monsterRoleKind} ${battle.monsterState}" data-monster-hp="${battle.monsterHp}" data-monster-maxhp="${battle.monsterMaxHp}" data-training="${training ? '1' : '0'}">
+          <div class="arena ${victoryFx ? 'victory-fx' : ''} ${training ? 'is-training' : ''} ${isChallengeMode ? 'is-challenge' : ''}" style="--fx1:${fx?.palette?.primary || '#ffe08a'};--fx2:${fx?.palette?.accent || '#ffb347'};--scene1:${scene.bg?.[0] || '#1a3340'};--scene2:${scene.bg?.[1] || '#122028'}">
+            <div class="fighter fighter-card monster ${monsterRoleKind} ${battle.monsterState} ${monsterDetailOpen ? 'is-detail-open' : 'is-detail-collapsed'}" data-monster-hp="${battle.monsterHp}" data-monster-maxhp="${battle.monsterMaxHp}" data-training="${training ? '1' : '0'}">
               <div class="fighter-card-face">
                 <div class="card-hp">
                   <div class="hp-readout" aria-label="${training ? '訓練假人' : '怪物生命'}">${
@@ -964,17 +985,24 @@ export function createApp(root, data, state) {
                 </div>
                 <div class="card-title-row">
                   <div class="name">${m.name}</div>
-                  <span class="role-badge kind-${monsterRoleKind}">${monsterRoleLabel}</span>
+                  ${
+                    monsterDetailOpen
+                      ? `<span class="role-badge kind-${monsterRoleKind}">${monsterRoleLabel}</span>`
+                      : ''
+                  }
                 </div>
-                <div class="portrait-stage">
+                <button type="button" class="portrait-stage card-portrait-hit" data-action="card-detail-toggle" data-side="monster" aria-expanded="${monsterDetailOpen}" aria-label="${monsterDetailOpen ? '收合怪物細節' : '展開怪物細節'}">
                   <div class="portrait-box monster-portrait" style="--mob1:${m.color || '#6a7888'};--mob2:#243040">
                     ${monsterSvg(m.shape, m.color, { scale: m.scale || 1, role: training ? null : m.role })}
                   </div>
-                </div>
+                  <span class="card-detail-hint" aria-hidden="true">${monsterDetailOpen ? '收合' : '詳情'}</span>
+                </button>
                 <div class="card-core-stats" aria-label="怪物攻擊">
                   <span class="card-atk">攻 ${training ? '—' : m.atk}</span>
                 </div>
-                <div
+                ${
+                  monsterDetailOpen
+                    ? `<div
                   class="card-as as-mob"
                   data-monster-as="${training ? '0' : formatAs(monsterAs)}"
                   data-monster-cd="${monsterCd}"
@@ -988,15 +1016,21 @@ export function createApp(root, data, state) {
                       ? trainCopy.asLine
                       : `${formatAs(monsterAs)}<span class="as-ms">（${monsterCd}ms）</span>`
                   }</strong>
-                </div>
+                </div>`
+                    : ''
+                }
               </div>
-              <div class="fighter-meta">
+              ${
+                monsterDetailOpen
+                  ? `<div class="fighter-meta">
                 ${renderStatPills(monsterChips, { className: 'monster-stat-pills' })}
-              </div>
+              </div>`
+                  : ''
+              }
               <!-- hit floats live in #hit-float-layer (persistent; not remounted here) -->
             </div>
             <div class="vs" aria-hidden="true">${training ? '練' : 'VS'}</div>
-            <div class="fighter fighter-card player ${battle.playerState}${playerIsHit(battle) ? ' is-hit' : ''}" data-player-hp="${battle.playerHp}">
+            <div class="fighter fighter-card player ${battle.playerState}${playerIsHit(battle) ? ' is-hit' : ''} ${playerDetailOpen ? 'is-detail-open' : 'is-detail-collapsed'}" data-player-hp="${battle.playerHp}">
               <div class="fighter-card-face">
                 <div class="card-hp">
                   <div class="hp-readout" aria-label="玩家生命">${battle.playerHp}/${battle.playerMaxHp}</div>
@@ -1004,18 +1038,25 @@ export function createApp(root, data, state) {
                 </div>
                 <div class="card-title-row">
                   <div class="name">${playerDisplayName(state)}</div>
-                  <span class="weapon-chip">${weapon ? `${weapon.name}+${wLevel}` : '徒手'}</span>
+                  ${
+                    playerDetailOpen
+                      ? `<span class="weapon-chip">${weapon ? `${weapon.name}+${wLevel}` : '徒手'}</span>`
+                      : ''
+                  }
                 </div>
-                <div class="portrait-stage">
+                <button type="button" class="portrait-stage card-portrait-hit" data-action="card-detail-toggle" data-side="player" aria-expanded="${playerDetailOpen}" aria-label="${playerDetailOpen ? '收合玩家細節' : '展開玩家細節'}">
                   ${framedPortraitHtml(avatarSvg(frame?.palette), frame, fx, { burst: victoryFx })}
                   <div class="weapon-badge ${affixClass(weapon)}">${slotIcon(weapon, wLevel)}</div>
                   <div class="shield-badge ${affixClass(shield)}">${slotIcon(shield, getGearLevel(state, shield?.id))}</div>
-                </div>
+                  <span class="card-detail-hint" aria-hidden="true">${playerDetailOpen ? '收合' : '詳情'}</span>
+                </button>
                 <div class="card-core-stats" aria-label="玩家攻防">
                   <span class="card-def">防 ${def}</span>
                   <span class="card-atk">攻 ${displayAtk}</span>
                 </div>
-                <div
+                ${
+                  playerDetailOpen
+                    ? `<div
                   class="card-as as-you"
                   data-player-as="${formatAs(playerAs)}"
                   data-player-cd="${playerCd}"
@@ -1024,11 +1065,17 @@ export function createApp(root, data, state) {
                 >
                   <span class="card-as-k">速</span>
                   <strong class="card-as-v">${formatAs(playerAs)}<span class="as-ms">（${playerCd}ms）</span></strong>
-                </div>
+                </div>`
+                    : ''
+                }
               </div>
-              <div class="fighter-meta">
+              ${
+                playerDetailOpen
+                  ? `<div class="fighter-meta">
                 ${renderStatPills(playerChips, { className: 'player-stat-pills' })}
-              </div>
+              </div>`
+                  : ''
+              }
             </div>
           </div>
 
@@ -1043,7 +1090,7 @@ export function createApp(root, data, state) {
             <ul class="log">${
               recentLog.length
                 ? recentLog.map((l) => `<li class="${l.tone}">${l.message}</li>`).join('')
-                : `<li class="muted-empty">${training ? '點「練功」打木頭人。' : '點「打怪」開始。'}</li>`
+                : `<li class="muted-empty">${training ? '點「練功」打木頭人。' : '點「掛機打怪」開始。'}</li>`
             }</ul>
           </div>
         </div>
@@ -1124,8 +1171,16 @@ export function createApp(root, data, state) {
         <div class="battle-controls">
           ${
             battle.over && !autoFighting
-              ? `<div class="result-box ${battle.victory ? 'win' : 'lose'}">
-                  <p>${battle.victory ? '勝利！' : '敗北．． 強化才能走更遠的路'}</p>
+              ? `<div class="result-box ${battle.victory ? 'win' : 'lose'} ${justClearedChallenge ? 'is-challenge-clear' : ''} ${isChallengeMode ? 'is-challenge-result' : ''}">
+                  <p>${
+                    justClearedChallenge
+                      ? '挑戰通關！'
+                      : isChallengeMode && !battle.victory
+                        ? '挑戰敗北'
+                        : battle.victory
+                          ? '勝利！'
+                          : '敗北．． 強化才能走更遠的路'
+                  }</p>
                   ${
                     battle.rewards
                       ? `<p class="reward">+${battle.rewards.gold} 金 · +${battle.rewards.material} 材 · +${battle.rewards.exp} 經驗${battle.rewards.doubled ? '（雙倍）' : ''}</p>`
@@ -1141,27 +1196,36 @@ export function createApp(root, data, state) {
                       : ''
                   }
                   ${
-                    showChallengeBtn
-                      ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
-                      : ''
-                  }
-                  <div class="result-cta-row ${!battle.victory && showReturnFarm ? 'has-return-farm' : ''}">
-                    <button type="button" class="btn ${showChallengeBtn || (!battle.victory && showReturnFarm) ? '' : 'primary '}wide" data-action="rematch">${showChallengeBtn ? '續刷小怪' : '再戰'}</button>
-                    ${
-                      showReturnFarm
-                        ? `<button type="button" class="btn ${battle.victory ? '' : 'primary '}wide" data-action="farm-return">回刷小怪</button>`
-                        : ''
-                    }
-                  </div>
-                  ${
-                    battle.victory && showAdvance
-                      ? `<button type="button" class="btn wide" data-action="run-advance">前往下一場景</button>`
-                      : ''
-                  }
-                  ${
+                    justClearedChallenge
+                      ? `<button type="button" class="btn primary wide" data-action="rematch">回農掛機</button>
+                  ${secondaryRow([
+                    showAdvance
+                      ? `<button type="button" class="btn compact" data-action="run-advance">前往下一場景</button>`
+                      : '',
                     showRetreat
-                      ? `<button type="button" class="btn ghost wide" data-action="run-retreat">撤回上一場景練功</button>`
-                      : ''
+                      ? `<button type="button" class="btn ghost compact" data-action="run-retreat">撤回上一場景</button>`
+                      : '',
+                  ])}`
+                      : !battle.victory && showReturnFarm
+                        ? `<button type="button" class="btn primary wide" data-action="farm-return">回刷小怪</button>
+                  ${secondaryRow([
+                    showRetreat
+                      ? `<button type="button" class="btn ghost compact" data-action="run-retreat">撤回上一場景</button>`
+                      : '',
+                  ])}`
+                        : `${
+                            showChallengeBtn
+                              ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
+                              : `<button type="button" class="btn primary wide" data-action="rematch">${training ? '再練' : '掛機打怪'}</button>`
+                          }
+                  ${secondaryRow([
+                    showChallengeBtn
+                      ? `<button type="button" class="btn compact" data-action="rematch">續刷小怪</button>`
+                      : '',
+                    showRetreat
+                      ? `<button type="button" class="btn ghost compact" data-action="run-retreat">撤回上一場景</button>`
+                      : '',
+                  ])}`
                   }
                 </div>`
               : `<div class="auto-fight-bar">
@@ -1173,23 +1237,34 @@ export function createApp(root, data, state) {
                       : ''
                   }
                   ${
-                    showChallengeBtn
+                    primaryIsChallenge
                       ? `<button type="button" class="btn primary wide farm-challenge-cta" data-action="farm-challenge">挑戰「${meter.focus.name}」</button>`
                       : ''
                   }
-                  <button type="button" class="btn attack ${autoFighting ? 'is-auto' : ''}" data-action="autofight" aria-pressed="${autoFighting}">
-                    ${autoFighting ? '暫停' : training ? '練功' : showChallengeBtn ? '續刷小怪' : '打怪'}
-                  </button>
                   ${
-                    !autoFighting && showReturnFarm
-                      ? `<button type="button" class="btn wide" data-action="farm-return">回刷小怪</button>`
+                    primaryIsPause
+                      ? `<button type="button" class="btn attack is-auto wide" data-action="autofight" aria-pressed="true">暫停</button>`
                       : ''
                   }
                   ${
+                    primaryIsStart
+                      ? `<button type="button" class="btn attack wide" data-action="autofight" aria-pressed="false">${startFightLabel}</button>`
+                      : ''
+                  }
+                  ${secondaryRow([
+                    autoFighting && primaryIsChallenge
+                      ? `<button type="button" class="btn compact is-auto-sec" data-action="autofight" aria-pressed="true">暫停</button>`
+                      : '',
+                    !autoFighting && primaryIsChallenge
+                      ? `<button type="button" class="btn compact" data-action="autofight" aria-pressed="false">續刷小怪</button>`
+                      : '',
+                    showReturnFarm
+                      ? `<button type="button" class="btn compact" data-action="farm-return">回刷小怪</button>`
+                      : '',
                     !autoFighting && showRetreat
-                      ? `<button type="button" class="btn ghost wide run-retreat-inline" data-action="run-retreat">撤回上一場景無限農區</button>`
-                      : ''
-                  }
+                      ? `<button type="button" class="btn ghost compact" data-action="run-retreat">撤回上一場景</button>`
+                      : '',
+                  ])}
                 </div>`
           }
         </div>
@@ -1726,7 +1801,7 @@ export function createApp(root, data, state) {
                   <h2 id="onboard-title">歡迎踏上成為老爸的英雄路</h2>
                   <p class="onboard-lead">四步上手——站樁扛事的廢材老爸教學。</p>
                   <ol class="onboard-steps">
-                    <li><strong>戰鬥</strong>：選場景與對手，點「打怪」掛機連攻；雙方各自冷卻。</li>
+                    <li><strong>戰鬥</strong>：選場景與對手，點「掛機打怪」連攻；量條滿可挑戰，點頭像看細節。</li>
                     <li><strong>強化</strong>：衝裝是主軸，無安定區；失敗可能降階／炸裝，輔助道具可護體。</li>
                     <li><strong>穿戴</strong>：沒有獨立背包——到<strong>強化</strong>或<strong>背包圖鑑</strong>穿上新手裝備；發脾氣特效預設空槽，可之後再裝。</li>
                     <li><strong>場景</strong>：戰鬥頁上方選家庭場景；解鎖後往下一站人生推進。</li>
@@ -1820,10 +1895,22 @@ export function createApp(root, data, state) {
       b.addEventListener('click', () => chooseMonster(b.getAttribute('data-monster-id'))),
     );
 
-    root.querySelector('[data-action="autofight"]')?.addEventListener('pointerdown', () => unlockSfx());
-    root.querySelector('[data-action="autofight"]')?.addEventListener('click', () => {
-      unlockSfx();
-      toggleAutoFight();
+    root.querySelectorAll('[data-action="card-detail-toggle"]').forEach((btn) => {
+      btn.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const side = btn.getAttribute('data-side');
+        cardDetailSide = cardDetailSide === side ? null : side;
+        render({ skipCapture: true });
+      });
+    });
+
+    root.querySelectorAll('[data-action="autofight"]').forEach((btn) => {
+      btn.addEventListener('pointerdown', () => unlockSfx());
+      btn.addEventListener('click', () => {
+        unlockSfx();
+        toggleAutoFight();
+      });
     });
     root.querySelector('[data-action="rematch"]')?.addEventListener('click', () => {
       unlockSfx();
