@@ -344,13 +344,67 @@ button.admin-badge:active { transform: scale(0.98); }
 }
 .farm-challenge-cta {
   flex: 1 1 100%;
-  min-height: 40px;
+  min-height: 48px;
   font-weight: 900;
   letter-spacing: 0.02em;
 }
-.auto-fight-bar .farm-challenge-cta,
-.result-box .farm-challenge-cta {
-  order: -1;
+.cta-secondary-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  justify-content: stretch;
+}
+.cta-secondary-row:empty { display: none; }
+.cta-secondary-row .btn {
+  flex: 1 1 auto;
+  min-height: 36px;
+  min-width: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.cta-secondary-row .btn.is-auto-sec {
+  border-color: rgba(196, 92, 92, 0.45);
+  color: #ffc4c0;
+  background: rgba(196, 92, 92, 0.12);
+}
+.battle.is-challenge-mode .battle-scroll {
+  position: relative;
+}
+.challenge-live-strip {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 101, 92, 0.5);
+  background:
+    linear-gradient(90deg, rgba(212, 101, 92, 0.22), rgba(180, 80, 60, 0.12));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.challenge-live {
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #ffc4c0;
+  letter-spacing: 0.04em;
+}
+.challenge-live-sub {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255, 220, 210, 0.75);
+}
+.arena.is-challenge {
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 101, 92, 0.35),
+    0 0 0 1px rgba(212, 101, 92, 0.18);
+}
+.result-box.is-challenge-clear p:first-child,
+.result-box.is-challenge-result.lose p:first-child {
+  font-weight: 900;
+  letter-spacing: 0.02em;
 }
 
 .gacha-panel {
@@ -664,6 +718,30 @@ button.admin-badge:active { transform: scale(0.98); }
   /* Stacking context so badge z-index beats nested frame/aura layers */
   isolation: isolate;
   z-index: 1;
+}
+button.card-portrait-hit {
+  appearance: none; -webkit-appearance: none;
+  border: 0; background: transparent; padding: 0; margin: 2px auto 0;
+  cursor: pointer; color: inherit;
+  display: block;
+  touch-action: manipulation;
+}
+.card-detail-hint {
+  position: absolute; right: -2px; bottom: -2px; z-index: 4;
+  min-height: 16px; padding: 1px 5px; border-radius: 4px;
+  font-size: 0.52rem; font-weight: 800; line-height: 1.2;
+  color: #c5d4e0; background: rgba(8, 12, 16, 0.72);
+  border: 1px solid rgba(180, 200, 210, 0.28);
+  pointer-events: none;
+}
+.fighter-card.is-detail-collapsed .fighter-card-face {
+  gap: 5px;
+  padding-bottom: 6px;
+}
+.fighter-card.is-detail-open .card-portrait-hit {
+  outline: 1px solid rgba(224, 179, 90, 0.35);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 .portrait-with-aura {
   position: relative; width: 100%; height: 100%;
@@ -1196,20 +1274,10 @@ button.admin-badge:active { transform: scale(0.98); }
 .result-box.lose { color: #ffc4c0; }
 .result-box .reward { color: var(--muted); font-size: 0.85rem; margin: 0; }
 .result-box .run-progress-msg .muted { font-weight: 600; font-size: 0.78rem; }
+.result-box .cta-secondary-row { justify-content: center; }
+/* Legacy dual-primary result row retired — single primary + secondary row. */
 .result-cta-row {
   display: flex; flex-direction: column; gap: 8px; width: 100%;
-}
-.result-cta-row.has-return-farm {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-}
-@media (min-width: 360px) {
-  .result-cta-row.has-return-farm {
-    grid-template-columns: 1fr 1fr;
-    align-items: stretch;
-  }
-  .result-cta-row.has-return-farm .btn { width: 100%; }
 }
 
 .enhance-browse {
