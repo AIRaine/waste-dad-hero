@@ -909,7 +909,7 @@ export function createApp(root, data, state) {
                       <div class="farm-meter-fill" style="width:${meter.pct}%"></div>
                       <span class="farm-meter-label">${
                         meter.canChallenge
-                          ? '可挑戰'
+                          ? `${meter.need}/${meter.need} 可挑戰`
                           : meter.cleared
                             ? '已通關'
                             : `${meter.have}/${meter.need}`

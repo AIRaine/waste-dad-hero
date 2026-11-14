@@ -229,7 +229,7 @@
       "atkBonus": 8,
       "unlock": {
         "type": "kills",
-        "count": 55
+        "count": 48
       },
       "flavor": "浴室風格的刀。",
       "desc": "刀 · 成長帶 8",
@@ -251,7 +251,7 @@
       "atkBonus": 10,
       "unlock": {
         "type": "kills",
-        "count": 64
+        "count": 55
       },
       "flavor": "浴室風格的刀。",
       "desc": "刀 · 家長日開路（成家後期）",
@@ -341,7 +341,7 @@
       "atkBonus": 8,
       "unlock": {
         "type": "kills",
-        "count": 60
+        "count": 52
       },
       "flavor": "浴室風格的劍。",
       "desc": "劍 · 成長帶 8",
@@ -363,7 +363,7 @@
       "atkBonus": 10,
       "unlock": {
         "type": "kills",
-        "count": 69
+        "count": 60
       },
       "flavor": "浴室風格的劍。",
       "desc": "劍 · 房貸壓力具現",
@@ -453,7 +453,7 @@
       "atkBonus": 8,
       "unlock": {
         "type": "kills",
-        "count": 65
+        "count": 56
       },
       "flavor": "浴室風格的短劍。",
       "desc": "短劍 · 成長帶 8",
@@ -541,7 +541,7 @@
       "atkBonus": 9,
       "unlock": {
         "type": "kills",
-        "count": 69
+        "count": 60
       },
       "flavor": "廚房風格的匕首。",
       "desc": "匕首 · 成長帶 9",
@@ -629,7 +629,7 @@
       "atkBonus": 9,
       "unlock": {
         "type": "kills",
-        "count": 73
+        "count": 64
       },
       "flavor": "廚房風格的弓。",
       "desc": "弓 · 成長帶 9",
@@ -717,7 +717,7 @@
       "atkBonus": 9,
       "unlock": {
         "type": "kills",
-        "count": 77
+        "count": 68
       },
       "flavor": "廚房風格的長槍。",
       "desc": "長槍 · 成長帶 9",
@@ -783,7 +783,7 @@
       "atkBonus": 8,
       "unlock": {
         "type": "kills",
-        "count": 84
+        "count": 74
       },
       "flavor": "書房風格的斧。",
       "desc": "斧 · 成長帶 8",
@@ -805,7 +805,7 @@
       "atkBonus": 10,
       "unlock": {
         "type": "kills",
-        "count": 93
+        "count": 84
       },
       "flavor": "書房風格的斧。",
       "desc": "斧 · 成長帶 10",
@@ -872,7 +872,7 @@
       "atkBonus": 8,
       "unlock": {
         "type": "kills",
-        "count": 88
+        "count": 78
       },
       "flavor": "書房風格的法杖。",
       "desc": "法杖 · 成長帶 8",
@@ -894,7 +894,7 @@
       "atkBonus": 12,
       "unlock": {
         "type": "kills",
-        "count": 97
+        "count": 88
       },
       "flavor": "書房風格的法杖。",
       "desc": "法杖 · 家規最終權",
@@ -961,7 +961,7 @@
       "atkBonus": 9,
       "unlock": {
         "type": "kills",
-        "count": 92
+        "count": 82
       },
       "flavor": "書房風格的雙刀。",
       "desc": "雙刀 · 成長帶 9",
@@ -983,7 +983,7 @@
       "atkBonus": 13,
       "unlock": {
         "type": "kills",
-        "count": 101
+        "count": 92
       },
       "flavor": "學校風格的雙刀。",
       "desc": "雙刀 · 親子早餐亂舞",
@@ -1146,7 +1146,7 @@
       "atkBonus": 0,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 40
       },
       "flavor": "鐵皮盔——老爸的防具櫃珍藏。",
       "desc": "工廠年代",
@@ -1194,7 +1194,7 @@
       "atkBonus": 1,
       "unlock": {
         "type": "kills",
-        "count": 57
+        "count": 65
       },
       "flavor": "金冠盔——老爸的防具櫃珍藏。",
       "desc": "為人父最終防具（現在）",
@@ -1265,7 +1265,7 @@
       "atkBonus": 0,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 40
       },
       "flavor": "鎖子甲——老爸的防具櫃珍藏。",
       "desc": "當兵外層",
@@ -1313,7 +1313,7 @@
       "atkBonus": 0,
       "unlock": {
         "type": "kills",
-        "count": 57
+        "count": 65
       },
       "flavor": "爸氣戰袍——老爸的防具櫃珍藏。",
       "desc": "家長日決戰服（中年）",
@@ -1384,7 +1384,7 @@
       "critChance": 0,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 40
       },
       "flavor": "皮手套——老爸的防具櫃珍藏。",
       "desc": "靶場餘溫",
@@ -1432,7 +1432,7 @@
       "critChance": 0.05,
       "unlock": {
         "type": "kills",
-        "count": 57
+        "count": 65
       },
       "flavor": "爆擊手套——老爸的防具櫃珍藏。",
       "desc": "換尿布／開家長群神技",
@@ -1503,7 +1503,7 @@
       "atkBonus": 1,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 40
       },
       "flavor": "登山靴——老爸的防具櫃珍藏。",
       "desc": "部隊回憶",
@@ -1551,7 +1551,7 @@
       "atkBonus": 1,
       "unlock": {
         "type": "kills",
-        "count": 57
+        "count": 65
       },
       "flavor": "疾風靴——老爸的防具櫃珍藏。",
       "desc": "安親班接送時速",
@@ -1623,7 +1623,7 @@
       "blockChance": 0.06,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 40
       },
       "flavor": "鐵壁盾——老爸的防具櫃珍藏。",
       "desc": "部隊應變",
@@ -1671,7 +1671,7 @@
       "blockChance": 0.12,
       "unlock": {
         "type": "kills",
-        "count": 57
+        "count": 65
       },
       "flavor": "守護盾——老爸的防具櫃珍藏。",
       "desc": "嬰兒車→腳踏車守護盾",
