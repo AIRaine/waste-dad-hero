@@ -1,5 +1,5 @@
 {
-  "note": "農區小怪為挑戰目標的弱化動態體；進度滿才可手動挑戰。挑戰／王通關後立刻解鎖下一階（不必再農一輪）。見 docs/farm-tier-gate-progression.md。",
+  "note": "農區小怪為挑戰目標的弱化動態體；每階須農滿才可手動挑戰。挑戰通關只開放下一階農區（不是後面全部、也不跳過農滿）。見 docs/unlock-cadence-overhaul.md。",
   "killsToUnlock": 10,
   "statMul": { "hp": 0.82, "atk": 0.85 },
   "defMul": 0.9,

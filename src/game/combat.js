@@ -357,11 +357,12 @@ function finishVictory(data, state, battle, monster) {
   }
   state.exp += exp;
   state.kills += 1;
-  // Farm minions are synthetic — meter lives in state.farm; do not mark catalog defeated.
+  // Farm minions are synthetic — meter lives in state.farm; do not mark catalog defeated
+  // or sceneClears (通關次數只算正式挑戰，避免農滿一次就跳場景門檻).
   if (!monster.isFarmMinion) {
     state.defeated[monster.id] = (state.defeated[monster.id] || 0) + 1;
+    recordSceneClear(state, monster, state.selectedDifficultyId);
   }
-  recordSceneClear(state, monster, state.selectedDifficultyId);
   battle.rewards = { gold, material, exp, doubled };
   const gachaTick = tickGachaAfterBattle(data, state, {
     training: !!battle.training,

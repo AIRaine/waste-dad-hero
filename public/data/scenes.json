@@ -1,6 +1,6 @@
 {
   "defaultId": "living_room",
-  "note": "場景解鎖門檻（通關次數／強化／擊殺）。農區→手動挑戰見 farm.json；挑戰通關後立刻解鎖下一階，不強迫再農。下一場景僅手動前往。見 docs/farm-tier-gate-progression.md。",
+  "note": "場景解鎖門檻（正式挑戰通關次數／強化／擊殺；農怪不計通關）。農區→手動挑戰見 farm.json；挑戰通關只開下一階農區，仍須農滿。下一場景僅手動前往。見 docs/unlock-cadence-overhaul.md。",
   "scenes": [
     {
       "id": "living_room",
@@ -77,7 +77,7 @@
       "order": 4,
       "unlock": {
         "type": "kills",
-        "count": 45
+        "count": 160
       },
       "accent": "#7d9edc",
       "bg": [
@@ -128,7 +128,7 @@
           },
           {
             "type": "kills",
-            "count": 70
+            "count": 320
           }
         ]
       },

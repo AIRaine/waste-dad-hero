@@ -282,7 +282,7 @@ export function applyFarmVictory(data, state, monster) {
     };
   }
 
-  // Real challenge win — unlock next tier immediately; do not auto-enter next challenge or scene.
+  // Real challenge win — open ONLY the next farm stage; never skip its meter or unlock the whole chain.
   const sceneId = monster.sceneId;
   const chain = challengeChain(data, sceneId);
   const idx = chain.findIndex((m) => m.id === monster.id);
@@ -291,18 +291,18 @@ export function applyFarmVictory(data, state, monster) {
   if ((state.farm.meters[monster.id] || 0) < need) state.farm.meters[monster.id] = need;
   const nextCh = idx >= 0 && idx < chain.length - 1 ? chain[idx + 1] : null;
   if (nextCh) {
-    // 通關後立刻解鎖下一階挑戰；可選留在當階農材料，不必再農一輪才開。
-    state.farm.unlocked[nextCh.id] = true;
-    if ((state.farm.meters[nextCh.id] || 0) < need) state.farm.meters[nextCh.id] = need;
+    // 通關 → 立刻開放「下一階農區」（可聚焦／可刷）；仍須農滿才可挑戰。
+    // 禁止灌滿 meter／unlocked，避免清前兩組後後面全可挑戰。
     state.farm.focusId = nextCh.id;
     state.farm.mode = 'farm';
     state.selectedMonsterId = `${farmIdPrefix(data)}${nextCh.id}`;
     return {
       kind: 'challenge_clear',
-      message: `「${monster.name}」通過！下一階「${nextCh.name}」已解鎖可挑戰（也可繼續農本階材料）`,
+      message: `「${monster.name}」通過！下一階「${nextCh.name}」農區已開放——刷滿進度後再挑戰（也可回本階農材料）`,
       nextChallenge: nextCh,
       fromSceneId: sceneId,
-      nextUnlocked: true,
+      nextFarmOpened: true,
+      nextUnlocked: false,
     };
   }
   state.farm.focusId = monster.id;
