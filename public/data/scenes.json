@@ -1,6 +1,6 @@
 {
   "defaultId": "living_room",
-  "note": "Run→Boss：未設 run.gateMonsterId 時，以該場景怪物鏈尾為通關閘；打贏且下一場景已解鎖則自動前進。見 docs/run-boss-progression.md。",
+  "note": "場景解鎖門檻（通關次數／強化／擊殺）。農區→手動挑戰見 farm.json；挑戰通關後立刻解鎖下一階，不強迫再農。下一場景僅手動前往。見 docs/farm-tier-gate-progression.md。",
   "scenes": [
     {
       "id": "living_room",
@@ -77,7 +77,7 @@
       "order": 4,
       "unlock": {
         "type": "kills",
-        "count": 18
+        "count": 45
       },
       "accent": "#7d9edc",
       "bg": [
@@ -128,7 +128,7 @@
           },
           {
             "type": "kills",
-            "count": 35
+            "count": 70
           }
         ]
       },

@@ -7,7 +7,7 @@ import { monstersInScene } from './scenes.js';
 
 export function farmConfig(data) {
   return data.farm || {
-    killsToUnlock: 3,
+    killsToUnlock: 10,
     statMul: { hp: 0.82, atk: 0.85 },
     defMul: 0.9,
     counterMul: 0.9,
@@ -62,7 +62,7 @@ export function isChallengeReachable(data, state, challenge) {
 
 export function killsNeeded(data) {
   const n = Number(farmConfig(data).killsToUnlock);
-  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 3;
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 10;
 }
 
 export function meterCount(state, challengeId) {
@@ -282,21 +282,27 @@ export function applyFarmVictory(data, state, monster) {
     };
   }
 
-  // Real challenge win — do not auto-push next T or scene.
+  // Real challenge win — unlock next tier immediately; do not auto-enter next challenge or scene.
   const sceneId = monster.sceneId;
   const chain = challengeChain(data, sceneId);
   const idx = chain.findIndex((m) => m.id === monster.id);
+  const need = killsNeeded(data);
   state.farm.unlocked[monster.id] = true;
+  if ((state.farm.meters[monster.id] || 0) < need) state.farm.meters[monster.id] = need;
   const nextCh = idx >= 0 && idx < chain.length - 1 ? chain[idx + 1] : null;
   if (nextCh) {
+    // 通關後立刻解鎖下一階挑戰；可選留在當階農材料，不必再農一輪才開。
+    state.farm.unlocked[nextCh.id] = true;
+    if ((state.farm.meters[nextCh.id] || 0) < need) state.farm.meters[nextCh.id] = need;
     state.farm.focusId = nextCh.id;
     state.farm.mode = 'farm';
     state.selectedMonsterId = `${farmIdPrefix(data)}${nextCh.id}`;
     return {
       kind: 'challenge_clear',
-      message: `「${monster.name}」通過！回農區累積下一階「${nextCh.name}」`,
+      message: `「${monster.name}」通過！下一階「${nextCh.name}」已解鎖可挑戰（也可繼續農本階材料）`,
       nextChallenge: nextCh,
       fromSceneId: sceneId,
+      nextUnlocked: true,
     };
   }
   state.farm.focusId = monster.id;
