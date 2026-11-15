@@ -846,7 +846,8 @@ export function createApp(root, data, state) {
     const primaryIsChallenge = showChallengeBtn;
     const primaryIsPause = autoFighting && !primaryIsChallenge;
     const primaryIsStart = !autoFighting && !primaryIsChallenge;
-    const startFightLabel = training ? '練功' : '掛機打怪';
+    // 挑戰態暫停後續戰勿再寫「掛機打怪」（農區語意）
+    const startFightLabel = training ? '練功' : isChallengeMode ? '繼續挑戰' : '掛機打怪';
     const secondaryRow = (bits) => {
       const html = bits.filter(Boolean).join('');
       return html ? `<div class="cta-secondary-row">${html}</div>` : '';
@@ -908,11 +909,13 @@ export function createApp(root, data, state) {
                     <div class="farm-meter ${showChallengeBtn ? 'is-full' : ''}" role="progressbar" aria-valuemin="0" aria-valuemax="${meter.need}" aria-valuenow="${meter.have}" aria-label="農區擊殺進度">
                       <div class="farm-meter-fill" style="width:${meter.pct}%"></div>
                       <span class="farm-meter-label">${
-                        meter.canChallenge
-                          ? `${meter.need}/${meter.need} 可挑戰`
-                          : meter.cleared
-                            ? '已通關'
-                            : `${meter.have}/${meter.need}`
+                        meter.mode === 'challenge'
+                          ? '挑戰中'
+                          : meter.canChallenge
+                            ? `${meter.need}/${meter.need} 可挑戰`
+                            : meter.cleared
+                              ? '已通關'
+                              : `${meter.have}/${meter.need}`
                       }</span>
                     </div>
                   </div>`
@@ -1782,7 +1785,7 @@ export function createApp(root, data, state) {
               <span class="res-chip mat"><i class="res-ico" aria-hidden="true"></i><span class="res-k">材</span><b class="res-v">${displayResource(state, state.material)}</b></span>
             </div>
             <div class="hud-power" role="group" aria-label="戰力" title="戰力">
-              <span class="pow-meter atk"><span class="pow-k">攻</span><b class="pow-v">${totalPlayerAtk(data, state)}</b></span>
+              <span class="pow-meter atk"><span class="pow-k">攻</span><b class="pow-v">${Math.max(1, totalPlayerAtk(data, state))}</b></span>
               <span class="pow-meter def"><span class="pow-k">防</span><b class="pow-v">${totalPlayerDef(data, state)}</b></span>
             </div>
           </div>
