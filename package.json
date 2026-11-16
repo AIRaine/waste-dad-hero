@@ -10,7 +10,8 @@
     "test:farm-autofight": "node scripts/farm-autofight-continue.mjs",
     "test:unlock-flow": "node scripts/unlock-flow-playtest.mjs",
     "test:unlock-cadence-ui": "node scripts/unlock-cadence-ui-playtest.mjs",
-    "test:hundred": "node scripts/hundred-persona-playtest.mjs"
+    "test:hundred": "node scripts/hundred-persona-playtest.mjs",
+    "test:hundred-ui": "node scripts/hundred-ui-monitor.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
